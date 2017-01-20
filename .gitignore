@@ -15,3 +15,4 @@ server.pid
 .cache
 .idea/
 project/project/
+.env
