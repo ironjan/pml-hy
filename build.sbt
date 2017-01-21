@@ -7,10 +7,17 @@ lazy val root = (project in file(".")).enablePlugins(PlayScala)
 scalaVersion := "2.11.7"
 
 libraryDependencies ++= Seq(
-  jdbc,
   cache,
-  "org.postgresql" % "postgresql" % "9.4-1201-jdbc41",
+  evolutions,
+  jdbc,
   ws,
+  "com.typesafe.slick" %% "slick" % "3.1.1",
+  "com.github.tototoshi" %% "slick-joda-mapper" % "2.2.0",
+  "joda-time" % "joda-time" % "2.7",
+  "org.joda" % "joda-convert" % "1.7",
+  "org.postgresql" % "postgresql" % "9.4-1201-jdbc41",
+
+
   "org.scalatestplus.play" %% "scalatestplus-play" % "1.5.1" % Test
 )
 
