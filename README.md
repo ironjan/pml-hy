@@ -1,49 +1,11 @@
-This is your new Play application
+PML-HY
 =================================
 
-This file will be packaged with your application when using `activator dist`.
+This is a repository for my participation in the course [Project in Practical Machine Learning](https://www.cs.helsinki.fi/en/courses/582739/2017/k/k/1) 
+at [Helsinkin Yliopistio (University of Helsinki)](https://www.helsinki.fi/fi).
 
-There are several demonstration files available in this template.
+*Description of this course:* The purpose of the course is to introduce students to the problematics of machine learning in a realistic setting. Students should be able to identify and take into account the "dirtiness" of real online data; select, justify and implement a machine learning algorithm/technique using a programming environment runnable on a web server; monitor and report the accuracy of their implementation, including reflection of their choices.
 
-Controllers
-===========
+# Project Structure
 
-- HomeController.scala:
-
-  Shows how to handle simple HTTP requests.
-
-- AsyncController.scala:
-
-  Shows how to do asynchronous programming when handling a request.
-
-- CountController.scala:
-
-  Shows how to inject a component into a controller and use the component when
-  handling requests.
-
-Components
-==========
-
-- Module.scala:
-
-  Shows how to use Guice to bind all the components needed by your application.
-
-- Counter.scala:
-
-  An example of a component that contains state, in this case a simple counter.
-
-- ApplicationTimer.scala:
-
-  An example of a component that starts when the application starts and stops
-  when the application stops.
-
-Filters
-=======
-
-- Filters.scala:
-
-  Creates the list of HTTP filters used by your application.
-
-- ExampleFilter.scala
-
-  A simple filter that adds a header to every response.
+ * Play, Slick, 
