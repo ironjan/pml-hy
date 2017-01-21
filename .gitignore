@@ -16,3 +16,5 @@ server.pid
 .idea/
 project/project/
 .env
+*.aux
+*.pdf
