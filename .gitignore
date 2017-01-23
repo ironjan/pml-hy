@@ -18,3 +18,5 @@ project/project/
 .env
 *.aux
 *.pdf
+*.out
+*.log
