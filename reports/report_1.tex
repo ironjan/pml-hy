@@ -1,3 +1,6 @@
+\documentclass[journal,10pt]{IEEEtran}
+\usepackage{hyperref}
+
 \title{A Very Simple \LaTeXe{} Template}
 \author{
         Vitaly Surazhsky \\
@@ -12,7 +15,6 @@
 }
 \date{\today}
 
-\documentclass[journal,10pt]{IEEEtran}
 
 \begin{document}
 \maketitle
@@ -21,23 +23,55 @@
 This is the paper's abstract \ldots
 \end{abstract}
 
-\section{Introduction}
-This is time for all good men to come to the aid of their party!
+\section{Result to Predict} How many free parking spots are there in Paderborn at what time in the future? And where? This idea was inspired by \url{https://parkendd.de} and can be useful for 
 
-\paragraph{Outline}
-The remainder of this article is organized as follows.
-Section~\ref{previous work} gives account of previous work.
-Our new and exciting results are described in Section~\ref{results}.
-Finally, Section~\ref{conclusions} gives the conclusions.
+\begin{itemize}
+  \item Travel planning
+  \item Construction planning (questionable?)
+\end{itemize}
 
-\section{Previous work}\label{previous work}
-A much longer \LaTeXe{} example was written by Gil~\cite{Gil:02}.
+\section{Data used for prediction}\label{data sources}
+\paragraph{The live data from Paderborn}
 
-\section{Results}\label{results}
-In this section we describe the results.
+\begin{itemize}
+  \item Available at \url{https://www.paderborn.de/microsite/asp/parken_in_der_city/freie_Parkplaetze_neu.php}
+  \item There is no known API. The data can be crawled more easily from \url{https://www4.paderborn.de/ParkInfoASP/default.aspx}
+  \item Shows a list of parking lots in Paderborn and the current number of free spots
+  \item We can scrape this data and add timestamps
+\end{itemize}
 
-\section{Conclusions}\label{conclusions}
-We worked hard, and achieved very little.
+\paragraph{Optional: Weather}
+\begin{itemize}
+  \item Influence may be very small as the city center can be also reached by public transportation
+  \item There may be APIs to get weather data for paderborn
+\end{itemize}
+
+\paragraph{Optional: Public Holidays, Important local events}
+\begin{itemize}
+  \item There are multiple events in Paderborn that influence parking
+  \item On Libori (local fair), the parking lot ``Le Mans Wall'' is used as location.
+  \item Also, the usage could be influenced by public holidays
+  \item Data may be available as ICS feed or could be entered manually
+\end{itemize}
+
+
+\section{How will I predict the result?}
+
+\begin{itemize}
+ \item Assumption: parking spot usage depends on time, e.g. many people go shopping in the afternoon
+ \item It is assumed that the parking spot usage fluctuates over time depending e.g. on weekdays or similar
+ \item Therefore the crawling timestamp is split into its parts (y, m, d, h, M) and extended (day of week, day of month, ...).
+\end{itemize}
+
+\section{How do predictions look like?}
+
+The pml-hy tool should be able to answer the following three queries:
+\begin{itemize}
+ \item How many free parking spots are there in 5 minutes?
+ \item How many free parking spots are there in 15 minutes?
+ \item How many free parking spots are there in 60 minutes?
+\end{itemize}
+
 
 \bibliographystyle{abbrv}
 \bibliography{simple}
