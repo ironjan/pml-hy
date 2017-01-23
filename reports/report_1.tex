@@ -1,18 +1,8 @@
 \documentclass[journal,10pt]{IEEEtran}
 \usepackage{hyperref}
 
-\title{A Very Simple \LaTeXe{} Template}
-\author{
-        Vitaly Surazhsky \\
-                Department of Computer Science\\
-        Technion---Israel Institute of Technology\\
-        Technion City, Haifa 32000, \underline{Israel}
-            \and
-        Yossi Gil\\
-        Department of Computer Science\\
-        Technion---Israel Institute of Technology\\
-        Technion City, Haifa 32000, \underline{Israel}
-}
+\title{Predicting Free Parking Spots in Paderborn}
+\author{Jan Lippert \(<\)\href{mailt:ljan@mail.upb.de}{ljan@mail.upb.de}\(>\)}
 \date{\today}
 
 
@@ -21,41 +11,45 @@
 
 \begin{abstract}
 This is the paper's abstract \ldots
+
+Please submit a one-page PDF report, 
+
+\begin{itemize}
+  \item explaining your topic and why you've chosen it
+  \item Try to position your topic amongst known research.
+  \item Explain where you're going to get your data from and\ldots
+  \item what you're going to predict.
+\end{itemize}
+
+Don't go into details about implementation yet.
 \end{abstract}
 
-\section{Result to Predict} How many free parking spots are there in Paderborn at what time in the future? And where? This idea was inspired by \url{https://parkendd.de} and can be useful for 
+\section{Result to Predict}
+I'm originally from Paderborn and when using the car, I often searched for free parking spaces in the city managed parking lots. It would have been nice to know in advance where to park my car. And as such, I want to use machine learning to predict the number of free parking spots on the parking areas in Paderborn.
 
-\begin{itemize}
-  \item Travel planning
-  \item Construction planning (questionable?)
-\end{itemize}
+Previously, I encountered the project \url{https://parkendd.de} which shows the current free parking spots in different cities and used the acquired data to predict the usage of the covered car park ``Centrum Galerie''\footnote{\url{http://mechlab-engineering.de/2015/03/vorhersage-der-parkhausbelegung-mit-offenen-daten/}}. The results presented on this page show that machine learning can be used to predict the number of free parking spots.
 
-\section{Data used for prediction}\label{data sources}
-\paragraph{The live data from Paderborn}
+\section{Data Sources}\label{data sources}
+There are many possible data sources in addition to the actual parking data. Taking all possible influence factors into account is most likely not be possible. Therefore we will focus on the parking data and optionally extend the model with event and weather data.
 
-\begin{itemize}
-  \item Available at \url{https://www.paderborn.de/microsite/asp/parken_in_der_city/freie_Parkplaetze_neu.php}
-  \item There is no known API. The data can be crawled more easily from \url{https://www4.paderborn.de/ParkInfoASP/default.aspx}
-  \item Shows a list of parking lots in Paderborn and the current number of free spots
-  \item We can scrape this data and add timestamps
-\end{itemize}
+\paragraph{Parking Usage Live Data}
+The main source of data for this project will be the homepage of the ASP Paderborn which lists the city managed parking areas and the number of currently free parking spots. There is no API known for the displayed data. 
 
-\paragraph{Optional: Weather}
-\begin{itemize}
-  \item Influence may be very small as the city center can be also reached by public transportation
-  \item There may be APIs to get weather data for paderborn
-\end{itemize}
+The data is displayed on \url{https://www.paderborn.de/microsite/asp/parken_in_der_city/freie_Parkplaetze_neu.php}; the displayed table is actually a very minimalistic website located at \url{https://www4.paderborn.de/ParkInfoASP/default.aspx}. Scraping this website should be very easy.
 
-\paragraph{Optional: Public Holidays, Important local events}
-\begin{itemize}
-  \item There are multiple events in Paderborn that influence parking
-  \item On Libori (local fair), the parking lot ``Le Mans Wall'' is used as location.
-  \item Also, the usage could be influenced by public holidays
-  \item Data may be available as ICS feed or could be entered manually
-\end{itemize}
+\paragraph{Event Data (Optional)}
+Another interesting data source could be public holidays and local events. In some cases, these events influence the number of free parking spots directly: the Libori fair is located on the parking area ``Le Mans Wall'' and the ``Lunapark'' is located on ``Maspernplatz''. 
+
+Other events may also cause more people to go to the city center and therefore to more parking space usage. One example includes Sunday openings. In Germany, shops are normally closed on Sunday. Howevery, cities may choose to allow shopping on a few Sundays a year. These Sunday openings most likely lead to a higher parking space usage than on other Sundays.
+
+This data is considered optional as the big events do not happen while the course ``Practical Project in Machine Learning'' takes place. A list of these events can be found on the homepage of the carneval club\footnote{\url{http://www.kirmes-paderborn.de/termine.htm}}. The city's homepage also lists some events\footnote{\url{https://www.paderborn.de/tourismus-kultur/veranstaltungen/veranstaltungshighlights.php}}. Both of these sources would have to be parsed manually as there is no ICS-Feed or similar. 
+
+\paragraph{Weather Data (Optional)}
+
+The current weather may also influence how many people go to the city center and how many of them use a car. Taking weather data into account is an optional task because it is assumed that the weather has only a small influence on the number of free parking spots.
 
 
-\section{How will I predict the result?}
+\section{?}
 
 \begin{itemize}
  \item Assumption: parking spot usage depends on time, e.g. many people go shopping in the afternoon
