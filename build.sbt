@@ -16,7 +16,7 @@ libraryDependencies ++= Seq(
   "joda-time" % "joda-time" % "2.7",
   "org.joda" % "joda-convert" % "1.7",
   "org.postgresql" % "postgresql" % "9.4-1201-jdbc41",
-
+  "net.ruippeixotog" %% "scala-scraper" % "1.2.0",
 
   "org.scalatestplus.play" %% "scalatestplus-play" % "1.5.1" % Test
 )
