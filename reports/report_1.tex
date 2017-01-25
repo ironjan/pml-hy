@@ -1,5 +1,6 @@
 \documentclass[journal,10pt]{IEEEtran}
 \usepackage{hyperref}
+\usepackage{todonotes}
 
 \title{Predicting Free Parking Spots in Paderborn}
 \author{Jan Lippert \(<\)\href{mailt:ljan@mail.upb.de}{ljan@mail.upb.de}\(>\)}
@@ -24,10 +25,31 @@ Please submit a one-page PDF report,
 Don't go into details about implementation yet.
 \end{abstract}
 
-\section{Result to Predict}
+\section{Topic}
+
+In urban areas, parking space is often limited, especially in central areas. To help with this situation \todo{add citations} propose parkoing space availabilitz prediction. 
+
+
 I'm originally from Paderborn and when using the car, I often searched for free parking spaces in the city managed parking lots. It would have been nice to know in advance where to park my car. And as such, I want to use machine learning to predict the number of free parking spots on the parking areas in Paderborn.
 
 Previously, I encountered the project \url{https://parkendd.de} which shows the current free parking spots in different cities and used the acquired data to predict the usage of the covered car park ``Centrum Galerie''\footnote{\url{http://mechlab-engineering.de/2015/03/vorhersage-der-parkhausbelegung-mit-offenen-daten/}}. The results presented on this page show that machine learning can be used to predict the number of free parking spots.
+
+\paragraph{Topic among current research}
+
+\begin{quote}
+  The growth in low-cost, low-power sensing and communication technologies is creating a pervasive network infrastructure called the Internet of Things (IoT), which enables a wide range of physical objects and environments to be monitored in fine spatial and temporal detail. The detailed, dynamic data that can be collected from these devices provide the basis for new business and government applications in areas such as public safety, transport logistics and environmental management. There has been growing interest in the IoT for realising smart cities, in order to maximise the productivity and reliability of urban infrastructure, such as minimising road congestion and making better use of the limited car parking facilities. In this work, we consider two smart car parking scenarios based on real-time car parking information that has been collected and disseminated by the City of San Francisco, USA and the City of Melbourne, Australia. We present a prediction mechanism for the parking occupancy rate using three feature sets with selected parameters to illustrate the utility of these features. Furthermore, we analyse the relative strengths of different machine learning methods in using these features for prediction.
+  \cite{Zheng2015}
+\end{quote}
+
+\begin{quote}
+  In this paper a new parking guiding and information system is described. The system assists the user to find the most suitable parking space based on his/her preferences and learned behavior. The system takes into account parameters such as driver's parking duration, arrival time, destination, type preference, cost preference, driving time, and walking distance as well as time-varying parking rules and pricing. Moreover, a prediction algorithm is proposed to forecast the parking availability for different parking locations for different times of the day based on the real-time parking information, and previous parking availability/occupancy data. A novel server structure is used to implement the system. Intelligent parking assist system reduces the searching time for parking spots in urban environments, and consequently leads to a reduction in air pollutions and traffic congestion. On-street parking meters, off-street parking garages, as well as free parking spaces are considered in our system.
+  \cite{Rajabioun2013}
+\end{quote}
+
+\begin{quote}
+  Embodiments of the present invention provide a system and method for maintaining a record of parking space usage data for a plurality of parking spaces, using the usage data to compute probability of availability for a given space as a function of time and communicating the resultant probability data along with availability data to an end user who is looking for a parking space in the area. This information can be combined with a user's estimated time of arrival (ETA) to assist the user in selecting a parking spot to drive to. A plurality of spaces can be ranked according to their likelihood of availability at an ETA to the general area or to each of the plurality of spaces.
+  \cite{quinn2008}
+\end{quote}
 
 \section{Data Sources}\label{data sources}
 There are many possible data sources in addition to the actual parking data. Taking all possible influence factors into account is most likely not be possible. Therefore we will focus on the parking data and optionally extend the model with event and weather data.
@@ -68,6 +90,6 @@ The pml-hy tool should be able to answer the following three queries:
 
 
 \bibliographystyle{abbrv}
-\bibliography{simple}
+\bibliography{report_1}
 
 \end{document}
