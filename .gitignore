@@ -20,3 +20,5 @@ project/project/
 *.pdf
 *.out
 *.log
+*.bbl
+*.blg
