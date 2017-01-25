@@ -10,83 +10,49 @@
 \begin{document}
 \maketitle
 
-\begin{abstract}
-This is the paper's abstract \ldots
+\section{Introduction}
 
-Please submit a one-page PDF report, 
+In urban areas, space and as such parking space is limited. Car owners often have to drive around to available parking spots. This leads to an unnecessary waste of time and additional air pollution. 
 
-\begin{itemize}
-  \item explaining your topic and why you've chosen it
-  \item Try to position your topic amongst known research.
-  \item Explain where you're going to get your data from and\ldots
-  \item what you're going to predict.
-\end{itemize}
+According to multiple studies, the availability of parking data reduces the search time for a parking spot \cite{Asakura1994}\cite{Caicedo2010228}. However, most systems only provide the current number free parking spots. In rush hours, this information can quickly get outdated and lead to driving around to find available parking spaces.
 
-Don't go into details about implementation yet.
-\end{abstract}
+%\cite{parkendd} is a similar project which shows the current free parking spots in different cities. This information is collected from different websites. In addition, \cite{parkendd} collected data over the course of a year and used machine learning to predict the usage of the covered car park ``Centrum Galerie''\footnote{\url{http://mechlab-engineering.de/2015/03/vorhersage-der-parkhausbelegung-mit-offenen-daten/}}. 
+%\cite{Rajabioun2013} and \cite{Zheng2015} propose similar systems to predict the availability of parking space to help car owners find a parking spot in advance. 
 
-\section{Topic}
-
-In urban areas, parking space is often limited, especially in central areas. To help with this situation \todo{add citations} propose parkoing space availabilitz prediction. 
+In Paderborn the situation is similar: live-data is available but no prediction. The proposed project will collect parking data from Paderborn and use machine learning to predict the number of free parking spots.
 
 
-I'm originally from Paderborn and when using the car, I often searched for free parking spaces in the city managed parking lots. It would have been nice to know in advance where to park my car. And as such, I want to use machine learning to predict the number of free parking spots on the parking areas in Paderborn.
 
-Previously, I encountered the project \url{https://parkendd.de} which shows the current free parking spots in different cities and used the acquired data to predict the usage of the covered car park ``Centrum Galerie''\footnote{\url{http://mechlab-engineering.de/2015/03/vorhersage-der-parkhausbelegung-mit-offenen-daten/}}. The results presented on this page show that machine learning can be used to predict the number of free parking spots.
+\section{Related Work}
 
-\paragraph{Topic among current research}
+\cite{parkendd} is a similar project which used the collected data to predict parking space availability. This project focussed on the car park ``Centrum Galerie''. \cite{parkendd} used the following features: week of year, day of week, time of day, sunday openings and the number of workdays until the next public holiday. Sunday openings are used as in Germany, shops are normally closed on Sundays. Sunday openings therefore influence how many people go to the shopping center and therefore the availability of parking space. In \cite{parkendd}, different algorithms are compared and the predictions are evaluated.
 
-\begin{quote}
-  The growth in low-cost, low-power sensing and communication technologies is creating a pervasive network infrastructure called the Internet of Things (IoT), which enables a wide range of physical objects and environments to be monitored in fine spatial and temporal detail. The detailed, dynamic data that can be collected from these devices provide the basis for new business and government applications in areas such as public safety, transport logistics and environmental management. There has been growing interest in the IoT for realising smart cities, in order to maximise the productivity and reliability of urban infrastructure, such as minimising road congestion and making better use of the limited car parking facilities. In this work, we consider two smart car parking scenarios based on real-time car parking information that has been collected and disseminated by the City of San Francisco, USA and the City of Melbourne, Australia. We present a prediction mechanism for the parking occupancy rate using three feature sets with selected parameters to illustrate the utility of these features. Furthermore, we analyse the relative strengths of different machine learning methods in using these features for prediction.
-  \cite{Zheng2015}
-\end{quote}
+\cite{Rajabioun2013} propose parking guiding and
+information system which also includes the prediction of available parking space. The proposed algorithm uses a probabilistic model based on historical data. Among others, the used features also include time of day and day of week. At last, \cite{Rajabioun2013} estimates the mean-error on predictions. They mention that predictions for 10 minutes in the future lead to a 1.2\% error on average while predictions for 40 minutes in the future lead to a 2.8\% error on average.
 
-\begin{quote}
-  In this paper a new parking guiding and information system is described. The system assists the user to find the most suitable parking space based on his/her preferences and learned behavior. The system takes into account parameters such as driver's parking duration, arrival time, destination, type preference, cost preference, driving time, and walking distance as well as time-varying parking rules and pricing. Moreover, a prediction algorithm is proposed to forecast the parking availability for different parking locations for different times of the day based on the real-time parking information, and previous parking availability/occupancy data. A novel server structure is used to implement the system. Intelligent parking assist system reduces the searching time for parking spots in urban environments, and consequently leads to a reduction in air pollutions and traffic congestion. On-street parking meters, off-street parking garages, as well as free parking spaces are considered in our system.
-  \cite{Rajabioun2013}
-\end{quote}
+\cite{Zheng2015} compared three different feature sets and three different machine learning algortihms -- regression tree, neural network, and support vector regression -- with respect to their performance. Based on data from the cities of Melbourne and San Francisco they conclude that the regression tree provides the best predictions when used with a feature set containing day of week and time of day.  
 
-\begin{quote}
-  Embodiments of the present invention provide a system and method for maintaining a record of parking space usage data for a plurality of parking spaces, using the usage data to compute probability of availability for a given space as a function of time and communicating the resultant probability data along with availability data to an end user who is looking for a parking space in the area. This information can be combined with a user's estimated time of arrival (ETA) to assist the user in selecting a parking spot to drive to. A plurality of spaces can be ranked according to their likelihood of availability at an ETA to the general area or to each of the plurality of spaces.
-  \cite{quinn2008}
-\end{quote}
 
 \section{Data Sources}\label{data sources}
-There are many possible data sources in addition to the actual parking data. Taking all possible influence factors into account is most likely not be possible. Therefore we will focus on the parking data and optionally extend the model with event and weather data.
+The main data source is the actual parking data which is available online. In addition there are other possible features that influence parking space availability. Since taking all features into account is not possible, this project will focus on the parking data and optionally extend the model with basic event data.
 
 \paragraph{Parking Usage Live Data}
-The main source of data for this project will be the homepage of the ASP Paderborn which lists the city managed parking areas and the number of currently free parking spots. There is no API known for the displayed data. 
+The homepage of the ASP Paderborn\footnote{City-Managed service for waste management, city cleaning, and parking.} lists the city managed parking areas and the number of currently free parking spots. 
+The data is available on \url{https://www.paderborn.de/microsite/asp/parken_in_der_city/freie_Parkplaetze_neu.php}. A more minimal website is available at \url{https://www4.paderborn.de/ParkInfoASP/default.aspx}. 
 
-The data is displayed on \url{https://www.paderborn.de/microsite/asp/parken_in_der_city/freie_Parkplaetze_neu.php}; the displayed table is actually a very minimalistic website located at \url{https://www4.paderborn.de/ParkInfoASP/default.aspx}. Scraping this website should be very easy.
+Since there is no API known, the parking data needs to be scraped from the website.  
+
 
 \paragraph{Event Data (Optional)}
-Another interesting data source could be public holidays and local events. In some cases, these events influence the number of free parking spots directly: the Libori fair is located on the parking area ``Le Mans Wall'' and the ``Lunapark'' is located on ``Maspernplatz''. 
+A second data source could be public holidays and local events. In some cases, these events influence the number of free parking spots directly: the Libori fair is located on the parking area ``Le Mans Wall'' and the ``Lunapark'' is located on ``Maspernplatz''. 
 
-Other events may also cause more people to go to the city center and therefore to more parking space usage. One example includes Sunday openings. In Germany, shops are normally closed on Sunday. Howevery, cities may choose to allow shopping on a few Sundays a year. These Sunday openings most likely lead to a higher parking space usage than on other Sundays.
+Other events may also cause more people to go to the city center and therefore to more parking space usage. One example includes Sunday openings. In Germany, shops are normally closed on Sunday. Howevery, cities may choose to allow shopping on a few Sundays a year. 
 
-This data is considered optional as the big events do not happen while the course ``Practical Project in Machine Learning'' takes place. A list of these events can be found on the homepage of the carneval club\footnote{\url{http://www.kirmes-paderborn.de/termine.htm}}. The city's homepage also lists some events\footnote{\url{https://www.paderborn.de/tourismus-kultur/veranstaltungen/veranstaltungshighlights.php}}. Both of these sources would have to be parsed manually as there is no ICS-Feed or similar. 
-
-\paragraph{Weather Data (Optional)}
-
-The current weather may also influence how many people go to the city center and how many of them use a car. Taking weather data into account is an optional task because it is assumed that the weather has only a small influence on the number of free parking spots.
+This data is considered optional as the big events do not happen while the course ``Practical Project in Machine Learning'' takes place. A list of these events can be found on the homepage of the carneval club\footnote{\url{http://www.kirmes-paderborn.de/termine.htm}}. The city's homepage also lists some events\footnote{\url{https://www.paderborn.de/tourismus-kultur/veranstaltungen/veranstaltungshighlights.php}}. Both of these sources would have to be parsed manually.
 
 
-\section{?}
-
-\begin{itemize}
- \item Assumption: parking spot usage depends on time, e.g. many people go shopping in the afternoon
- \item It is assumed that the parking spot usage fluctuates over time depending e.g. on weekdays or similar
- \item Therefore the crawling timestamp is split into its parts (y, m, d, h, M) and extended (day of week, day of month, ...).
-\end{itemize}
-
-\section{How do predictions look like?}
-
-The pml-hy tool should be able to answer the following three queries:
-\begin{itemize}
- \item How many free parking spots are there in 5 minutes?
- \item How many free parking spots are there in 15 minutes?
- \item How many free parking spots are there in 60 minutes?
-\end{itemize}
+\section{Prediction Goal}
+As mentioned in the introduction, this project is about predicting available parking space ahead of time. In concrete terms, the project will first focus on one of the parking areas, e.g. ``Libori-Galerie'', and predict the availabilty on regular intervals for 5, 15, and 60 minutes into the future.
 
 
 \bibliographystyle{abbrv}
