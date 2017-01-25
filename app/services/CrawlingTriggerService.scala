@@ -23,28 +23,19 @@ import scala.concurrent.ExecutionContext.Implicits.global
 
   val system = ActorSystem("CrawlingSystem")
 
-  var Tick = 0
-  val tickActor = system.actorOf(Props(new Actor {
-    val limit = 100
-    def receive = {
-      case tick: Int => {
-        if(tick < limit) {
-          println(s"tick $tick/$limit")
-          system.scheduler.scheduleOnce(50 milliseconds,
-            self,
-            tick + 1)
-          }else{
-            context.stop(self)
-            println(s"ticked $limit times. Not rescheduling")
-          }
+  val Event = "Crawl"
 
+  val crawlingActor = system.actorOf(Props(new Actor {
+    def receive = {
+      case Event => {
+          println(s"Triggering crawl...")
         } 
       }
       }))
-  //This will schedule to send the Tick-message
-  //to the tickActor after 0ms repeating every 50ms
-  system.scheduler.scheduleOnce(50 milliseconds,
-    tickActor,
-    Tick)
+  
+  system.scheduler.schedule(0 milliseconds,
+    5 minutes,
+    crawlingActor,
+    Event)
 
 }
