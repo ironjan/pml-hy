@@ -1,5 +1,7 @@
 package services.crawler
 
+import core._
+
 import org.joda.time.DateTime
 
 /**
@@ -7,9 +9,12 @@ import org.joda.time.DateTime
 case class RawParkingDataSet(dateTime: DateTime,
                              name: String,
                              inUSe: Int,
-                             capacity: Int)
+                             capacity: Int,
+                             id: Long = -1,
+                             isDeleted: Boolean = false)
+  extends BaseEntity
 
-object RawParkingDataSet{
+object RawParkingDataSet {
   def apply(dateTime: DateTime,
             name: String,
             inUSe: String,

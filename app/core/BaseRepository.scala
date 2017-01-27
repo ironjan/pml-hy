@@ -1,3 +1,4 @@
+package core
 
 import slick.driver.PostgresDriver
 import slick.lifted.{CanBeQueryCondition, Rep, TableQuery}
@@ -8,7 +9,7 @@ import PostgresDriver.api._
 
 
 object DriverHelper {
-  val db = Database.forConfig("defaultDb")
+  val db = Database.forConfig("default")
 }
 
 
