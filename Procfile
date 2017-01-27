@@ -1,2 +1,1 @@
-web: target/universal/stage/bin/pml-hy -Dhttp.port=${PORT}
-console: target/universal/stage/bin/pml-hy -main scala.tools.nsc.MainGenericRunner -usejavacp
+web: target/universal/stage/bin/pml-hy -Dhttp.port=${PORT} -Dplay.evolutions.db.default.autoApply=true -Ddb.default.driver=org.postgresql.Driver -Ddb.default.url=${DATABASE_URL}
