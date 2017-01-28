@@ -36,9 +36,9 @@ import scala.concurrent.ExecutionContext.Implicits.global
         }
       }
       }))
-  
+
   system.scheduler.schedule(0 milliseconds,
-    5 minutes,
+    15 minutes,
     crawlingActor,
     Event)
 
