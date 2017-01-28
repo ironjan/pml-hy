@@ -1,10 +1,12 @@
 package controllers
 
 import javax.inject._
+
 import play.api._
 import play.api.mvc._
-import services.crawler.Crawler
-
+import repository.RawParkingDataRepository
+import services.crawler.{Crawler, RawParkingDataSet}
+import scala.concurrent.ExecutionContext.Implicits.global
 /**
  * This controller creates an `Action` to handle HTTP requests to the
  * application's home page.
@@ -18,11 +20,21 @@ class HomeController @Inject() extends Controller {
    * will be called when the application receives a `GET` request with
    * a path of `/`.
    */
-  def index = Action {
+  def index = Action.async { implicit request =>
     val start = System.currentTimeMillis()
     Crawler.crawl
-    val time = System.currentTimeMillis() - start
-    Ok(views.html.index(s"Crawled in ${time}ms."))
+    val crawlingTime = System.currentTimeMillis() - start
+
+    val repo = new RawParkingDataRepository
+    repo.getAll
+      .map(crawledSets => {
+      val count = crawledSets.count(_ => true)
+      val msg = s"Crawled current set in ${crawlingTime}ms, $count sets in total."
+      Ok(views.html.index(msg))
+    })
+
+
+
   }
 
 }
