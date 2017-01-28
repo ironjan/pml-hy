@@ -1,6 +1,6 @@
 package services.crawler
 
-
+import repository.RawParkingDataRepository
 import java.time.chrono.Chronology
 
 import scala.io.Source
@@ -13,6 +13,8 @@ import net.ruippeixotog.scalascraper.model.{Document, Element}
 import org.joda.time.{DateTime, DateTimeZone}
 import play.api.Logger
 
+import scala.concurrent.Await
+import scala.concurrent.duration._
 import scala.language.postfixOps
 import scala.reflect.macros.whitebox
 
@@ -25,23 +27,17 @@ object Crawler {
 
   def crawl = {
     val crawlingTime = DateTime.now()
+    val repo = new RawParkingDataRepository
     extractData(downloadDocument)
       .flatMap(convertToRawParkingDataSet(crawlingTime, _))
-      .foreach(println)
+      .foreach(d => Await.result(repo.save(d), 5 seconds))
   }
 
   private def convertToRawParkingDataSet(crawlingTime: DateTime, x: Array[String]) = {
     val name = x(0)
     val currentUsage = x(3)
     val maxCapacity = x(2)
-    try {
-      Some(RawParkingDataSet(crawlingTime, name, currentUsage, maxCapacity))
-    } catch {
-      case e: NumberFormatException => {
-        Logger.warn(s"NumberFormatException for RawParkingDataSet($crawlingTime, $name, $currentUsage, $maxCapacity")
-        None
-      }
-    }
+    Some(RawParkingDataSet(crawlingTime, name, currentUsage, maxCapacity))
   }
 
   private def extractData(doc: Document): List[Array[String]] = {
