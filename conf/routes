@@ -4,6 +4,8 @@
 
 # An example controller showing a sample home page
 GET     /                           controllers.HomeController.index
+GET     /all_crawled                controllers.HomeController.all_crawled
+GET     /working_data_crawled       controllers.HomeController.working_data_crawled
 # An example controller showing how to write asynchronous code
 GET     /message                    controllers.AsyncController.message
 
