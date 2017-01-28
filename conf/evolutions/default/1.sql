@@ -1,11 +1,11 @@
 # --- !Ups
 
 CREATE TABLE raw_parking_data(
-  id SERIAL,
+  id SERIAL PRIMARY KEY,
   is_deleted boolean NOT NULL,
   name varchar(255) NOT NULL,
-  used int NOT NULL,
-  capacity int NOT NULL,
+  used varchar(255) NOT NULL,
+  capacity varchar(255) NOT NULL,
   crawling_time TIMESTAMP NOT NULL
   );
 
