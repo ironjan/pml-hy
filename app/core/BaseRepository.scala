@@ -1,15 +1,17 @@
 package core
 
-import slick.driver.PostgresDriver
 import slick.lifted.{CanBeQueryCondition, Rep, TableQuery}
 
 import scala.concurrent.Future
 import scala.reflect._
+import slick.backend.DatabaseConfig
+import slick.driver.PostgresDriver
 import PostgresDriver.api._
 
 
 object DriverHelper {
-  val db = Database.forConfig("default")
+  val dbConfig: DatabaseConfig[PostgresDriver] = DatabaseConfig.forConfig("slick.dbs.default")
+  val db = dbConfig.db
 }
 
 
@@ -104,7 +106,7 @@ abstract class BaseRepository[T <: BaseTable[E], E <: BaseEntity : ClassTag](cla
   val clazzTable: TableQuery[T] = clazz
   lazy val clazzEntity = classTag[E].runtimeClass
   val query: PostgresDriver.api.type#TableQuery[T] = clazz
-  val db: PostgresDriver.backend.DatabaseDef = DriverHelper.db
+  val db = DriverHelper.db
 
   def getAll: Future[Seq[E]] = {
     db.run(getAllQuery.result)
