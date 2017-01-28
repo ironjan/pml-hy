@@ -15,8 +15,9 @@ case class RawParkingDataSet(dateTime: DateTime,
   extends BaseEntity
 
 object RawParkingDataSet {
-  def apply(dateTime: DateTime,
+  def fromRaw(dateTime: DateTime,
             name: String,
             inUSe: String,
             capacity: String): RawParkingDataSet = new RawParkingDataSet(dateTime, name, inUSe.toInt, capacity.toInt)
+def tupled = (RawParkingDataSet.apply _).tupled
 }
