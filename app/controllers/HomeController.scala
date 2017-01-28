@@ -3,6 +3,7 @@ package controllers
 import javax.inject._
 import play.api._
 import play.api.mvc._
+import services.crawler.Crawler
 
 /**
  * This controller creates an `Action` to handle HTTP requests to the
@@ -18,7 +19,10 @@ class HomeController @Inject() extends Controller {
    * a path of `/`.
    */
   def index = Action {
-    Ok(views.html.index("Your new application is ready."))
+    val start = System.currentTimeMillis()
+    Crawler.crawl
+    val time = System.currentTimeMillis() - start
+    Ok(views.html.index(s"Crawled in ${time}ms."))
   }
 
 }
