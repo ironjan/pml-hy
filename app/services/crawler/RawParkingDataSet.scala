@@ -7,10 +7,11 @@ import play.api.libs.json.Json
 
 /**
   */
-case class RawParkingDataSet(dateTime: DateTime,
+case class RawParkingDataSet(crawlingTime: DateTime,
                              name: String,
-                             inUSe: String,
+                             used: String,
                              capacity: String,
+                             city: String,
                              id: Long = -1,
                              isDeleted: Boolean = false)
   extends BaseEntity

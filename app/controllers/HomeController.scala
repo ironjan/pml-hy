@@ -49,7 +49,7 @@ class HomeController @Inject() (repo: RawParkingDataRepository)
     repo.getAll
       .map { crawledSets =>
         val filtered = crawledSets
-          .filter(d => scala.util.Try(d.inUSe.toInt).isSuccess)
+          .filter(d => scala.util.Try(d.used.toInt).isSuccess)
 
         Ok(Json.toJson(filtered))
       }
@@ -59,7 +59,7 @@ class HomeController @Inject() (repo: RawParkingDataRepository)
     repo.getAll
       .map {crawledSets =>
         Ok(Json.toJson(
-          crawledSets.map(d => new DateTime(d.dateTime)).distinct
+          crawledSets.map(d => new DateTime(d.crawlingTime)).distinct
         ))
       }
   }

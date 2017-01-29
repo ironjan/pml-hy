@@ -27,6 +27,7 @@ object Crawler {
 
   def crawl = {
     val crawlingTime = DateTime.now()
+    // TODO convert Craler to class and inject
     val repo = new RawParkingDataRepository
     extractData(downloadDocument)
       .flatMap(convertToRawParkingDataSet(crawlingTime, _))
@@ -34,10 +35,11 @@ object Crawler {
   }
 
   private def convertToRawParkingDataSet(crawlingTime: DateTime, x: Array[String]) = {
-    val name = x(0)
-    val currentUsage = x(3)
-    val maxCapacity = x(2)
-    Some(RawParkingDataSet(crawlingTime, name, currentUsage, maxCapacity))
+    val location = x(0)
+    val used = x(3)
+    val capacity = x(2)
+
+    Some(RawParkingDataSet(crawlingTime, location, used, capacity, Cities.Paderborn))
   }
 
   private def extractData(doc: Document): List[Array[String]] = {
@@ -50,10 +52,6 @@ object Crawler {
     result
   }
 
-  private def downloadDocument: Document = {
-    val browser = JsoupBrowser()
-    val doc = browser.get(Url)
-    doc
-  }
+  private def downloadDocument: Document = JsoupBrowser().get(Url)
 
 }
