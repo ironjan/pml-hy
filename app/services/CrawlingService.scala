@@ -13,7 +13,7 @@ import akka.actor._
 import scala.concurrent.duration._
 import scala.concurrent._
 import akka.event.Logging
-import services.crawler.Crawler
+import services.crawler.{PaderbornCrawler, PaderbornCrawlerImpl}
 
 import scala.concurrent.ExecutionContext.Implicits.global
 
@@ -21,7 +21,9 @@ import scala.concurrent.ExecutionContext.Implicits.global
  * Implements a service that triggers the crawler on regular intervals.
  */
  @Singleton
- class CrawlingService @Inject()(clock: Clock, appLifecycle: ApplicationLifecycle) {
+ class CrawlingService @Inject()(crawler: PaderbornCrawler,
+                                 clock: Clock,
+                                 appLifecycle: ApplicationLifecycle) {
   val system = ActorSystem("CrawlingSystem")
   val Event = "Crawl"
 
@@ -32,7 +34,7 @@ import scala.concurrent.ExecutionContext.Implicits.global
     def receive = {
       case Event => {
           println(s"Triggering crawl…")
-          Crawler.crawl
+          crawler.crawl
         }
       }
       }))

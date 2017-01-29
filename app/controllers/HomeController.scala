@@ -7,7 +7,7 @@ import play.api._
 import play.api.libs.json.Json
 import play.api.mvc._
 import repository.RawParkingDataRepository
-import services.crawler.{Crawler, RawParkingDataSet}
+import services.crawler.{PaderbornCrawler, PaderbornCrawlerImpl, RawParkingDataSet}
 
 import scala.concurrent.ExecutionContext.Implicits.global
 
@@ -16,7 +16,7 @@ import scala.concurrent.ExecutionContext.Implicits.global
   * application's home page.
   */
 @Singleton
-class HomeController @Inject() (repo: RawParkingDataRepository)
+class HomeController @Inject() (crawler: PaderbornCrawler) (repo: RawParkingDataRepository)
   extends Controller {
 
   /**
@@ -27,7 +27,7 @@ class HomeController @Inject() (repo: RawParkingDataRepository)
     */
   def index = Action.async { implicit request =>
     val start = System.currentTimeMillis()
-    Crawler.crawl
+    crawler.crawl
     val crawlingTime = System.currentTimeMillis() - start
 
     repo.getAll
