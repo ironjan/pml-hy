@@ -1,8 +1,12 @@
 import com.google.inject.AbstractModule
 import java.time.Clock
 
+import com.reactore.repository.Tables.RawParkingDataTable
+import core.BaseRepository
+import repository.{RawParkingDataRepository}
 import services.ApplicationTimer
 import services.CrawlingService
+import services.crawler.RawParkingDataSet
 
 /**
  * This class is a Guice module that tells Guice how to bind several
@@ -23,6 +27,8 @@ class Module extends AbstractModule {
     // application starts.
     bind(classOf[ApplicationTimer]).asEagerSingleton()
     bind(classOf[CrawlingService]).asEagerSingleton()
+
+    bind(classOf[RawParkingDataRepository]).toInstance(new RawParkingDataRepository)
   }
 
 }
