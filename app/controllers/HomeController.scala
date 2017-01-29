@@ -2,6 +2,7 @@ package controllers
 
 import javax.inject._
 
+import org.joda.time.DateTime
 import play.api._
 import play.api.libs.json.Json
 import play.api.mvc._
@@ -52,6 +53,16 @@ class HomeController @Inject() extends Controller {
           .filter(d => scala.util.Try(d.inUSe.toInt).isSuccess)
 
         Ok(Json.toJson(filtered))
+      }
+  }
+
+  def crawling_time_history = Action.async {implicit request =>
+    val repo = new RawParkingDataRepository
+    repo.getAll
+      .map {crawledSets =>
+        Ok(Json.toJson(
+          crawledSets.map(d => new DateTime(d.dateTime)).distinct
+        ))
       }
   }
 }
