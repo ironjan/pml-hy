@@ -10,32 +10,21 @@ import repository.RawParkingDataRepository
 import services.crawler.{PaderbornCrawler, PaderbornCrawlerImpl, RawParkingDataSet}
 
 import scala.concurrent.ExecutionContext.Implicits.global
+import scala.concurrent.Future
 
 /**
   * This controller creates an `Action` to handle HTTP requests to the
   * application's home page.
   */
 @Singleton
-class HomeController @Inject() (crawler: PaderbornCrawler) (repo: RawParkingDataRepository)
+class HomeController @Inject() (crawler: PaderbornCrawler,
+                                repo: RawParkingDataRepository)
   extends Controller {
 
-  /**
-    * Create an Action to render an HTML page with a welcome message.
-    * The configuration in the `routes` file means that this method
-    * will be called when the application receives a `GET` request with
-    * a path of `/`.
-    */
   def index = Action.async { implicit request =>
-    val start = System.currentTimeMillis()
-    crawler.crawl
-    val crawlingTime = System.currentTimeMillis() - start
-
-    repo.getAll
-      .map(crawledSets => {
-        val count = crawledSets.count(_ => true)
-        val msg = s"Crawled current set in ${crawlingTime}ms, $count sets in total."
-        Ok(views.html.index(msg))
-      })
+    repo.countAll.map{count =>
+      Ok(views.html.index(count) )
+    }
   }
 
   def all_crawled = Action.async { implicit request =>

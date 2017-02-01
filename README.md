@@ -1,7 +1,7 @@
 PML-HY
 =================================
 
-This is a repository for my participation in the course [Project in Practical Machine Learning](https://www.cs.helsinki.fi/en/courses/582739/2017/k/k/1) 
+This is a webapp for my participation in the course [Project in Practical Machine Learning](https://www.cs.helsinki.fi/en/courses/582739/2017/k/k/1)
 at [Helsinkin Yliopistio (University of Helsinki)](https://www.helsinki.fi/fi). The application itself is online at
 [[https://enigmatic-citadel-24582.herokuapp.com/]].
 
