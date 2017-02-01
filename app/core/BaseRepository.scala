@@ -98,6 +98,10 @@ trait BaseRepositoryQuery[T <: BaseTable[E], E <: BaseEntity] {
     query.filter(_.id === id).filter(_.isDeleted === false).update(row)
   }
 
+  def countAllQuery = {
+    query.filter(_.isDeleted === false).length.result
+  }
+
 }
 
 
@@ -130,6 +134,10 @@ abstract class BaseRepository[T <: BaseTable[E], E <: BaseEntity : ClassTag](cla
 
   def deleteById(id: Long) = {
     db.run(deleteByIdQuery(id))
+  }
+
+  def countAll = {
+    db.run(countAllQuery)
   }
 
 }
