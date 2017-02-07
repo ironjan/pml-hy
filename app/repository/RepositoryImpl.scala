@@ -1,8 +1,7 @@
 package repository
-import com.reactore.repository.Tables.RawParkingDataTable
-import core.{BaseRepository, BaseRepositoryQuery}
-import services.crawler.RawParkingDataSet
+import com.reactore.repository.Tables.ParkingDataTable
+import core.BaseRepository
+import services.crawler.ParkingDataSet
 import slick.lifted.TableQuery
 
-class RawParkingDataRepository
-  extends BaseRepository[RawParkingDataTable, RawParkingDataSet](TableQuery[RawParkingDataTable])
+class ParkingDataRepository extends BaseRepository[ParkingDataTable, ParkingDataSet](TableQuery[ParkingDataTable])

@@ -1,20 +1,12 @@
-@*
- * This template takes a single argument, a String containing a
- * message to display.
- *@
-@(message: String)
+@(itemCount: Int)
 
-@*
- * Call the `main` template with two arguments. The first
- * argument is a `String` with the title of the page, the second
- * argument is an `Html` object containing the body of the page.
- *@
-@main("Welcome to Play") {
+@main("Prediction of Available Parking Space in Paderborn") {
 
-    @*
-     * Get an `Html` object by calling the built-in Play welcome
-     * template and passing a `String` message.
-     *@
-    @play20.welcome(message, style = "Scala")
+<p>This is a webapp for my participation in the course <a href="https://www.cs.helsinki.fi/en/courses/582739/2017/k/k/1">
+ Project in Practical Machine Learning</a> at <a href="https://www.helsinki.fi/fi">Helsinkin Yliopistio (University of
+ Helsinki)</a></p>
 
+<p>Until now, we crawled @itemCount different data points to use in the predictions.</p>
+
+<!-- TODO insert links to data routes -->
 }

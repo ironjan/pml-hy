@@ -3,11 +3,10 @@ package controllers
 import javax.inject._
 
 import org.joda.time.DateTime
-import play.api._
 import play.api.libs.json.Json
 import play.api.mvc._
-import repository.RawParkingDataRepository
-import services.crawler.{PaderbornCrawler, PaderbornCrawlerImpl, RawParkingDataSet}
+import repository.ParkingDataRepository
+import services.crawler.{PaderbornCrawler, ParkingDataSet}
 
 import scala.concurrent.ExecutionContext.Implicits.global
 
@@ -16,30 +15,18 @@ import scala.concurrent.ExecutionContext.Implicits.global
   * application's home page.
   */
 @Singleton
-class HomeController @Inject() (crawler: PaderbornCrawler) (repo: RawParkingDataRepository)
+class HomeController @Inject() (crawler: PaderbornCrawler,
+                                repo: ParkingDataRepository)
   extends Controller {
 
-  /**
-    * Create an Action to render an HTML page with a welcome message.
-    * The configuration in the `routes` file means that this method
-    * will be called when the application receives a `GET` request with
-    * a path of `/`.
-    */
   def index = Action.async { implicit request =>
-    val start = System.currentTimeMillis()
-    crawler.crawl
-    val crawlingTime = System.currentTimeMillis() - start
-
-    repo.getAll
-      .map(crawledSets => {
-        val count = crawledSets.count(_ => true)
-        val msg = s"Crawled current set in ${crawlingTime}ms, $count sets in total."
-        Ok(views.html.index(msg))
-      })
+    repo.countAll.map{count =>
+      Ok(views.html.index(count) )
+    }
   }
 
   def all_crawled = Action.async { implicit request =>
-    val repo = new RawParkingDataRepository
+    val repo = new ParkingDataRepository
     repo.getAll
       .map(crawledSets =>
         Ok(Json.toJson(crawledSets)))
@@ -49,7 +36,7 @@ class HomeController @Inject() (crawler: PaderbornCrawler) (repo: RawParkingData
     repo.getAll
       .map { crawledSets =>
         val filtered = crawledSets
-          .filter(d => scala.util.Try(d.used.toInt).isSuccess)
+          .filter(d => d.isRecentModel && d.hasUsefulData)
 
         Ok(Json.toJson(filtered))
       }

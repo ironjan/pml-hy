@@ -1,21 +1,15 @@
 package services
 
-import java.time.{Clock, Instant}
+import java.time.Clock
 import javax.inject._
 
+import akka.actor.{Actor, _}
 import play.api.Logger
 import play.api.inject.ApplicationLifecycle
-
-import scala.concurrent.Future
-import akka.actor.Actor
-import akka.actor._
-
-import scala.concurrent.duration._
-import scala.concurrent._
-import akka.event.Logging
-import services.crawler.{PaderbornCrawler, PaderbornCrawlerImpl}
+import services.crawler.PaderbornCrawler
 
 import scala.concurrent.ExecutionContext.Implicits.global
+import scala.concurrent.duration._
 
 /**
  * Implements a service that triggers the crawler on regular intervals.
@@ -40,7 +34,7 @@ import scala.concurrent.ExecutionContext.Implicits.global
       }))
 
   system.scheduler.schedule(0 milliseconds,
-    15 minutes,
+    5 minutes,
     crawlingActor,
     Event)
 
