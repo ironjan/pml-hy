@@ -8,7 +8,5 @@ import services.crawler.ParkingDataSet
 class CleanerImpl extends Cleaner[ParkingDataSet] {
   override def cleanDatabase: Unit = ???
 
-  override def cleanEntry(t: ParkingDataSet): ParkingDataSet = {
-
-  }
+  override def cleanEntry(t: ParkingDataSet): ParkingDataSet = ???
 }
