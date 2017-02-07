@@ -2,7 +2,8 @@ import java.time.Clock
 
 import com.google.inject.AbstractModule
 import repository.ParkingDataRepository
-import services.crawler.{PaderbornCrawler, PaderbornCrawlerImpl}
+import services.crawler.{PaderbornCrawler, PaderbornCrawlerImpl, ParkingDataSet}
+import services.enhancer.{Cleaner, CleanerService, ParkingDataSetCleanerImpl}
 import services.{ApplicationTimer, CrawlingService}
 
 /**
@@ -24,9 +25,11 @@ class Module extends AbstractModule {
     // application starts.
     bind(classOf[ApplicationTimer]).asEagerSingleton()
     bind(classOf[CrawlingService]).asEagerSingleton()
+    bind(classOf[CleanerService]).asEagerSingleton()
 
     bind(classOf[ParkingDataRepository]).toInstance(new ParkingDataRepository)
     bind(classOf[PaderbornCrawler]).to(classOf[PaderbornCrawlerImpl])
+    bind(classOf[Cleaner[ParkingDataSet]]).to(classOf[ParkingDataSetCleanerImpl])
   }
 
 }

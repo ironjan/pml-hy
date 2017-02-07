@@ -6,7 +6,7 @@ import org.joda.time.DateTime
 import play.api.libs.json.Json
 import play.api.mvc._
 import repository.ParkingDataRepository
-import services.crawler.PaderbornCrawler
+import services.crawler.{PaderbornCrawler, ParkingDataSet}
 
 import scala.concurrent.ExecutionContext.Implicits.global
 
@@ -36,7 +36,7 @@ class HomeController @Inject() (crawler: PaderbornCrawler,
     repo.getAll
       .map { crawledSets =>
         val filtered = crawledSets
-          .filter(d => scala.util.Try(d.freeRaw.toInt).isSuccess)
+          .filter(d => d.isRecentModel && d.hasUsefulData)
 
         Ok(Json.toJson(filtered))
       }

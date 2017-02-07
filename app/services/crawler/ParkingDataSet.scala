@@ -34,4 +34,14 @@ object ParkingDataSet {
   implicit val rawParkingDataSetReads = Json.reads[ParkingDataSet]
 
   def tupled = (ParkingDataSet.apply _).tupled
+
+  val recentModelVersion = 1
+
+  implicit class ParkingDataSetOps(parkingDataSet: ParkingDataSet){
+    def isRecentModel = parkingDataSet.modelVersion.contains(recentModelVersion)
+    def hasUsefulData = parkingDataSet.free.nonEmpty
+    def isDeleteable = isRecentModel && !hasUsefulData
+
+  }
+
 }
