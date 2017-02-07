@@ -5,7 +5,7 @@ import javax.inject._
 import org.joda.time.DateTime
 import play.api.libs.json.Json
 import play.api.mvc._
-import repository.RawParkingDataRepository
+import repository.ParkingDataRepository
 import services.crawler.PaderbornCrawler
 
 import scala.concurrent.ExecutionContext.Implicits.global
@@ -16,7 +16,7 @@ import scala.concurrent.ExecutionContext.Implicits.global
   */
 @Singleton
 class HomeController @Inject() (crawler: PaderbornCrawler,
-                                repo: RawParkingDataRepository)
+                                repo: ParkingDataRepository)
   extends Controller {
 
   def index = Action.async { implicit request =>
@@ -26,7 +26,7 @@ class HomeController @Inject() (crawler: PaderbornCrawler,
   }
 
   def all_crawled = Action.async { implicit request =>
-    val repo = new RawParkingDataRepository
+    val repo = new ParkingDataRepository
     repo.getAll
       .map(crawledSets =>
         Ok(Json.toJson(crawledSets)))

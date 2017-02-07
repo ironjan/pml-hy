@@ -1,12 +1,12 @@
 package core
 
+import slick.backend.DatabaseConfig
+import slick.driver.PostgresDriver
+import slick.driver.PostgresDriver.api._
 import slick.lifted.{CanBeQueryCondition, Rep, TableQuery}
 
 import scala.concurrent.Future
 import scala.reflect._
-import slick.backend.DatabaseConfig
-import slick.driver.PostgresDriver
-import PostgresDriver.api._
 
 
 object DriverHelper {

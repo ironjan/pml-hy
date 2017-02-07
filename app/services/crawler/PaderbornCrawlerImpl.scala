@@ -5,7 +5,7 @@ import net.ruippeixotog.scalascraper.dsl.DSL.Extract._
 import net.ruippeixotog.scalascraper.dsl.DSL._
 import net.ruippeixotog.scalascraper.model.{Document, Element}
 import org.joda.time.DateTime
-import repository.RawParkingDataRepository
+import repository.ParkingDataRepository
 
 import scala.concurrent.Await
 import scala.concurrent.duration._
@@ -21,7 +21,7 @@ class PaderbornCrawlerImpl extends PaderbornCrawler{
 
   override def crawl = {
     val crawlingTime = DateTime.now()
-    val repo = new RawParkingDataRepository
+    val repo = new ParkingDataRepository
     extractData(downloadDocument)
       .flatMap(convertToRawParkingDataSet(crawlingTime, _))
       .foreach(d => Await.result(repo.save(d), 5 seconds))
