@@ -36,7 +36,7 @@ class HomeController @Inject() (crawler: PaderbornCrawler,
     repo.getAll
       .map { crawledSets =>
         val filtered = crawledSets
-          .filter(d => scala.util.Try(d.free.toInt).isSuccess)
+          .filter(d => scala.util.Try(d.freeRaw.toInt).isSuccess)
 
         Ok(Json.toJson(filtered))
       }
