@@ -39,7 +39,7 @@ class PaderbornCrawlerImpl extends PaderbornCrawler{
     val used = x(3)
     val capacity = x(2)
 
-    Some(RawParkingDataSet(crawlingTime, location, used, capacity, Cities.Paderborn))
+    Some(ParkingDataSet(crawlingTime, location, used, capacity, Cities.Paderborn))
   }
 
   private def extractData(doc: Document): List[Array[String]] = {

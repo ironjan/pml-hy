@@ -3,9 +3,9 @@ package com.reactore.repository
 import java.sql.Date
 
 import core.{BaseEntity, BaseTable}
-import services.crawler.RawParkingDataSet
 import slick.driver.PostgresDriver
 import com.github.tototoshi.slick.PostgresJodaSupport._
+import services.crawler.ParkingDataSet
 
 
 object Tables extends {
@@ -17,10 +17,10 @@ trait Tables {
 
   import profile.api._
 
-  class RawParkingDataTable(_tableTag: Tag) extends BaseTable[RawParkingDataSet](_tableTag, Some("public"), "raw_parking_data") {
-    def * = (dateTime, name, free, capacity, city, id, isDeleted) <>(RawParkingDataSet.tupled, RawParkingDataSet.unapply)
+  class ParkingDataTable(_tableTag: Tag) extends BaseTable[ParkingDataSet](_tableTag, Some("public"), "parking_data") {
+    def * = (dateTime, name, free, capacity, city, id, isDeleted) <>(ParkingDataSet.tupled, ParkingDataSet.unapply)
 
-    def ? = (Rep.Some(dateTime), Rep.Some(name), Rep.Some(free), Rep.Some(capacity), Rep.Some(city), Rep.Some(id), Rep.Some(isDeleted)).shaped.<>({ r => import r._; _1.map(_ => RawParkingDataSet.tupled((_1.get, _2.get, _3.get, _4.get, _5.get, _6.get, _7.get))) }, (_: Any) => throw new Exception("Inserting into ? projection not supported."))
+    def ? = (Rep.Some(dateTime), Rep.Some(name), Rep.Some(free), Rep.Some(capacity), Rep.Some(city), Rep.Some(id), Rep.Some(isDeleted)).shaped.<>({ r => import r._; _1.map(_ => ParkingDataSet.tupled((_1.get, _2.get, _3.get, _4.get, _5.get, _6.get, _7.get))) }, (_: Any) => throw new Exception("Inserting into ? projection not supported."))
 
     override val id: Rep[Long] = column[Long]("id", O.AutoInc, O.PrimaryKey)
     val name: Rep[String] = column[String]("name", O.Length(255, varying = true))
@@ -31,6 +31,6 @@ trait Tables {
     override val isDeleted: Rep[Boolean] = column[Boolean]("is_deleted", O.Default(false))
   }
 
-  lazy val rawParkingDataTable = new TableQuery(tag => new RawParkingDataTable(tag))
+  lazy val rawParkingDataTable = new TableQuery(tag => new ParkingDataTable(tag))
 
 }

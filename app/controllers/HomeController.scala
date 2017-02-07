@@ -7,7 +7,7 @@ import play.api._
 import play.api.libs.json.Json
 import play.api.mvc._
 import repository.RawParkingDataRepository
-import services.crawler.{PaderbornCrawler, PaderbornCrawlerImpl, RawParkingDataSet}
+import services.crawler.{PaderbornCrawler, PaderbornCrawlerImpl, ParkingDataSet$}
 
 import scala.concurrent.ExecutionContext.Implicits.global
 import scala.concurrent.Future
