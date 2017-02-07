@@ -12,7 +12,14 @@ case class ParkingDataSet(crawlingTime: DateTime,
                           capacity: String,
                           city: String,
                           id: Long = -1,
-                          isDeleted: Boolean = false)
+                          isDeleted: Boolean = false,
+                          modelVersion: Option[Int] = Some(0),
+                          hourOfDay: Option[Int] = None,
+                          minuteOfHour: Option[Int] = None,
+                          dayOfWeek: Option[Int] = None,
+                          dayOfMonth: Option[Int] = None,
+                          weekOfMonth: Option[Int] = None,
+                          weekOfYear: Option[Int] = None)
   extends BaseEntity
 
 object ParkingDataSet {
