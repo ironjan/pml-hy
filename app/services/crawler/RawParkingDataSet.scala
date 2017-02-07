@@ -9,7 +9,7 @@ import play.api.libs.json.Json
   */
 case class RawParkingDataSet(crawlingTime: DateTime,
                              name: String,
-                             used: String,
+                             free: String,
                              capacity: String,
                              city: String,
                              id: Long = -1,
