@@ -1,11 +1,9 @@
 package com.reactore.repository
 
-import java.sql.Date
-
-import core.{BaseEntity, BaseTable}
-import slick.driver.PostgresDriver
 import com.github.tototoshi.slick.PostgresJodaSupport._
+import core.BaseTable
 import services.crawler.ParkingDataSet
+import slick.driver.PostgresDriver
 
 
 object Tables extends {
