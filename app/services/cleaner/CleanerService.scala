@@ -1,4 +1,4 @@
-package services.enhancer
+package services.cleaner
 
 import java.time.Clock
 import javax.inject.{Inject, Singleton}
@@ -6,7 +6,6 @@ import javax.inject.{Inject, Singleton}
 import akka.actor.{Actor, ActorSystem, Props}
 import play.api.Logger
 import play.api.inject.ApplicationLifecycle
-import services.crawler.PaderbornCrawler
 
 import scala.concurrent.ExecutionContext.Implicits.global
 import scala.concurrent.duration._

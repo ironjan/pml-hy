@@ -2,8 +2,8 @@ import java.time.Clock
 
 import com.google.inject.AbstractModule
 import repository.ParkingDataRepository
+import services.cleaner.{Cleaner, CleanerService, ParkingDataSetCleanerImpl}
 import services.crawler.{PaderbornCrawler, PaderbornCrawlerImpl, ParkingDataSet}
-import services.enhancer.{Cleaner, CleanerService, ParkingDataSetCleanerImpl}
 import services.{ApplicationTimer, CrawlingService}
 
 /**

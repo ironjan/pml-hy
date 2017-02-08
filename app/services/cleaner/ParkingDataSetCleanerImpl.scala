@@ -1,4 +1,4 @@
-package services.enhancer
+package services.cleaner
 
 import com.google.inject.Inject
 import org.joda.time.Weeks
@@ -7,10 +7,10 @@ import repository.ParkingDataRepository
 import services.crawler.ParkingDataSet
 
 import scala.concurrent.Await
-import scala.util.Try
 import scala.concurrent.ExecutionContext.Implicits.global
 import scala.concurrent.duration._
 import scala.language.postfixOps
+import scala.util.Try
 
 /**
   * Implementation of Cleaner for ParkingDataSet
