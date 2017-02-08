@@ -24,7 +24,7 @@ class CleanerService @Inject()(cleaner: ParkingDataSetCleanerImpl,
   Logger.info(s"Started application. Setting up CleanerService.")
 
 
-  val crawlingActor = system.actorOf(Props(new Actor {
+  val cleaningActor = system.actorOf(Props(new Actor {
     def receive = {
       case Event => {
         println(s"Triggering clean…")
@@ -34,7 +34,7 @@ class CleanerService @Inject()(cleaner: ParkingDataSetCleanerImpl,
   }))
 
   system.scheduler.schedule(15 seconds,
-    5 minutes,
-    crawlingActor,
+    15 minutes,
+    cleaningActor,
     Event)
 }

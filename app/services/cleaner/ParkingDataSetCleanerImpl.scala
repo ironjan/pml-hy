@@ -20,7 +20,7 @@ class ParkingDataSetCleanerImpl @Inject()(parkingDataRepository: ParkingDataRepo
   override def cleanDatabase: Unit = {
     parkingDataRepository
       .getAll
-      .map(_.map(cleanEntry).foreach(d => Await.result(parkingDataRepository.save(d), 5 seconds)))
+      .map(_.filterNot(_.isRecentModel).map(cleanEntry).foreach(d => Await.result(parkingDataRepository.save(d), 5 seconds)))
   }
 
   override def cleanEntry(t: ParkingDataSet): ParkingDataSet = {

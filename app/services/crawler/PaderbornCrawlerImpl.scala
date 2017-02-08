@@ -1,11 +1,13 @@
 package services.crawler
 
+import javax.inject.{Inject, Singleton}
 import net.ruippeixotog.scalascraper.browser.JsoupBrowser
 import net.ruippeixotog.scalascraper.dsl.DSL.Extract._
 import net.ruippeixotog.scalascraper.dsl.DSL._
 import net.ruippeixotog.scalascraper.model.{Document, Element}
 import org.joda.time.DateTime
 import repository.ParkingDataRepository
+import services.cleaner.{Cleaner, ParkingDataSetCleanerImpl}
 
 import scala.concurrent.Await
 import scala.concurrent.duration._
@@ -15,15 +17,19 @@ trait PaderbornCrawler extends Crawler{
   override def city = Cities.Paderborn
 }
 
-class PaderbornCrawlerImpl extends PaderbornCrawler{
+class PaderbornCrawlerImpl @Inject() (cleaner: ParkingDataSetCleanerImpl) 
+  extends PaderbornCrawler{
   val Url = "https://www4.paderborn.de/ParkInfoASP/default.aspx"
 
+  val LiboriGalerieName = "P6 Libori-Galerie"
 
   override def crawl = {
     val crawlingTime = DateTime.now()
     val repo = new ParkingDataRepository
     extractData(downloadDocument)
       .flatMap(convertToRawParkingDataSet(crawlingTime, _))
+      .filter(_.name == LiboriGalerieName)
+      .map(cleaner.cleanEntry)
       .foreach(d => Await.result(repo.save(d), 5 seconds))
   }
 
