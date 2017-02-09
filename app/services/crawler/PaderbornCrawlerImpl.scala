@@ -17,7 +17,7 @@ trait PaderbornCrawler extends Crawler{
   override def city = Cities.Paderborn
 }
 
-class PaderbornCrawlerImpl @Inject() (cleaner: ParkingDataSetCleanerImpl) 
+class PaderbornCrawlerImpl @Inject() (cleaner: Cleaner[ParkingDataSet]) 
   extends PaderbornCrawler{
   val Url = "https://www4.paderborn.de/ParkInfoASP/default.aspx"
 

@@ -16,22 +16,18 @@ import scala.util.Try
   * Implementation of Cleaner for ParkingDataSet
   */
 class ParkingDataSetCleanerImpl @Inject()(parkingDataRepository: ParkingDataRepository)
-  extends Cleaner[ParkingDataSet] {
+  extends ParkingDataSetCleaner {
   override def cleanDatabase: Unit = {
     parkingDataRepository
       .getAll
-      .map(_.filterNot(_.isRecentModel).map(cleanEntry).foreach(d => Await.result(parkingDataRepository.save(d), 5 seconds)))
+      .map(_.filterNot(_.isRecentModel).map(cleanEntry).foreach(d => Await.result(parkingDataRepository.updateById(d.id, d), 5 seconds)))
   }
 
   override def cleanEntry(t: ParkingDataSet): ParkingDataSet = {
-    Logger.debug(s"Cleaning $t.")
     t.modelVersion match {
       case None => cleanToRecent(t)
       case Some(0) => cleanToRecent(t)
-      case Some(ParkingDataSet.recentModelVersion) => {
-        Logger.debug(s"$t is already most recent model.")
-        t
-      }
+      case Some(ParkingDataSet.recentModelVersion) => t
       case Some(version) => {
         Logger.warn(s"Unknown model version $version")
         t
@@ -51,7 +47,7 @@ class ParkingDataSetCleanerImpl @Inject()(parkingDataRepository: ParkingDataRepo
     val free = Try(t.freeRaw.toInt).toOption
     val capacity = Try(t.capacityRaw.toInt).toOption
 
-    val cleaned = ParkingDataSet(crawlingTime,
+    ParkingDataSet(crawlingTime,
       t.name,
       t.freeRaw,
       t.capacityRaw,
@@ -67,9 +63,5 @@ class ParkingDataSetCleanerImpl @Inject()(parkingDataRepository: ParkingDataRepo
       Some(weekOfYear),
       free,
       capacity)
-
-    Logger.debug(s"Cleaned ParkingDataSet: $cleaned")
-
-    cleaned
   }
 }

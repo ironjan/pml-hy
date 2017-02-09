@@ -3,9 +3,9 @@ import java.time.Clock
 import com.google.inject.AbstractModule
 import repository.ParkingDataRepository
 import services.cleaner.{Cleaner, CleanerService, ParkingDataSetCleanerImpl}
-import services.crawler.{PaderbornCrawler, PaderbornCrawlerImpl, ParkingDataSet}
-import services.{ApplicationTimer, CrawlingService}
-
+import services.crawler.{PaderbornCrawler, PaderbornCrawlerImpl, ParkingDataSet, ParkingDataSetCleaner}
+import services.{ApplicationTimer, CrawlingService, DBCleaningService}
+import services.dbcleaner.{DBCleaner, DBCleanerTrait}
 /**
  * This class is a Guice module that tells Guice how to bind several
  * different types. This Guice module is created when the Play
@@ -26,10 +26,12 @@ class Module extends AbstractModule {
     bind(classOf[ApplicationTimer]).asEagerSingleton()
     bind(classOf[CrawlingService]).asEagerSingleton()
     bind(classOf[CleanerService]).asEagerSingleton()
+    bind(classOf[DBCleaningService]).asEagerSingleton()
 
     bind(classOf[ParkingDataRepository]).toInstance(new ParkingDataRepository)
     bind(classOf[PaderbornCrawler]).to(classOf[PaderbornCrawlerImpl])
-    bind(classOf[Cleaner[ParkingDataSet]]).to(classOf[ParkingDataSetCleanerImpl])
+    bind(classOf[ParkingDataSetCleaner]).to(classOf[ParkingDataSetCleanerImpl])
+    bind(classOf[DBCleanerTrait]).to(classOf[DBCleaner])
   }
 
 }

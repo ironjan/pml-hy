@@ -27,7 +27,7 @@ import scala.concurrent.duration._
   val cleaningActor = system.actorOf(Props(new Actor {
     def receive = {
       case Event => {
-          println(s"Triggering cleaning…")
+          println(s"Triggering cleaning of database…")
           crawler.crawl
         }
       }
