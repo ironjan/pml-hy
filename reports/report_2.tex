@@ -1,6 +1,7 @@
 \documentclass[journal,10pt]{IEEEtran}
 \usepackage{hyperref}
 \usepackage{todonotes}
+%\usepackage[disabled]{todonotes}
 \usepackage{amssymb}
 \usepackage{amsmath}
 \usepackage{mathtools}
@@ -26,23 +27,13 @@ Methodology Selection}
 \begin{document}
 \maketitle
 
-\begin{abstract}
-  \begin{itemize}
-    \item Describe your data source
-    \item Formally (=precisely) describe your hypothesis
-    \item Describe your data summarily, does it seem feasible for your idea? Discuss any problem you have identified
-    \item Describe your selected model training method and discuss the reasoning behind your selection.
-    \item Describe and discuss your ``objective method'', ie. the method by which you will measure the success of your predictor.
-  \end{itemize}
-\end{abstract}
-
 \section{Introduction}
 
 In urban areas, space and as such parking space is limited. Car owners often have to drive around to available parking spots. This leads to an unnecessary waste of time and additional air pollution. 
 
 According to multiple studies, the availability of parking data reduces the search time for a parking spot \cite{Asakura1994}\cite{Caicedo2010228}. However, most systems only provide the current number free parking spots. In rush hours, this information can quickly get outdated and lead to driving around to find available parking spaces.
 
-The goal of this project is to predict the available parking space in advance. Because of the limitation outlined in \ref{sec:challenged}, we will focus on the covered car park ``Libori-Galerie''. This car park is also the most interesting as it is directly connected to a local shopping center. It is opened from 06:00 am to 02:00 am.
+The goal of this project is to predict the available parking space in advance. Because of the limitation outlined in section \ref{sec:challenged}, we will focus on the covered car park ``Libori-Galerie''. This car park is also the most interesting as it is directly connected to a local shopping center. It is opened from 06:00 am to 02:00 am.
 
 \section{Data Sources}\label{data sources}
 The main data source is the actual parking data which is available online. In addition there are other possible features that may influence parking space availability. Since taking all features into account is not possible, this project will solely focus on the parking data in relation to time. 
@@ -88,21 +79,25 @@ f(\hod, \moh, \dow, \dom, \wom, \woy, \yyy) = y\text{.}
 
 \section{Feasibility}
 
-To keep the scope of this project small, multiple data sources will be ignored. For this project, it is assumed that the number of available parking spots solely depends on time. As described in \ref{data sources}, this obviously is a very simplified model. However, as shown by \cite{parkendd}, such a simple model may be enough. 
+To keep the scope of this project small, multiple data sources will be ignored. For this project, it is assumed that the number of available parking spots solely depends on time. As described in section \ref{data sources}, this obviously is a very simplified model. However, as shown by \cite{parkendd}, such a simple model may be enough. 
 
 The greatest challenge in this project is to collect enough training data to make meaningful predictions. All data needs to be extracted from APS's website. Changes to the website and non-availability of the service may prove problematic. In the beginning of February, the ASP parking guiding system was dysfunctional and did not show useful data online. 
 
-The next limit is the usage of heroku's free plan. This plan limits the used database to 10000 rows. When crawling every 15 minutes, this limits the amount of available training data to roughly one week; the amount can be increased, since the 10000 row limit can be exceeded for 7 days before new inserts into the database are disabled.
+The next limit is the usage of heroku's free plan. This plan limits the used database to 10000 rows. When crawling every 15 minutes, this limits the amount of available data to roughly one week before heroku disables inserts into the database. The 10000 row limit can be exceeded for 7 days before inserts are disabled.
 
 
 \section{Model}
-\subtask{Describe your selected model training method and discuss the reasoning behind your selection.}
-\subsection{Training Methods} 
+The main focus will be on using a regression tree to model the availability rate as this seems to be the most promising model. It was used by both \cite{parkendd} and \cite{Zheng2015} with great success. One appealing reason to use this model is the possibility of visualizing the prediction algorithm.
+
+Another reason is that some of the prediction features are categoric in nature, e.g. day of week. This is more of a side-note as these features can be converted to numerical data, i.e. \(0\) to \(6\) instead of \(monday\) to \(sunday\).
+
+As regression trees may be very inaccurate, other models like Support Vector Machines or Multivariate Linear Regression may be investigated. The accuracy of the Regression Tree used by \cite{parkendd} was most likely achieved by limiting the predicted labels to buckets of 10\%s, ie. 0\%-10\% free, 10\%-20\% free, etc. 
 
 \section{Verification}
-\subtask{Describe and discuss your ``objective method'', ie. the method by which you will measure the success of your predictor.}
-To verify the trained model and the accuracy of its predictions, the predictions will be queried in regular intervals and compared to the actual available parking space at that time. 
-
+To verify the accuracy of the predictions, the prediction system will be queried in regular intervals. The predictions \(y_i^*\) and the actual values \(y_i\) are then compared via mean-absolute error:
+\[
+MAE \defeq mean(| y_i^* - y_i |)\text{.}
+\]
 
 \bibliographystyle{ieeetr}  
 \bibliography{report_2}
