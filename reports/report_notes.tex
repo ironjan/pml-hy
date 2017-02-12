@@ -1,0 +1,41 @@
+\documentclass[journal,10pt]{IEEEtran}
+\usepackage{hyperref}
+\usepackage{todonotes}
+\usepackage{amssymb}
+\usepackage{amsmath}
+\usepackage{mathtools}
+\usepackage{graphicx}
+
+\title{Predicting Parking Space Availability in Paderborn\\
+Other notes}
+\author{Jan Lippert \(<\)\href{mailt:ljan@mail.upb.de}{ljan@mail.upb.de}\(>\)}
+\date{\today}
+
+\newcommand{\subtask}[1]{\begin{quote}\textbf{#1}\end{quote}}
+\newcommand{\hod}{h}
+\newcommand{\moh}{m}
+\newcommand{\dow}{d}
+\newcommand{\dom}{d_m}
+\newcommand{\wom}{w_m}
+\newcommand{\woy}{w_y}
+\newcommand{\yyy}{a}
+
+\newcommand{\IN}{\mathbb{N}}
+\newcommand{\defeq}{\coloneqq}
+
+\begin{document}
+\maketitle
+
+
+\section{Heroku Free Dynos}
+After collecting data for some time, I did some correlation analysis on the data. I had to notice that all entries were labelled as ``\(\wom = 1\)'' despite the app being put online more than a week ago. Further investigation showed that the data was only available for 3 different days. 
+
+The reason for this failure of data collection was in the uninformed use of the Heroku Free package. Free dynos will sleep after 30\todo{60? minutes} minutes of inactivity. After this was noticed, \url{http://kaffeine.herokuapp.com/} was set up to keep the application alive. 
+
+Free dynos are required to sleep for 6 hours a day. Since the ``Libori-Galerie'' is closed from 2:00 am to 8:00 am we will align the sleeping schedule of our application accordingly. 
+
+
+\bibliographystyle{ieeetr}  
+\bibliography{report_notes}
+
+\end{document}
