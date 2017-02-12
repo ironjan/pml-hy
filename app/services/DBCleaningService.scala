@@ -6,7 +6,7 @@ import javax.inject._
 import akka.actor.{Actor, _}
 import play.api.Logger
 import play.api.inject.ApplicationLifecycle
-import services.crawler.PaderbornCrawler
+import services.dbcleaner.DBCleaner
 
 import scala.concurrent.ExecutionContext.Implicits.global
 import scala.concurrent.duration._
@@ -15,9 +15,9 @@ import scala.concurrent.duration._
  * Implements a service that regularly cleans the DB.
  */
  @Singleton
- class DBCleaningService @Inject()(crawler: PaderbornCrawler,
-                                 clock: Clock,
-                                 appLifecycle: ApplicationLifecycle) {
+class DBCleaningService @Inject()(dbCleaner: DBCleaner,
+                                  clock: Clock,
+                                  appLifecycle: ApplicationLifecycle) {
   val system = ActorSystem("DBCleaningSystem")
   val Event = "Clean"
 
@@ -27,8 +27,7 @@ import scala.concurrent.duration._
   val cleaningActor = system.actorOf(Props(new Actor {
     def receive = {
       case Event => {
-          println(s"Triggering cleaning…")
-          crawler.crawl
+        dbCleaner.removeUnneededEntries
         }
       }
       }))
