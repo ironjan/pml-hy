@@ -6,9 +6,8 @@ import play.api.Logger
 import repository.ParkingDataRepository
 import services.crawler.ParkingDataSet
 
-import scala.concurrent.Await
 import scala.concurrent.ExecutionContext.Implicits.global
-import scala.concurrent.duration._
+import scala.concurrent.Future
 import scala.language.postfixOps
 import scala.util.Try
 
@@ -20,18 +19,21 @@ class ParkingDataSetCleanerImpl @Inject()(parkingDataRepository: ParkingDataRepo
   override def cleanDatabase: Unit = {
     parkingDataRepository
       .getAll
-      .map(_.filterNot(_.isRecentModel).map(cleanEntry).foreach(d => Await.result(parkingDataRepository.save(d), 5 seconds)))
+      .flatMap(ds =>
+        Future.sequence(
+          ds.filterNot(_.isRecentModel)
+            .map(cleanEntry)
+            .map(d => parkingDataRepository.updateById(d.id, d)))
+      )
+      .map(_.sum)
+      .foreach(sum => s"Cleaned $sum entries.")
   }
 
   override def cleanEntry(t: ParkingDataSet): ParkingDataSet = {
-    Logger.debug(s"Cleaning $t.")
     t.modelVersion match {
       case None => cleanToRecent(t)
       case Some(0) => cleanToRecent(t)
-      case Some(ParkingDataSet.recentModelVersion) => {
-        Logger.debug(s"$t is already most recent model.")
-        t
-      }
+      case Some(ParkingDataSet.recentModelVersion) => t
       case Some(version) => {
         Logger.warn(s"Unknown model version $version")
         t
@@ -51,7 +53,7 @@ class ParkingDataSetCleanerImpl @Inject()(parkingDataRepository: ParkingDataRepo
     val free = Try(t.freeRaw.toInt).toOption
     val capacity = Try(t.capacityRaw.toInt).toOption
 
-    val cleaned = ParkingDataSet(crawlingTime,
+    ParkingDataSet(crawlingTime,
       t.name,
       t.freeRaw,
       t.capacityRaw,
@@ -67,9 +69,5 @@ class ParkingDataSetCleanerImpl @Inject()(parkingDataRepository: ParkingDataRepo
       Some(weekOfYear),
       free,
       capacity)
-
-    Logger.debug(s"Cleaned ParkingDataSet: $cleaned")
-
-    cleaned
   }
 }
