@@ -11,6 +11,7 @@ import repository.ParkingDataRepository
 import services.cleaner.ParkingDataSetCleanerImpl
 
 import scala.concurrent.Await
+import scala.concurrent.ExecutionContext.Implicits.global
 import scala.concurrent.duration._
 import scala.language.postfixOps
 
@@ -35,7 +36,8 @@ class PaderbornCrawlerImpl @Inject()(cleaner: ParkingDataSetCleanerImpl)
       .map(d => Await.result(repo.save(d), 5 seconds))
 
     val count = crawledEntries.count(_ => true)
-    println(s"Crawled $count new entries")
+    val totalCount = Await.result(repo.getAll.map(_.count(_ => true)), 10 seconds)
+    println(s"Crawled $count new entries. Total: $totalCount")
   }
 
   private def convertToRawParkingDataSet(crawlingTime: DateTime, x: Array[String]) = {
