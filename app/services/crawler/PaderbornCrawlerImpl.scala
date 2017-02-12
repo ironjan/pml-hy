@@ -1,36 +1,41 @@
 package services.crawler
 
-import javax.inject.{Inject, Singleton}
+import javax.inject.Inject
+
 import net.ruippeixotog.scalascraper.browser.JsoupBrowser
 import net.ruippeixotog.scalascraper.dsl.DSL.Extract._
 import net.ruippeixotog.scalascraper.dsl.DSL._
 import net.ruippeixotog.scalascraper.model.{Document, Element}
 import org.joda.time.DateTime
 import repository.ParkingDataRepository
-import services.cleaner.{Cleaner, ParkingDataSetCleanerImpl}
+import services.cleaner.ParkingDataSetCleanerImpl
 
 import scala.concurrent.Await
 import scala.concurrent.duration._
 import scala.language.postfixOps
 
-trait PaderbornCrawler extends Crawler{
+trait PaderbornCrawler extends Crawler {
   override def city = Cities.Paderborn
 }
 
-class PaderbornCrawlerImpl @Inject() (cleaner: ParkingDataSetCleanerImpl) 
-  extends PaderbornCrawler{
+class PaderbornCrawlerImpl @Inject()(cleaner: ParkingDataSetCleanerImpl)
+  extends PaderbornCrawler {
   val Url = "https://www4.paderborn.de/ParkInfoASP/default.aspx"
 
-  val LiboriGalerieName = "P6 Libori-Galerie"
+  val LiboriGaleriePrefix = "P6"
 
   override def crawl = {
     val crawlingTime = DateTime.now()
     val repo = new ParkingDataRepository
-    extractData(downloadDocument)
+
+    val crawledEntries = extractData(downloadDocument)
       .flatMap(convertToRawParkingDataSet(crawlingTime, _))
-      .filter(_.name == LiboriGalerieName)
+      .filter(_.name.startsWith(LiboriGaleriePrefix))
       .map(cleaner.cleanEntry)
-      .foreach(d => Await.result(repo.save(d), 5 seconds))
+      .map(d => Await.result(repo.save(d), 5 seconds))
+
+    val count = crawledEntries.count(_ => true)
+    println(s"Crawled $count new entries")
   }
 
   private def convertToRawParkingDataSet(crawlingTime: DateTime, x: Array[String]) = {
