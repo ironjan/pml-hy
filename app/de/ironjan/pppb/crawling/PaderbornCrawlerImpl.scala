@@ -1,4 +1,4 @@
-package de.ironjan.pppb.services.crawler
+package de.ironjan.pppb.crawling
 
 import javax.inject.Inject
 

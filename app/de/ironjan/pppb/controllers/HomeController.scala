@@ -2,8 +2,8 @@ package de.ironjan.pppb.controllers
 
 import javax.inject._
 
+import de.ironjan.pppb.crawling.PaderbornCrawler
 import de.ironjan.pppb.repository.ParkingDataRepository
-import de.ironjan.pppb.services.crawler.PaderbornCrawler
 import org.joda.time.DateTime
 import play.api.libs.json.Json
 import play.api.mvc._

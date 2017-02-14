@@ -1,8 +1,8 @@
 package de.ironjan.pppb.services.cleaner
 
 import com.google.inject.Inject
+import de.ironjan.pppb.crawling.ParkingDataSet
 import de.ironjan.pppb.repository.ParkingDataRepository
-import de.ironjan.pppb.services.crawler.ParkingDataSet
 import org.joda.time.Weeks
 import play.api.Logger
 

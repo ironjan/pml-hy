@@ -1,10 +1,9 @@
-package de.ironjan.pppb.services
+package de.ironjan.pppb.crawling
 
 import java.time.Clock
 import javax.inject._
 
 import akka.actor.{Actor, _}
-import de.ironjan.pppb.services.crawler.PaderbornCrawler
 import play.api.Logger
 import play.api.inject.ApplicationLifecycle
 
