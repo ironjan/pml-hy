@@ -4,9 +4,9 @@ import java.time.Clock
 
 import com.google.inject.AbstractModule
 import de.ironjan.pppb.core.model.ParkingDataSet
+import de.ironjan.pppb.core.repository.ParkingDataRepository
 import de.ironjan.pppb.crawling.{CrawlingService, PaderbornCrawler, PaderbornCrawlerImpl}
 import de.ironjan.pppb.preprocessing.{Cleaner, CleanerService, ParkingDataSetCleanerImpl}
-import de.ironjan.pppb.repository.ParkingDataRepository
 
 /**
  * This class is a Guice module that tells Guice how to bind several

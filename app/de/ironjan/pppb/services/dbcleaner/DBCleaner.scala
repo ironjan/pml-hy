@@ -1,7 +1,7 @@
 package de.ironjan.pppb.services.dbcleaner
 
 import com.google.inject.Inject
-import de.ironjan.pppb.repository.ParkingDataRepository
+import de.ironjan.pppb.core.repository.ParkingDataRepository
 
 import scala.concurrent.Await
 import scala.concurrent.ExecutionContext.Implicits.global

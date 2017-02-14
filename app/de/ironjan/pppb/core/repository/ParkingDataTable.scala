@@ -1,4 +1,4 @@
-package de.ironjan.pppb.repository
+package de.ironjan.pppb.core.repository
 
 import com.github.tototoshi.slick.PostgresJodaSupport._
 import de.ironjan.pppb.core.BaseTable

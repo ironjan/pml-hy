@@ -2,7 +2,7 @@ package de.ironjan.pppb.preprocessing
 
 import com.google.inject.Inject
 import de.ironjan.pppb.core.model.ParkingDataSet
-import de.ironjan.pppb.repository.ParkingDataRepository
+import de.ironjan.pppb.core.repository.ParkingDataRepository
 import org.joda.time.Weeks
 import play.api.Logger
 
