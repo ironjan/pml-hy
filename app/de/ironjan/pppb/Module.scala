@@ -1,3 +1,5 @@
+package de.ironjan.pppb
+
 import java.time.Clock
 
 import com.google.inject.AbstractModule
@@ -11,7 +13,7 @@ import services.{ApplicationTimer, CrawlingService}
  * different types. This Guice module is created when the Play
  * application starts.
 
- * Play will automatically use any class called `Module` that is in
+ * Play will automatically use any class called `de.ironjan.pppb.Module` that is in
  * the root package. You can create modules in other locations by
  * adding `play.modules.enabled` settings to the `application.conf`
  * configuration file.

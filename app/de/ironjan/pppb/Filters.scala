@@ -1,3 +1,5 @@
+package de.ironjan.pppb
+
 import javax.inject._
 
 import filters.ExampleFilter
@@ -9,7 +11,7 @@ import play.api.http.HttpFilters
  * class is queried by Play to get a list of filters.
  *
  * Play will automatically use filters from any class called
- * `Filters` that is placed the root package. You can load filters
+ * `de.ironjan.pppb.Filters` that is placed the root package. You can load filters
  * from a different class by adding a `play.http.filters` setting to
  * the `application.conf` configuration file.
  *

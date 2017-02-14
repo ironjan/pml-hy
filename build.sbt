@@ -1,4 +1,4 @@
-name := """pml-hy"""
+name := """de.ironjan.pppb"""
 
 version := "1.0-SNAPSHOT"
 
