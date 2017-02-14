@@ -1,14 +1,14 @@
-package services.crawler
+package de.ironjan.pppb.services.crawler
 
 import javax.inject.Inject
 
+import de.ironjan.pppb.repository.ParkingDataRepository
+import de.ironjan.pppb.services.cleaner.ParkingDataSetCleanerImpl
 import net.ruippeixotog.scalascraper.browser.JsoupBrowser
 import net.ruippeixotog.scalascraper.dsl.DSL.Extract._
 import net.ruippeixotog.scalascraper.dsl.DSL._
 import net.ruippeixotog.scalascraper.model.{Document, Element}
 import org.joda.time.DateTime
-import repository.ParkingDataRepository
-import services.cleaner.ParkingDataSetCleanerImpl
 
 import scala.concurrent.Await
 import scala.concurrent.ExecutionContext.Implicits.global

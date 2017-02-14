@@ -3,10 +3,10 @@ package de.ironjan.pppb
 import java.time.Clock
 
 import com.google.inject.AbstractModule
-import repository.ParkingDataRepository
-import services.cleaner.{Cleaner, CleanerService, ParkingDataSetCleanerImpl}
-import services.crawler.{PaderbornCrawler, PaderbornCrawlerImpl, ParkingDataSet}
-import services.{ApplicationTimer, CrawlingService}
+import de.ironjan.pppb.repository.ParkingDataRepository
+import de.ironjan.pppb.services.cleaner.{Cleaner, CleanerService, ParkingDataSetCleanerImpl}
+import de.ironjan.pppb.services.crawler.{PaderbornCrawler, PaderbornCrawlerImpl, ParkingDataSet}
+import de.ironjan.pppb.services.{ApplicationTimer, CrawlingService}
 
 /**
  * This class is a Guice module that tells Guice how to bind several

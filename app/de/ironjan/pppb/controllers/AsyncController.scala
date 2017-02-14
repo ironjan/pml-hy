@@ -1,4 +1,4 @@
-package controllers
+package de.ironjan.pppb.controllers
 
 import javax.inject._
 

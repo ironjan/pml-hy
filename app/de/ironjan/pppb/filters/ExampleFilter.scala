@@ -1,4 +1,4 @@
-package filters
+package de.ironjan.pppb.filters
 
 import javax.inject._
 

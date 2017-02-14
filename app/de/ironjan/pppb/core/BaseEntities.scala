@@ -1,4 +1,4 @@
-package core
+package de.ironjan.pppb.core
 
 import slick.driver.PostgresDriver.api._
 

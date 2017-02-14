@@ -1,4 +1,4 @@
-package services.cleaner
+package de.ironjan.pppb.services.cleaner
 
 /**
   * This service will clean the data

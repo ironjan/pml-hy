@@ -1,6 +1,5 @@
-package services.crawler
+package de.ironjan.pppb.core
 
-import core._
 import org.joda.time.DateTime
 import org.joda.time.format.DateTimeFormat
 import play.api.libs.json._

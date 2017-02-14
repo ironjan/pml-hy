@@ -1,4 +1,4 @@
-package services
+package de.ironjan.pppb.services
 
 import java.time.{Clock, Instant}
 import javax.inject._

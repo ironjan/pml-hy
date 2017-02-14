@@ -1,10 +1,10 @@
-package services.dbcleaner
+package de.ironjan.pppb.services.dbcleaner
 
 import com.google.inject.Inject
+import de.ironjan.pppb.repository.ParkingDataRepository
 
-import repository.ParkingDataRepository
-import scala.concurrent.ExecutionContext.Implicits.global
 import scala.concurrent.Await
+import scala.concurrent.ExecutionContext.Implicits.global
 import scala.concurrent.duration._
 
 class DBCleaner  @Inject()(repo: ParkingDataRepository){

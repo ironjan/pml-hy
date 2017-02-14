@@ -1,4 +1,4 @@
-package core
+package de.ironjan.pppb.core
 
 import slick.backend.DatabaseConfig
 import slick.driver.PostgresDriver

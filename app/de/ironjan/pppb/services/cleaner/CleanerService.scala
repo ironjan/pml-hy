@@ -1,4 +1,4 @@
-package services.cleaner
+package de.ironjan.pppb.services.cleaner
 
 import java.time.Clock
 import javax.inject.{Inject, Singleton}

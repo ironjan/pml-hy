@@ -1,12 +1,12 @@
-package services
+package de.ironjan.pppb.services
 
 import java.time.Clock
 import javax.inject._
 
 import akka.actor.{Actor, _}
+import de.ironjan.pppb.services.crawler.PaderbornCrawler
 import play.api.Logger
 import play.api.inject.ApplicationLifecycle
-import services.crawler.PaderbornCrawler
 
 import scala.concurrent.ExecutionContext.Implicits.global
 import scala.concurrent.duration._

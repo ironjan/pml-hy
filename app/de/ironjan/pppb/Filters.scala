@@ -2,7 +2,7 @@ package de.ironjan.pppb
 
 import javax.inject._
 
-import filters.ExampleFilter
+import de.ironjan.pppb.filters.ExampleFilter
 import play.api._
 import play.api.http.HttpFilters
 
