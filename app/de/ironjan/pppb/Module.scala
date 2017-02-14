@@ -4,8 +4,8 @@ import java.time.Clock
 
 import com.google.inject.AbstractModule
 import de.ironjan.pppb.crawling.{CrawlingService, PaderbornCrawler, PaderbornCrawlerImpl, ParkingDataSet}
+import de.ironjan.pppb.preprocessing.{Cleaner, CleanerService, ParkingDataSetCleanerImpl}
 import de.ironjan.pppb.repository.ParkingDataRepository
-import de.ironjan.pppb.services.cleaner.{Cleaner, CleanerService, ParkingDataSetCleanerImpl}
 import de.ironjan.pppb.services.ApplicationTimer
 
 /**

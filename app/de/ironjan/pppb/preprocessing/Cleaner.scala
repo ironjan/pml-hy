@@ -1,4 +1,4 @@
-package de.ironjan.pppb.services.cleaner
+package de.ironjan.pppb.preprocessing
 
 /**
   * This service will clean the data

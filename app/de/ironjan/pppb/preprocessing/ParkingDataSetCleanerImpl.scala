@@ -1,4 +1,4 @@
-package de.ironjan.pppb.services.cleaner
+package de.ironjan.pppb.preprocessing
 
 import com.google.inject.Inject
 import de.ironjan.pppb.crawling.ParkingDataSet

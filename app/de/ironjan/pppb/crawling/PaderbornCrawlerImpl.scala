@@ -2,8 +2,8 @@ package de.ironjan.pppb.crawling
 
 import javax.inject.Inject
 
+import de.ironjan.pppb.preprocessing.ParkingDataSetCleanerImpl
 import de.ironjan.pppb.repository.ParkingDataRepository
-import de.ironjan.pppb.services.cleaner.ParkingDataSetCleanerImpl
 import net.ruippeixotog.scalascraper.browser.JsoupBrowser
 import net.ruippeixotog.scalascraper.dsl.DSL.Extract._
 import net.ruippeixotog.scalascraper.dsl.DSL._
