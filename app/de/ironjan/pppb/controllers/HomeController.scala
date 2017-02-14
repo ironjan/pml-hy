@@ -21,7 +21,7 @@ class HomeController @Inject() (crawler: PaderbornCrawler,
 
   def index = Action.async { implicit request =>
     repo.countAll.map{count =>
-      Ok(views.html.index(count) )
+      Ok(de.ironjan.pppb.views.html.index(count) )
     }
   }
 
