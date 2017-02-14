@@ -2,8 +2,9 @@
 # This file defines all application routes (Higher priority routes first)
 # ~~~~
 
-# An example controller showing a sample home page
-GET     /                           de.ironjan.pppb.controllers.HomeController.index
+GET     /                           de.ironjan.pppb.IndexController.index
+
+
 GET     /all_crawled                de.ironjan.pppb.controllers.HomeController.all_crawled
 GET     /working_data_crawled       de.ironjan.pppb.controllers.HomeController.working_data_crawled
 GET     /crawling_time_history      de.ironjan.pppb.controllers.HomeController.crawling_time_history

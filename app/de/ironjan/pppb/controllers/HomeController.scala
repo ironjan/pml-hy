@@ -19,12 +19,6 @@ class HomeController @Inject() (crawler: PaderbornCrawler,
                                 repo: ParkingDataRepository)
   extends Controller {
 
-  def index = Action.async { implicit request =>
-    repo.countAll.map{count =>
-      Ok(de.ironjan.pppb.views.html.index(count) )
-    }
-  }
-
   def all_crawled = Action.async { implicit request =>
     val repo = new ParkingDataRepository
     repo.getAll
