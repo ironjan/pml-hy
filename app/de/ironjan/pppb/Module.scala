@@ -3,7 +3,8 @@ package de.ironjan.pppb
 import java.time.Clock
 
 import com.google.inject.AbstractModule
-import de.ironjan.pppb.crawling.{CrawlingService, PaderbornCrawler, PaderbornCrawlerImpl, ParkingDataSet}
+import de.ironjan.pppb.core.model.ParkingDataSet
+import de.ironjan.pppb.crawling.{CrawlingService, PaderbornCrawler, PaderbornCrawlerImpl}
 import de.ironjan.pppb.preprocessing.{Cleaner, CleanerService, ParkingDataSetCleanerImpl}
 import de.ironjan.pppb.repository.ParkingDataRepository
 

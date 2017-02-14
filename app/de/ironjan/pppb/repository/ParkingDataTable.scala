@@ -2,7 +2,7 @@ package de.ironjan.pppb.repository
 
 import com.github.tototoshi.slick.PostgresJodaSupport._
 import de.ironjan.pppb.core.BaseTable
-import de.ironjan.pppb.crawling.ParkingDataSet
+import de.ironjan.pppb.core.model.ParkingDataSet
 import slick.driver.PostgresDriver.api._
 
 class ParkingDataTable(_tableTag: Tag) extends BaseTable[ParkingDataSet](_tableTag, Some("public"), "parking_data") {

@@ -1,4 +1,4 @@
-package de.ironjan.pppb.crawling
+package de.ironjan.pppb.core.model
 
 import de.ironjan.pppb.core.BaseEntity
 import org.joda.time.DateTime
