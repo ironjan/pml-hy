@@ -1,4 +1,4 @@
-package de.ironjan.pppb.controllers
+package de.ironjan.pppb.core
 
 import javax.inject._
 
@@ -15,8 +15,8 @@ import scala.concurrent.ExecutionContext.Implicits.global
   * application's home page.
   */
 @Singleton
-class HomeController @Inject() (crawler: PaderbornCrawler,
-                                repo: ParkingDataRepository)
+class DataAPIController @Inject()(crawler: PaderbornCrawler,
+                                  repo: ParkingDataRepository)
   extends Controller {
 
   def all_crawled = Action.async { implicit request =>
