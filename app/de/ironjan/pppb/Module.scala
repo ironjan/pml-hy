@@ -23,12 +23,9 @@ class Module extends AbstractModule {
   override def configure() = {
     // Use the system clock as the default implementation of Clock
     bind(classOf[Clock]).toInstance(Clock.systemUTC())
-    bind(classOf[CrawlingService]).asEagerSingleton()
-    bind(classOf[CleanerService]).asEagerSingleton()
 
-    bind(classOf[ParkingDataRepository]).toInstance(new ParkingDataRepository)
-    bind(classOf[PaderbornCrawler]).to(classOf[PaderbornCrawlerImpl])
-    bind(classOf[Cleaner[ParkingDataSet]]).to(classOf[ParkingDataSetCleanerImpl])
+    // TODO find better place
+    bind(classOf[CleanerService]).asEagerSingleton()
   }
 
 }
