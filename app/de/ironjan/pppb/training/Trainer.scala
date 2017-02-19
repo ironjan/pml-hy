@@ -39,6 +39,6 @@ class Trainer @Inject() (parkingDataRepository: ParkingDataRepository){
 
     val trainingTime = System.currentTimeMillis - beforeTraining
     Logger.debug(s"Got regression tree in ${trainingTime}ms.")
-    Logger.debug(s"\"Results\": ${regressionTree.importance()} ${regressionTree.maxDepth()}.")
+    Logger.debug(s"Results: ${regressionTree.importance()} ${regressionTree.maxDepth()}.")
   }
 }
