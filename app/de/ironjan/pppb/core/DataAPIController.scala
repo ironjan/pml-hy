@@ -44,4 +44,17 @@ class DataAPIController @Inject()(crawler: PaderbornCrawler,
         ))
       }
   }
+
+  def csv = Action.async {implicit request =>
+    repo.getAll
+      .map {crawledSets =>
+        crawledSets.map { d =>
+            (d.crawlingTime, d.hourOfDay, d.minuteOfHour, d.dayOfWeek, d.dayOfMonth, d.weekOfMonth, d.weekOfYear, d.free, d.capacity)
+        }.map(t => t.productIterator.mkString(","))
+        .mkString("\n")
+      }.map(s => Ok(s.toString))
+        //crawlingTime":1486933054571,"name":"P6 Libori-Galerie","freeRaw":"174","capacityRaw":"500","city":"Paderborn","id":602190,"isDeleted":false,"modelVersion":1,"hourOfDay":20,"minuteOfHour":57,"dayOfWeek":7,"dayOfMonth":12,"weekOfMonth":0,"weekOfYear":6,"free":174,"capacity
+}
+
+
 }

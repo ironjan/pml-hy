@@ -8,6 +8,7 @@ GET     /                           de.ironjan.pppb.IndexController.index
 GET     /all_crawled                de.ironjan.pppb.core.DataAPIController.all_crawled
 GET     /working_data_crawled       de.ironjan.pppb.core.DataAPIController.working_data_crawled
 GET     /crawling_time_history      de.ironjan.pppb.core.DataAPIController.crawling_time_history
+GET     /csv                        de.ironjan.pppb.core.DataAPIController.csv
 
 # Map static resources from the /public folder to the /assets URL path
 GET     /assets/*file               controllers.Assets.versioned(path="/public", file: Asset)
