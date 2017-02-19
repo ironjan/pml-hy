@@ -33,6 +33,7 @@ class ParkingDataSetCleanerImpl @Inject()(parkingDataRepository: ParkingDataRepo
     t.modelVersion match {
       case None => cleanToRecent(t)
       case Some(0) => cleanToRecent(t)
+      case Some(1) => cleanToRecent(t)
       case Some(ParkingDataSet.recentModelVersion) => t
       case Some(version) => {
         Logger.warn(s"Unknown model version $version")
@@ -47,7 +48,7 @@ class ParkingDataSetCleanerImpl @Inject()(parkingDataRepository: ParkingDataRepo
     val minuteOfHour = crawlingTime.getMinuteOfHour
     val dayOfWeek = crawlingTime.getDayOfWeek
     val dayOfMonth = crawlingTime.getDayOfMonth
-    val weekOfMonth = Weeks.weeksBetween(crawlingTime, crawlingTime.withDayOfMonth(1)).getWeeks + 1
+    val weekOfMonth = Weeks.weeksBetween(crawlingTime.withDayOfMonth(1), crawlingTime).getWeeks + 1
     val weekOfYear = crawlingTime.getWeekOfWeekyear
 
     val free = Try(t.freeRaw.toInt).toOption
