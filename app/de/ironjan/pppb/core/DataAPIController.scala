@@ -49,7 +49,8 @@ class DataAPIController @Inject()(crawler: PaderbornCrawler,
     repo.getAll
       .map {crawledSets =>
         crawledSets.map { d =>
-            (d.crawlingTime, d.hourOfDay, d.minuteOfHour, d.dayOfWeek, d.dayOfMonth, d.weekOfMonth, d.weekOfYear, d.free, d.capacity)
+            // TODO verify that get doesn't cause problems
+            (d.crawlingTime, d.hourOfDay.get, d.minuteOfHour.get, d.dayOfWeek.get, d.dayOfMonth.get, d.weekOfMonth.get, d.weekOfYear.get, d.free.get, d.capacity.get)
         }.map(t => t.productIterator.mkString(","))
         .mkString("\n")
       }.map(s => Ok(s.toString))
