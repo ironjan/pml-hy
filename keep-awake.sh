@@ -13,7 +13,8 @@ function wake_up_app {
 while true
 do
   currentTime=`date --utc +"%H%M%S"`
-  echo "Running script @$currentTime UTC. PID=$$" >> ./logs/keep-awake.log
+  currentTimeFull=`date --utc +"%Y-%m-%d %H%M%S"`
+  echo "Running script @$currentTimeFull UTC. PID=$$" >> ./logs/keep-awake.log
   if [[ ! "$currentTime" < "$PROD_START_TIME" && ! "$currentTime" > "$PROD_END___TIME" ]]; then
     wake_up_app
   fi
