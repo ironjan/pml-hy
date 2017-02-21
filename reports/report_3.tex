@@ -6,6 +6,14 @@
 Technology Selection}
 \maketitle
 
+\begin{abstract}
+ * Give the URL of your (hopefully functional) system
+ * Describe and motivate the technology choices you have made
+ * Describe any problems you might have encountered when periodically importing data
+ * Describe how your system is performing
+
+The Parking Prediction system Paderborn is available at \url{http://pppb.herokuapp.com/}. It was written in Play! Scala and uses the \href{smile}{haifengl.github.io/smile/} library.
+ \end{abstract}
 
 \section{Introduction}
 
@@ -26,8 +34,34 @@ This report will describe how such a system could be implemented. Section \ref{s
 
 \begin{itemize}
   \item RoR, Python, Play!
-  \item 
+  \item Final Choice was Play! with Scala
+  \item Widely used, although not as widely as python
 \end{itemize}
+
+\section{Libraries}
+
+\section{Encountered Problems}
+\subsection{Malfunction of the Parking Guidance System}
+One week after the first prototype of the crawler was online, \url{https://www.paderborn.de/microsite/asp/parken_in_der_city/freie_Parkplaetze_neu.php} was non-functional. The number of available parking spaces for the ``Liborie-Galerie'' was always \(0\).
+
+At the same time, many of the other parking areas were switched to ``Nicht im Parkleitsystem'' (not part of the parking guidance system). Both of these issues were caused by a malfunction of the parking guidance system. Crawling was resumed normally after the parking guidance ystem was fixed by ASP.
+
+On another note, string values were not expected for the Liborie-Galerie. This caused the crawler to crash on every crawl; the crawler was then adapted to be ore resilient to unexpected values: all non-integer values for free spaces will directly be dropped.
+
+\subsection{Heroku Free Dyno Limitations}
+
+After collecting data for some time, I did some correlation analysis on the data. I had to notice that all entries were labelled as ``\(\wom = 1\)'' despite the app being put online more than a week ago. Further investigation showed that the data was only available for 3 different days. 
+
+The reason for this failure of data collection was in the uninformed use of the Heroku Free package. Free dynos will sleep after 30 minutes minutes of inactivity. After this was noticed, multiple services and workarounds were investigated.
+
+However, most of the workarounds were from before 2015. In 2015, Heroku added the requirement that free dynos need to sleep 6 hours a day. Unfortunately the most promising service -- \url{http://kaffeine.herokuapp.com/} -- is not functional anymore.
+
+To keep the system runnin, a bash script was created which keeps the syno awake by sending regular HEAD requests. Since the dyno is still required to sleep 6 hours a day, a sleeping time had be chosen. Luckily, the ``Libori-Galerie'' is closed from 2am to 8am and the dyno will rest in this period. 
+
+\subsection{Free Database Limitations}
+At first, there were multiple problems in accessing the datbase. The free tier only allows 20 concurrent connections to the Postgresql database. These connections were exhausted 5 minutes after the start of the application. This could be solved by configuring the application to restricting the number of database connections to 10 -- when the application was configured to use 20 connections, problems persisted.
+
+The next limit is in the size of the database. The free tier only allows \(10000\) rows. Insert actions will be disabled after the database has had more than \(10000\) for 7 days. This challenge will be circumvented by removing old data in regular intervals.
 
 
 \bibliographystyle{ieeetr}  
