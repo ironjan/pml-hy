@@ -29,7 +29,7 @@ class TrainingService @Inject()(trainer: Trainer,
   }))
 
   system.scheduler.schedule(0 seconds,
-    30 seconds,
+    30 minutes,
     actor,
     Event)
 }
