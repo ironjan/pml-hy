@@ -47,7 +47,7 @@ class Trainer @Inject()(parkingDataRepository: ParkingDataRepository) {
     Logger.debug(s"Prepared training data.")
 
     evaluate(smile.regression.cart(x, y, 100), testSet)
-    evaluate(smile.regression.cart(x, y, 100, attributes = ParkingDataSet.attributes), testSet)
+//    evaluate(smile.regression.cart(x, y, 100, attributes = ParkingDataSet.attributes), testSet)
     evaluate(smile.regression.randomForest(x,y), testSet)
     evaluate(smile.regression.ols(x,y), testSet)
 
