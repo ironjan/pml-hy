@@ -12,19 +12,16 @@ import scala.concurrent.ExecutionContext.Implicits.global
 /**
   * Created by Jan Lippert on 19.02.2017.
   */
-class Trainer @Inject() (parkingDataRepository: ParkingDataRepository){
+class Trainer @Inject()(parkingDataRepository: ParkingDataRepository) {
   def doSomething = {
     Logger.debug(s"Started training.")
 
     val unzipped =
-    Await.result(parkingDataRepository.getAll
-      .map(ds =>
-          // FIXME just using get!
-          ds
-      .filter(_.hasUsefulData)
-      .map(d => (Array(d.hourOfDay.get.toDouble, d.minuteOfHour.get.toDouble, d.dayOfWeek.get.toDouble,
-          d.dayOfMonth.get.toDouble, d.weekOfMonth.get.toDouble, d.weekOfYear.get.toDouble), d.free.get.toDouble))
-      .unzip),
+      Await.result(parkingDataRepository.getAll
+        .map(ds =>
+          ds.filter(_.hasUsefulData)
+            .map(_.toMlTrainingTuple)
+            .unzip),
         Duration.Inf)
 
     // TODO better way for double .toArray?
@@ -35,7 +32,7 @@ class Trainer @Inject() (parkingDataRepository: ParkingDataRepository){
     val beforeTraining = System.currentTimeMillis
     Logger.debug(s"Prepared training data.")
 
-    val regressionTree = smile.regression.cart(x,y,maxNodes = 100)
+    val regressionTree = smile.regression.cart(x, y, maxNodes = 100)
 
     val trainingTime = System.currentTimeMillis - beforeTraining
     Logger.debug(s"Got regression tree in ${trainingTime}ms.")

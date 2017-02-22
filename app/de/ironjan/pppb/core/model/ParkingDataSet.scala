@@ -37,11 +37,20 @@ object ParkingDataSet {
 
   val recentModelVersion = 1
 
-  implicit class ParkingDataSetOps(parkingDataSet: ParkingDataSet){
+  implicit class ParkingDataSetOps(parkingDataSet: ParkingDataSet) {
     def isRecentModel = parkingDataSet.modelVersion.contains(recentModelVersion)
+
     def hasUsefulData = parkingDataSet.free.nonEmpty
+
     def isDeleteable = isRecentModel && !hasUsefulData
 
+    // FIXME just using get!
+    def toMlTrainingTuple =
+      (
+        Array(parkingDataSet.hourOfDay.get.toDouble, parkingDataSet.minuteOfHour.get.toDouble,
+          parkingDataSet.dayOfWeek.get.toDouble, parkingDataSet.dayOfMonth.get.toDouble,
+          parkingDataSet.weekOfMonth.get.toDouble, parkingDataSet.weekOfYear.get.toDouble),
+        parkingDataSet.free.get.toDouble)
   }
 
 }
