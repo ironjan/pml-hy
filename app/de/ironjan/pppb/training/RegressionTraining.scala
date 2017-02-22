@@ -13,3 +13,8 @@ object RegressionTreeTraining extends RegressionTraining[Double]{
 object RandomForestClassificator extends RegressionTraining[Double]{
   override def train(x: Array[Array[Double]], y: Array[Double]) = smile.regression.randomForest(x,y)
 }
+
+object S extends RegressionTraining[Double] {
+  override def train(x: Array[Array[Double]], y: Array[Double]) = smile.regression.ols(x,y)
+
+}
