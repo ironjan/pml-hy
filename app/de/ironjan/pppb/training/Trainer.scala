@@ -70,9 +70,6 @@ class Trainer @Inject()(parkingDataRepository: ParkingDataRepository) {
     evaluate(smile.regression.gbm(x,y, shrinkage = 0.40), testSet)
     evaluate(smile.regression.gbm(x,y, shrinkage = 0.80), testSet)
     evaluate(smile.regression.gbm(x,y, shrinkage = 1), testSet)
-    evaluate(smile.regression.gbm(x,y, shrinkage = 2), testSet)
-    evaluate(smile.regression.gbm(x,y, shrinkage = 4096), testSet)
-
   }
 
   private def evaluate(regression: Regression[Array[Double]], T: Seq[ParkingDataSet]) ={
