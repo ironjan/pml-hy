@@ -45,11 +45,11 @@ class Trainer @Inject()(parkingDataRepository: ParkingDataRepository) {
 
     Logger.debug(s"Prepared training data.")
 
-    evaluate(testSet, regressionTree(x, y))
-    evaluate(testSet, randomForest(x, y))
+    evaluate(RegressionTreeTraining.train(x, y), testSet)
+    evaluate(RandomForestClassificator.train(x, y), testSet)
   }
 
-  private def evaluate(T: Seq[ParkingDataSet], regression: Regression[Array[Double]]): Unit ={
+  private def evaluate(regression: Regression[Array[Double]], T: Seq[ParkingDataSet]) ={
     val xStars = unzipSet(T)._1
     val yStars = unzipSet(T)._2
 
@@ -60,21 +60,6 @@ class Trainer @Inject()(parkingDataRepository: ParkingDataRepository) {
     val mae = aes.sum / aes.length
     Logger.debug(s"$regression had a mean average error of $mae.")
 
-  }
-
-  private def regressionTree(x: Array[Array[Double]], y: Array[Double]) = {
-    val beforeTraining = System.currentTimeMillis
-    val regression = smile.regression.cart(x, y, maxNodes = 100)
-    val trainingTime = System.currentTimeMillis() - beforeTraining
-    Logger.debug(s"Training of $regression took ${trainingTime}ms.")
-    regression
-  }
-  private def randomForest(x: Array[Array[Double]], y: Array[Double]) = {
-    val beforeTraining = System.currentTimeMillis
-    val regression = smile.regression.randomForest(x, y)
-    val trainingTime = System.currentTimeMillis() - beforeTraining
-    Logger.debug(s"Training of $regression took ${trainingTime}ms.")
-    regression
   }
 
   private def unzipSet(trainingSet: Seq[ParkingDataSet]) = {
