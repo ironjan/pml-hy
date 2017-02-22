@@ -5,6 +5,7 @@ import de.ironjan.pppb.core.model.ParkingDataSet
 import de.ironjan.pppb.core.repository.ParkingDataRepository
 import org.joda.time.DateTime
 import play.api.Logger
+import smile.regression.Regression
 
 import scala.concurrent.Await
 import scala.concurrent.duration.Duration
@@ -44,29 +45,36 @@ class Trainer @Inject()(parkingDataRepository: ParkingDataRepository) {
 
     Logger.debug(s"Prepared training data.")
 
-    regressionTree(testSet, x, y)
+    evaluate(testSet, regressionTree(x, y))
+    evaluate(testSet, randomForest(x, y))
   }
 
-  private def regressionTree(testSet: Seq[ParkingDataSet], x: Array[Array[Double]], y: Array[Double]) = {
-    val beforeTraining = System.currentTimeMillis
+  private def evaluate(T: Seq[ParkingDataSet], regression: Regression[Array[Double]]): Unit ={
+    val xStars = unzipSet(T)._1
+    val yStars = unzipSet(T)._2
 
-    val regressionTree = smile.regression.cart(x, y, maxNodes = 100)
+    val aes = xStars.map(regression.predict)
+      .zip(yStars)
+      .map(p => Math.abs(p._1 - p._2))
 
-
-    val trainingTime = System.currentTimeMillis - beforeTraining
-    Logger.debug(s"Got regression tree in ${trainingTime}ms: maxDepth=${regressionTree.maxDepth()}.")
-
-    val unzipSet1 = unzipSet(testSet)
-    val aes = unzipSet1._1.map(regressionTree.predict)
-      .zip(unzipSet1._2)
-      .map(p => {
-        val yStar = p._1
-        val y = p._2
-
-        Math.abs(yStar - y)
-      })
     val mae = aes.sum / aes.length
-    Logger.debug(s"regression tree had a mean average error of $mae.")
+    Logger.debug(s"$regression had a mean average error of $mae.")
+
+  }
+
+  private def regressionTree(x: Array[Array[Double]], y: Array[Double]) = {
+    val beforeTraining = System.currentTimeMillis
+    val regression = smile.regression.cart(x, y, maxNodes = 100)
+    val trainingTime = System.currentTimeMillis() - beforeTraining
+    Logger.debug(s"Training of $regression took ${trainingTime}ms.")
+    regression
+  }
+  private def randomForest(x: Array[Array[Double]], y: Array[Double]) = {
+    val beforeTraining = System.currentTimeMillis
+    val regression = smile.regression.randomForest(x, y)
+    val trainingTime = System.currentTimeMillis() - beforeTraining
+    Logger.debug(s"Training of $regression took ${trainingTime}ms.")
+    regression
   }
 
   private def unzipSet(trainingSet: Seq[ParkingDataSet]) = {
