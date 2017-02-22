@@ -7,12 +7,7 @@ Technology Selection}
 \maketitle
 
 \begin{abstract}
- * Give the URL of your (hopefully functional) system
- * Describe and motivate the technology choices you have made
- * Describe any problems you might have encountered when periodically importing data
- * Describe how your system is performing
-
-The Parking Prediction system Paderborn is available at \url{http://pppb.herokuapp.com/}. It was written in Play! Scala and uses the \href{smile}{haifengl.github.io/smile/} library.
+The Parking Prediction system Paderborn is available at \url{http://pppb.herokuapp.com/}. It was written in Play! Scala and uses the \href{smile}{haifengl.github.io/smile/} library. There are no live predictions yet as the quality of predictions is insufficient. Alternative models need to be investigated and implemented in the final system. 
  \end{abstract}
 
 \section{Introduction}
@@ -26,26 +21,26 @@ This report will describe how such a system could be implemented. Section \ref{s
 \section{Technology}
 
 \subsection{Architecture}\label{sec:architecture}
-\begin{itemize}
-  \item Multiple modules
-  \item crawling, preprocessing, training, prediciton, evaluation
-\end{itemize}
+One important part in the choice of technology was the separation of the different concerns in the applications. There are multiple parts that play together: crawling, preprocessing, training, prediciton, and finally evaluation. 
+
+Crawling has to be done on a regular basis. Therefore the chosen framework needs to support regular execution of jobs. When new entries are crawled, they are cleaned via the preprocessing module and inserted in the database. Since it may be necessary to update the model over time, the preprocessing module will also have a regular job that cleans existing entries by updating them to the most recent model.
+
+
 
 \subsection{Frameworks}\label{sec:frameworks}
+To implement this project, Ruby on Rails, Python and Scala were considered. I used Ruby on Rails in previous projects and development is quite fast with this framework. However, I could only find a few libraries that deal with machine learning \cite{bigml} \cite{leanpanda}. 
+Another choice of language was python. Python has quite a lot pf machine learning libraries and is also used in academics. However, I do not have much previous experience with python.
 
-\begin{itemize}
-  \item RoR, Python, Play!
-  \item Final Choice was Play! with Scala
-  \item Widely used, although not as widely as python
-\end{itemize}
+My final choice was the \href{Play! framework}{https://playframework.com} with Scala. I did use this framework in previous projects and therefore was familiar with setting up background jobs and how to enable web access. Heroku also supports easy deployment for Play! aaplications\todo{insert link}. One important factor of this choice was the typesafety lof the Scala language and it's usage in machine learning and big data\todo{insert link}. While the problem at hand is certainly not big data, the multitude of existing libraries helped a lot to get started\todo{add links to the libraries}.
 
-\section{Libraries}
+I chose to use \href{Smile}{http://haifengl.github.io/smile/index.html}, the ``Statistical Machine Intelligence and Learning Engine''. It was easy to use and documentation is quite extensive. In some cases, the API documentation even references the scientific papers the learning algorithm is based on. 
+
 
 \section{Encountered Problems}
 \subsection{Malfunction of the Parking Guidance System}
-One week after the first prototype of the crawler was online, \url{https://www.paderborn.de/microsite/asp/parken_in_der_city/freie_Parkplaetze_neu.php} was non-functional. The number of available parking spaces for the ``Liborie-Galerie'' was always \(0\).
+One week after the first prototype of the crawler was online, \url{https://www.paderborn.de/microsite/asp/parken_in_der_city/freie_Parkplaetze_neu.php} was non-functional. The number of available parking spaces for the ``Liborie-Galerie'' was always set to \(0\).
 
-At the same time, many of the other parking areas were switched to ``Nicht im Parkleitsystem'' (not part of the parking guidance system). Both of these issues were caused by a malfunction of the parking guidance system. Crawling was resumed normally after the parking guidance ystem was fixed by ASP.
+At the same time, many of the other parking areas were switched to ``Nicht im Parkleitsystem'' (not part of the parking guidance system). Both of these issues were caused by a malfunction of the parking guidance system. Crawling was resumed normally after the parking guidance system was fixed by the provider.
 
 On another note, string values were not expected for the Liborie-Galerie. This caused the crawler to crash on every crawl; the crawler was then adapted to be ore resilient to unexpected values: all non-integer values for free spaces will directly be dropped.
 
@@ -64,7 +59,10 @@ At first, there were multiple problems in accessing the datbase. The free tier o
 
 The next limit is in the size of the database. The free tier only allows \(10000\) rows. Insert actions will be disabled after the database has had more than \(10000\) for 7 days. This challenge will be circumvented by removing old data in regular intervals.
 
+\sections{Performance}
+As initially expected, the prediction accuracy is quite low. The regression tree has a mean absolute error of \(108.08\) when using 299 training examples and 41 test examples.
 
+ * Describe how your system is performing
 \bibliographystyle{ieeetr}  
 \bibliography{report_3}
 
