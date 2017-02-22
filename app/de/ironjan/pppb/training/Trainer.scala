@@ -24,7 +24,7 @@ class Trainer @Inject()(parkingDataRepository: ParkingDataRepository) {
     val ts = DateTime.now()
 
     // Append checking set & predict it
-    val boundary =  ds.length * 7 / 8 + 1
+    val boundary =  ds.length * 9 / 10
     val splitSet = (ds.slice(0, boundary), ds.slice(boundary, ds.length-1))
     trainSubset(ts, splitSet, splitSet._1.head.capacity.get) // TODO just using get on option
 
