@@ -22,6 +22,7 @@ class Trainer @Inject()(parkingDataRepository: ParkingDataRepository) {
 
     val ts = DateTime.now()
 
+    // Append checking set & predict it 
     ds.zipWithIndex
       .map(t => ds.slice(0, t._2 + 1))
       .foreach(ds => trainSubset(ts, ds))
