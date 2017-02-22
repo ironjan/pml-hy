@@ -42,8 +42,13 @@ class Trainer @Inject()(parkingDataRepository: ParkingDataRepository) {
     val y = unzipped._2.toArray
 
 
-    val beforeTraining = System.currentTimeMillis
     Logger.debug(s"Prepared training data.")
+
+    regressionTree(testSet, x, y)
+  }
+
+  private def regressionTree(testSet: Seq[ParkingDataSet], x: Array[Array[Double]], y: Array[Double]) = {
+    val beforeTraining = System.currentTimeMillis
 
     val regressionTree = smile.regression.cart(x, y, maxNodes = 100)
 
@@ -57,12 +62,11 @@ class Trainer @Inject()(parkingDataRepository: ParkingDataRepository) {
       .map(p => {
         val yStar = p._1
         val y = p._2
-        Logger.debug(s"Prediction: $yStar - $y")
 
         Math.abs(yStar - y)
       })
-    val mae = aes.sum/aes.length
-    Logger.debug(s"This tree had a mean average error of $mae.")
+    val mae = aes.sum / aes.length
+    Logger.debug(s"regression tree had a mean average error of $mae.")
   }
 
   private def unzipSet(trainingSet: Seq[ParkingDataSet]) = {
