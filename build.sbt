@@ -1,4 +1,4 @@
-name := """pml-hy"""
+name := """de.ironjan.pppb"""
 
 version := "1.0-SNAPSHOT"
 
@@ -17,6 +17,8 @@ libraryDependencies ++= Seq(
   "org.joda" % "joda-convert" % "1.7",
   "org.postgresql" % "postgresql" % "9.4-1201-jdbc41",
   "net.ruippeixotog" %% "scala-scraper" % "1.2.0",
+  "com.github.haifengl" % "smile-scala_2.11" % "1.2.2",
+  "com.github.haifengl" % "smile-core" % "1.2.2",
 
   "org.scalatestplus.play" %% "scalatestplus-play" % "1.5.1" % Test
 )
