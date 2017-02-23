@@ -23,16 +23,15 @@ class DataAPIController @Inject()(crawler: PaderbornCrawler,
     val repo = new ParkingDataRepository
     repo.getAll
       .map(crawledSets =>
-        Ok(Json.toJson(crawledSets)))
+        Ok(Json.toJson(crawledSets.map(ParkingDataSetJson.from))))
   }
 
   def working_data_crawled = Action.async { implicit request =>
     repo.getAll
       .map { crawledSets =>
-        val filtered = crawledSets
+        Ok(Json.toJson(crawledSets
           .filter(d => d.isRecentModel && d.hasUsefulData)
-
-        Ok(Json.toJson(filtered))
+          .map(ParkingDataSetJson.from)))
       }
   }
 
