@@ -36,7 +36,7 @@ object ParkingDataSet {
 
   def tupled = (ParkingDataSet.apply _).tupled
 
-  val recentModelVersion = 1
+  val recentModelVersion = 2
 
   implicit class ParkingDataSetOps(parkingDataSet: ParkingDataSet) {
     def isRecentModel = parkingDataSet.modelVersion.contains(recentModelVersion)
