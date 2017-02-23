@@ -7,7 +7,7 @@ import org.joda.time.Weeks
 import play.api.Logger
 
 import scala.concurrent.ExecutionContext.Implicits.global
-import scala.concurrent.Future
+import scala.concurrent.{Await, Future}
 import scala.language.postfixOps
 import scala.util.Try
 
@@ -17,16 +17,32 @@ import scala.util.Try
 class ParkingDataSetCleanerImpl @Inject()(parkingDataRepository: ParkingDataRepository)
   extends Cleaner[ParkingDataSet] {
   override def cleanDatabase: Unit = {
+    removeUnneededEntries
+    updateModels
+  }
+
+  def removeUnneededEntries: Unit = {
+    Logger.info("removeUnneededEntries called")
     parkingDataRepository
       .getAll
       .flatMap(ds =>
-        Future.sequence(
-          ds.filterNot(_.isRecentModel)
-            .map(cleanEntry)
-            .map(d => parkingDataRepository.updateById(d.id, d)))
-      )
+          Future.sequence(
+              ds.filter(_.isDeleteable)
+            .map(d => parkingDataRepository.deleteById(d.id))))
       .map(_.sum)
-      .foreach(sum => s"Cleaned $sum entries.")
+      .foreach(sum => Logger.debug(s"Deleted $sum entries"))
+  }
+  private def updateModels = {
+    Logger.info("updateModels called")
+    parkingDataRepository
+      .getAll
+      .flatMap(ds =>
+          Future.sequence(
+              ds.filterNot(_.isRecentModel)
+            .map(d => {Logger.debug(s"Cleaning $d"); cleanEntry(d)})
+            .map(d => parkingDataRepository.updateById(d.id, d))))
+      .map(_.sum)
+      .foreach(sum => Logger.debug(s"Cleaned $sum entries."))
   }
 
   override def cleanEntry(t: ParkingDataSet): ParkingDataSet = {
