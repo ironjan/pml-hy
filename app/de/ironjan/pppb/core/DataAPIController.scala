@@ -23,38 +23,41 @@ class DataAPIController @Inject()(crawler: PaderbornCrawler,
     val repo = new ParkingDataRepository
     repo.getAll
       .map(crawledSets =>
-        Ok(Json.toJson(crawledSets.map(ParkingDataSetJson.from))))
+        Ok(Json.toJson(
+            crawledSets.sortBy(_.crawlingTime.getMillis())
+            .map(ParkingDataSetJson.from))))
   }
 
   def working_data_crawled = Action.async { implicit request =>
     repo.getAll
       .map { crawledSets =>
-        Ok(Json.toJson(crawledSets
-          .filter(d => d.isRecentModel && d.hasUsefulData)
+        Ok(Json.toJson(
+          crawledSets.filter(d => d.isRecentModel && d.hasUsefulData)
+          .sortBy(_.crawlingTime.getMillis())
           .map(ParkingDataSetJson.from)))
       }
   }
 
-  def crawling_time_history = Action.async {implicit request =>
+  def crawling_time_history = Action.async { implicit request =>
     repo.getAll
-      .map {crawledSets =>
+      .map { crawledSets =>
         Ok(Json.toJson(
           crawledSets.map(d => new DateTime(d.crawlingTime)).distinct
         ))
       }
   }
 
-  def csv = Action.async {implicit request =>
+  def csv = Action.async { implicit request =>
     repo.getAll
-      .map {crawledSets =>
+      .map { crawledSets =>
         crawledSets.map { d =>
-            // TODO verify that get doesn't cause problems
-            (d.crawlingTime, d.hourOfDay.get, d.minuteOfHour.get, d.dayOfWeek.get, d.dayOfMonth.get, d.weekOfMonth.get, d.weekOfYear.get, d.free.get, d.capacity.get)
+          // TODO verify that get doesn't cause problems
+          (d.crawlingTime, d.hourOfDay.get, d.minuteOfHour.get, d.dayOfWeek.get, d.dayOfMonth.get, d.weekOfMonth.get, d.weekOfYear.get, d.free.get, d.capacity.get)
         }.map(t => t.productIterator.mkString(","))
-        .mkString("\n")
+          .mkString("\n")
       }.map(s => Ok(s.toString))
-        //crawlingTime":1486933054571,"name":"P6 Libori-Galerie","freeRaw":"174","capacityRaw":"500","city":"Paderborn","id":602190,"isDeleted":false,"modelVersion":1,"hourOfDay":20,"minuteOfHour":57,"dayOfWeek":7,"dayOfMonth":12,"weekOfMonth":0,"weekOfYear":6,"free":174,"capacity
-}
+    //crawlingTime":1486933054571,"name":"P6 Libori-Galerie","freeRaw":"174","capacityRaw":"500","city":"Paderborn","id":602190,"isDeleted":false,"modelVersion":1,"hourOfDay":20,"minuteOfHour":57,"dayOfWeek":7,"dayOfMonth":12,"weekOfMonth":0,"weekOfYear":6,"free":174,"capacity
+  }
 
 
 }
