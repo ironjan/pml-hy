@@ -43,10 +43,7 @@ object ParkingDataSet {
 
     def hasUsefulData = parkingDataSet.free.nonEmpty
 
-    def isPreCrawlerFix = parkingDataSet.crawlingTime.isBefore(new DateTime(2017, 2, 14, 0, 0, 0))
-
-
-    def isDeleteable = isRecentModel && !hasUsefulData && isPreCrawlerFix
+    def isDeleteable = isRecentModel && !hasUsefulData
 
     // FIXME just using get!
     def toMlTrainingTuple =
