@@ -40,11 +40,6 @@ d3.json("/working_data_crawled", function(error, data) {
     x.domain(d3.extent(data, function(d) { return d.crawlingTime; }));
     y.domain([0, d3.max(data, function(d) { return d.free; })]);
 
-    // Add the valueline path.
-    svg.append("path")
-        .attr("class", "line")
-        .attr("d", valueline(data));
-
     // Add the X Axis
     svg.append("g")
         .attr("class", "x axis")
@@ -55,5 +50,10 @@ d3.json("/working_data_crawled", function(error, data) {
     svg.append("g")
         .attr("class", "y axis")
         .call(yAxis);
+
+    // Add the valueline path.
+    svg.append("path")
+        .attr("class", "line")
+        .attr("d", valueline(data));
 
 });
