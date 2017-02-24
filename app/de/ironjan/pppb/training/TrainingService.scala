@@ -23,7 +23,7 @@ class TrainingService @Inject()(trainer: Trainer,
   val actor = system.actorOf(Props(new Actor {
     def receive = {
       case Event => {
-        trainer.doSomething
+        trainer.timeModelEvaluation
       }
     }
   }))

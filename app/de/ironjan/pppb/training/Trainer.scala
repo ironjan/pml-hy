@@ -16,26 +16,35 @@ import scala.concurrent.ExecutionContext.Implicits.global
   * Created by Jan Lippert on 19.02.2017.
   */
 class Trainer @Inject()(parkingDataRepository: ParkingDataRepository) {
-  def doSomething = {
+  def timeModelEvaluation = {
     Logger.debug(s"Started training.")
 
     val ds = Await.result(parkingDataRepository.getAll, Duration.Inf)
 
     val ts = DateTime.now()
 
-    // Append checking set & predict it
-    val boundary =  ds.length * 9 / 10
-    val splitSet = (ds.slice(0, boundary), ds.slice(boundary, ds.length-1))
-    trainSubset(ts, splitSet, splitSet._1.head.capacity.get) // TODO just using get on option
+    findBestModel(ds)
 
     val totalTrainingTime = DateTime.now().getMillis - ts.getMillis
     Logger.debug(s"Total training time for all subsets: ${totalTrainingTime}ms.")
   }
 
-  private def trainSubset(ts: DateTime, ds: (Seq[ParkingDataSet], Seq[ParkingDataSet]), capacity: Int) = {
+  def findBestModel(ds: Seq[ParkingDataSet]): Regression[Array[Double]] = {
+    // Append checking set & predict it
+    val boundary = ds.length * 9 / 10
+    val splitSet = (ds.slice(0, boundary), ds.slice(boundary, ds.length - 1))
+
+    // TODO just using get on option
+    evaluateModels(splitSet, splitSet._1.head.capacity.get)
+      .sortBy(_._1)
+      .head
+      ._2
+  }
+
+  private def evaluateModels(ds: (Seq[ParkingDataSet], Seq[ParkingDataSet]), capacity: Int) = {
     val trainingSet = ds._1
     val testSet = ds._2
-    Logger.debug(s"Training subset of length ${trainingSet.length} and test set of length ${testSet.length} (Set of $ts)  ")
+    Logger.debug(s"Training subset of length ${trainingSet.length} and test set of length ${testSet.length}.")
 
     val unzipped = unzipSet(trainingSet)
 
@@ -46,30 +55,30 @@ class Trainer @Inject()(parkingDataRepository: ParkingDataRepository) {
 
     Logger.debug(s"Prepared training data.")
 
-    evaluate(smile.regression.cart(x, y, 100), testSet)
-//    evaluate(smile.regression.cart(x, y, 100, attributes = ParkingDataSet.attributes), testSet)
-    evaluate(smile.regression.randomForest(x,y), testSet)
-    evaluate(smile.regression.ols(x,y), testSet)
+    Seq(evaluate(smile.regression.cart(x, y, 100), testSet),
+    evaluate(smile.regression.randomForest(x,y), testSet),
+    evaluate(smile.regression.ols(x,y), testSet),
 
 
-    evaluate(smile.regression.ridge(x,y,0.33), testSet)
-    evaluate(smile.regression.ridge(x,y,1), testSet)
-    evaluate(smile.regression.ridge(x,y,3), testSet)
-    evaluate(smile.regression.ridge(x,y,9), testSet)
-    evaluate(smile.regression.ridge(x,y,27), testSet)
+    evaluate(smile.regression.ridge(x,y,0.33), testSet),
+    evaluate(smile.regression.ridge(x,y,1), testSet),
+    evaluate(smile.regression.ridge(x,y,3), testSet),
+    evaluate(smile.regression.ridge(x,y,9), testSet),
+    evaluate(smile.regression.ridge(x,y,27), testSet),
 
-    evaluate(smile.regression.lasso(x,y,0.33), testSet)
-    evaluate(smile.regression.lasso(x,y,1), testSet)
-    evaluate(smile.regression.lasso(x,y,3), testSet)
-    evaluate(smile.regression.lasso(x,y,9), testSet)
-    evaluate(smile.regression.lasso(x,y,27), testSet)
+    evaluate(smile.regression.lasso(x,y,0.33), testSet),
+    evaluate(smile.regression.lasso(x,y,1), testSet),
+    evaluate(smile.regression.lasso(x,y,3), testSet),
+    evaluate(smile.regression.lasso(x,y,9), testSet),
+    evaluate(smile.regression.lasso(x,y,27), testSet),
 
-    evaluate(smile.regression.gbm(x,y, shrinkage = 0.05), testSet)
-    evaluate(smile.regression.gbm(x,y, shrinkage = 0.1), testSet)
-    evaluate(smile.regression.gbm(x,y, shrinkage = 0.20), testSet)
-    evaluate(smile.regression.gbm(x,y, shrinkage = 0.40), testSet)
-    evaluate(smile.regression.gbm(x,y, shrinkage = 0.80), testSet)
+    evaluate(smile.regression.gbm(x,y, shrinkage = 0.05), testSet),
+    evaluate(smile.regression.gbm(x,y, shrinkage = 0.1), testSet),
+    evaluate(smile.regression.gbm(x,y, shrinkage = 0.20), testSet),
+    evaluate(smile.regression.gbm(x,y, shrinkage = 0.40), testSet),
+    evaluate(smile.regression.gbm(x,y, shrinkage = 0.80), testSet),
     evaluate(smile.regression.gbm(x,y, shrinkage = 1), testSet)
+    )
   }
 
   private def evaluate(regression: Regression[Array[Double]], T: Seq[ParkingDataSet]) ={
@@ -82,7 +91,7 @@ class Trainer @Inject()(parkingDataRepository: ParkingDataRepository) {
 
     val mae = aes.sum / aes.length
     Logger.debug(s"${regression.getClass.getName} had a mean average error of $mae.")
-
+    (mae, regression)
   }
 
   private def unzipSet(trainingSet: Seq[ParkingDataSet]) = {
