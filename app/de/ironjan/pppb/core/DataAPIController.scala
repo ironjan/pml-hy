@@ -50,9 +50,26 @@ class DataAPIController @Inject()(crawler: PaderbornCrawler,
   def csv = Action.async { implicit request =>
     repo.getAll
       .map { crawledSets =>
-        crawledSets.map { d =>
+        crawledSets.sortBy(_.crawlingTime.getMillis())
+          .map {
+            def unifyStringLength(i: Int) = {
+              val prefix = if (i < 10) "  "
+              else if (i < 100) " "
+              else ""
+              prefix + i
+            }
+
+            d =>
           // TODO verify that get doesn't cause problems
-          (d.crawlingTime, d.hourOfDay.get, d.minuteOfHour.get, d.dayOfWeek.get, d.dayOfMonth.get, d.weekOfMonth.get, d.weekOfYear.get, d.free.get, d.capacity.get)
+              val hourOfDay = unifyStringLength(d.hourOfDay.get)
+              val minuteOfHour = unifyStringLength(d.minuteOfHour.get)
+              val dayOfWeek = unifyStringLength(d.dayOfWeek.get)
+              val dayOfMonth = unifyStringLength(d.dayOfMonth.get)
+              val weekOfYear = unifyStringLength(d.weekOfYear.get)
+              val free = unifyStringLength(d.free.get)
+              val capacity = unifyStringLength(d.capacity.get)
+
+              (d.crawlingTime, hourOfDay, minuteOfHour, dayOfWeek, dayOfMonth, d.weekOfMonth.get, weekOfYear, free, capacity)
         }.map(t => t.productIterator.mkString(","))
           .mkString("\n")
       }.map(s => Ok(s.toString))
