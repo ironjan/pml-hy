@@ -1,16 +1,14 @@
 package de.ironjan.pppb.preprocessing
 
 import com.google.inject.Inject
-import de.ironjan.pppb.core.model.ParkingDataSet
+import de.ironjan.pppb.core.model._
 import de.ironjan.pppb.core.repository.ParkingDataRepository
-import org.joda.time.Weeks
 import play.api.Logger
 
 import scala.concurrent.ExecutionContext.Implicits.global
-import scala.concurrent.{Await, Future}
+import scala.concurrent.Future
 import scala.language.postfixOps
 import scala.util.Try
-
 /**
   * Implementation of Cleaner for ParkingDataSet
   */
@@ -64,7 +62,7 @@ class ParkingDataSetCleanerImpl @Inject()(parkingDataRepository: ParkingDataRepo
     val minuteOfHour = crawlingTime.getMinuteOfHour
     val dayOfWeek = crawlingTime.getDayOfWeek
     val dayOfMonth = crawlingTime.getDayOfMonth
-    val weekOfMonth = Weeks.weeksBetween(crawlingTime.withDayOfMonth(1), crawlingTime).getWeeks + 1
+    val weekOfMonth = crawlingTime.weekOfMonth
     val weekOfYear = crawlingTime.getWeekOfWeekyear
 
     val free = Try(t.freeRaw.toInt).toOption

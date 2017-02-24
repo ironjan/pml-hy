@@ -5,8 +5,6 @@ import org.joda.time.DateTime
 import play.api.libs.json.Json
 import smile.data.{Attribute, NominalAttribute}
 
-/**
-  */
 case class ParkingDataSet(crawlingTime: DateTime,
                           name: String,
                           freeRaw: String,
