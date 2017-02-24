@@ -33,7 +33,7 @@ import scala.concurrent.duration._
       }))
 
   system.scheduler.schedule(0 milliseconds,
-    5 minutes,
+    1 minutes,
     crawlingActor,
     Event)
 
