@@ -43,11 +43,9 @@ object ParkingDataSet {
 
     def hasUsefulData = parkingDataSet.free.nonEmpty
 
-    def isPreCrawlerFix = {
-      val crawlingDateFix = new DateTime().withYear(2017).withMonthOfYear(2).withDayOfMonth(15)
-      parkingDataSet.crawlingTime.isBefore(crawlingDateFix)
-    }
-    
+    def isPreCrawlerFix = parkingDataSet.crawlingTime.isBefore(new DateTime(2017, 2, 14, 0, 0, 0))
+
+
     def isDeleteable = isRecentModel && !hasUsefulData && isPreCrawlerFix
 
     // FIXME just using get!
