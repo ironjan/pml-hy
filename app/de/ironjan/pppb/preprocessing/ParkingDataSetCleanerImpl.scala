@@ -1,7 +1,8 @@
 package de.ironjan.pppb.preprocessing
 
 import com.google.inject.Inject
-import de.ironjan.pppb.core.model._
+import de.ironjan.pppb.core.model.ParkingDataSet
+import de.ironjan.pppb.core.model.DateTimeHelper._
 import de.ironjan.pppb.core.repository.ParkingDataRepository
 import play.api.Logger
 

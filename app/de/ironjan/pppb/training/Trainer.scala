@@ -2,10 +2,10 @@ package de.ironjan.pppb.training
 
 import com.google.inject.Inject
 import de.ironjan.pppb.core.model.ParkingDataSet
+import de.ironjan.pppb.core.model.DateTimeHelper._
 import de.ironjan.pppb.core.repository.ParkingDataRepository
 import org.joda.time.DateTime
 import play.api.Logger
-import smile.data.{Attribute, DateAttribute, NominalAttribute}
 import smile.regression.Regression
 
 import scala.concurrent.Await
@@ -55,33 +55,13 @@ class Trainer @Inject()(parkingDataRepository: ParkingDataRepository) {
 
     Logger.debug(s"Prepared training data.")
 
-    Seq(evaluate(smile.regression.cart(x, y, 100), testSet),
-    evaluate(smile.regression.randomForest(x,y), testSet),
-    evaluate(smile.regression.ols(x,y), testSet),
-
-
-    evaluate(smile.regression.ridge(x,y,0.33), testSet),
-    evaluate(smile.regression.ridge(x,y,1), testSet),
-    evaluate(smile.regression.ridge(x,y,3), testSet),
-    evaluate(smile.regression.ridge(x,y,9), testSet),
-    evaluate(smile.regression.ridge(x,y,27), testSet),
-
-    evaluate(smile.regression.lasso(x,y,0.33), testSet),
-    evaluate(smile.regression.lasso(x,y,1), testSet),
-    evaluate(smile.regression.lasso(x,y,3), testSet),
-    evaluate(smile.regression.lasso(x,y,9), testSet),
-    evaluate(smile.regression.lasso(x,y,27), testSet),
-
-    evaluate(smile.regression.gbm(x,y, shrinkage = 0.05), testSet),
-    evaluate(smile.regression.gbm(x,y, shrinkage = 0.1), testSet),
-    evaluate(smile.regression.gbm(x,y, shrinkage = 0.20), testSet),
-    evaluate(smile.regression.gbm(x,y, shrinkage = 0.40), testSet),
-    evaluate(smile.regression.gbm(x,y, shrinkage = 0.80), testSet),
-    evaluate(smile.regression.gbm(x,y, shrinkage = 1), testSet)
-    )
+    Seq.concat(
+      Seq(evaluate(smile.regression.cart(x, y, 100), testSet),
+      evaluate(smile.regression.randomForest(x, y), testSet)),
+      Seq.tabulate(19) { i => (i + 1) * 0.05 }.map(s => evaluate(smile.regression.gbm(x, y, shrinkage = s), testSet)))
   }
 
-  private def evaluate(regression: Regression[Array[Double]], T: Seq[ParkingDataSet]) ={
+  private def evaluate(regression: Regression[Array[Double]], T: Seq[ParkingDataSet]) = {
     val xStars = unzipSet(T)._1
     val yStars = unzipSet(T)._2
 

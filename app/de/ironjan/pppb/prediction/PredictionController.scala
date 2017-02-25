@@ -8,7 +8,7 @@ import de.ironjan.pppb.core.repository.ParkingDataRepository
 import de.ironjan.pppb.training.Trainer
 import org.joda.time.{DateTime, DurationFieldType}
 import play.api.mvc._
-import de.ironjan.pppb.core.model.DateTimeOps._
+import de.ironjan.pppb.core.model.DateTimeHelper._
 
 import scala.concurrent.ExecutionContext.Implicits.global
 import scala.concurrent.Future
