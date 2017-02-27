@@ -1,3 +1,4 @@
+function drawDayFree(){
 var moveChart = dc.lineChart('#day-free-chart');
 
 var margin = {top: 30, right: 20, bottom: 30, left: 50},
@@ -21,7 +22,7 @@ var valueline = d3.svg.line()
     .interpolate("linear");
 
 // Adds the svg canvas
-var svg = d3.select("body")
+var svg = d3.select("#day-free-chart")
     .append("svg")
         .attr("width", width + margin.left + margin.right)
         .attr("height", height + margin.top + margin.bottom)
@@ -66,3 +67,5 @@ d3.json("/api/working_data_crawled", function(error, data) {
             .attr("cx", function(d) { return x(d.crawlingTime); })
             .attr("cy", function(d) { return y(d.free); });
 });
+};
+drawDayFree();

@@ -1,3 +1,4 @@
+function drawPredictions(){
 var moveChart = dc.lineChart('#prediction-chart');
 
 var margin = {top: 30, right: 20, bottom: 30, left: 50},
@@ -16,12 +17,12 @@ var yAxis = d3.svg.axis().scale(y)
 
 // Define the line
 var valueline = d3.svg.line()
-    .x(function(d) { return x(d.crawlingTime); })
-    .y(function(d) { return y(d.free); })
+    .x(function(d) { return x(d.predictedTime); })
+    .y(function(d) { return y(d.prediction); })
     .interpolate("linear");
 
 // Adds the svg canvas
-var svg = d3.select("body")
+var svg = d3.select("#prediction-chart")
     .append("svg")
         .attr("width", width + margin.left + margin.right)
         .attr("height", height + margin.top + margin.bottom)
@@ -30,15 +31,15 @@ var svg = d3.select("body")
               "translate(" + margin.left + "," + margin.top + ")");
 
 // Get the data
-d3.json("/api/working_data_crawled", function(error, data) {
+d3.json("/api/predictions", function(error, data) {
     data.forEach(function(d) {
-        d.crawlingTime = d3.time.format.iso.parse(d.crawlingTime);
-        d.free = +d.free;
+        d.predictedTime = d3.time.format.iso.parse(d.predictedTime);
+        d.prediction = +d.prediction;
     });
 
     // Scale the range of the data
-    x.domain(d3.extent(data, function(d) { return d.crawlingTime; }));
-    y.domain([0, d3.max(data, function(d) { return d.free; })]);
+    x.domain(d3.extent(data, function(d) { return d.predictedTime; }));
+    y.domain([0, d3.max(data, function(d) { return d.prediction; })]);
 
     // Add the X Axis
     svg.append("g")
@@ -63,6 +64,9 @@ d3.json("/api/working_data_crawled", function(error, data) {
         .data(data)
         .enter().append("circle")
             .attr("r", 2)
-            .attr("cx", function(d) { return x(d.crawlingTime); })
-            .attr("cy", function(d) { return y(d.free); });
+            .attr("cx", function(d) { return x(d.predictedTime); })
+            .attr("cy", function(d) { return y(d.prediction); });
 });
+}
+
+drawPredictions();
