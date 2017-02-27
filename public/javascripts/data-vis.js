@@ -53,8 +53,8 @@ d3.json("/working_data_crawled", function(error, data) {
     // Add the valueline path.
     svg.append("path")
         .attr("class", "line")
+        .attr("d", valueline(data))
         .attr("fill", "transparent")
-        .attr("stroke", "black")
-        .attr("d", valueline(data));
+        .attr("stroke", "black");
 
 });
