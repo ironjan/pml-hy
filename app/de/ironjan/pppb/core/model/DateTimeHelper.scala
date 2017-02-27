@@ -27,6 +27,17 @@ object DateTimeHelper {
     def weekOfMonth = {
       Weeks.weeksBetween(dateTime.withDayOfMonth(1), dateTime).getWeeks + 1
     }
+
+    def explode ={
+      val hourOfDay = dateTime.getHourOfDay
+      val minuteOfHour = dateTime.getMinuteOfHour
+      val dayOfWeek = dateTime.getDayOfWeek
+      val dayOfMonth = dateTime.getDayOfMonth
+      val weekOfMonth = dateTime.weekOfMonth
+      val weekOfYear = dateTime.getWeekOfWeekyear
+      (hourOfDay, minuteOfHour, dayOfWeek, dayOfMonth, weekOfMonth, weekOfYear)
+    }
   }
+
 
 }

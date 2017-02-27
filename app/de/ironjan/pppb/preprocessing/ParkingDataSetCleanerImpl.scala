@@ -4,6 +4,7 @@ import com.google.inject.Inject
 import de.ironjan.pppb.core.model.ParkingDataSet
 import de.ironjan.pppb.core.model.DateTimeHelper._
 import de.ironjan.pppb.core.repository.ParkingDataRepository
+import org.joda.time.DateTime
 import play.api.Logger
 
 import scala.concurrent.ExecutionContext.Implicits.global
@@ -59,12 +60,7 @@ class ParkingDataSetCleanerImpl @Inject()(parkingDataRepository: ParkingDataRepo
 
   private def cleanToRecent(t: ParkingDataSet) = {
     val crawlingTime = t.crawlingTime
-    val hourOfDay = crawlingTime.getHourOfDay
-    val minuteOfHour = crawlingTime.getMinuteOfHour
-    val dayOfWeek = crawlingTime.getDayOfWeek
-    val dayOfMonth = crawlingTime.getDayOfMonth
-    val weekOfMonth = crawlingTime.weekOfMonth
-    val weekOfYear = crawlingTime.getWeekOfWeekyear
+    val (hourOfDay, minuteOfHour, dayOfWeek, dayOfMonth, weekOfMonth, weekOfYear) = crawlingTime.explode
 
     val free = Try(t.freeRaw.toInt).toOption
     val capacity = Try(t.capacityRaw.toInt).toOption
@@ -86,4 +82,5 @@ class ParkingDataSetCleanerImpl @Inject()(parkingDataRepository: ParkingDataRepo
       free,
       capacity)
   }
+
 }

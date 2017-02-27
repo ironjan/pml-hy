@@ -5,3 +5,7 @@ GET     /csv                        de.ironjan.pppb.core.DataAPIController.csv
 
 GET     /predictions/in_15_min      de.ironjan.pppb.prediction.PredictionController.predict
 GET     /predictions                de.ironjan.pppb.prediction.PredictionController.all_predictions
+
+GET     /evaluations                de.ironjan.pppb.evaluation.EvaluationController.getAll
+GET     /evaluations/simplified     de.ironjan.pppb.evaluation.EvaluationController.getSimplified
+GET     /evaluations/stats          de.ironjan.pppb.evaluation.EvaluationController.getStats
