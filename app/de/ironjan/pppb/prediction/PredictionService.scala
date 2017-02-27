@@ -9,13 +9,15 @@ import org.joda.time.{DateTime, DurationFieldType}
 import smile.regression.Regression
 import de.ironjan.pppb.core.model.DateTimeHelper._
 import de.ironjan.pppb.prediction.model.PredictionResult
+import de.ironjan.pppb.prediction.repository.PredictionDataRepository
 import play.api.Logger
 
 import scala.concurrent.ExecutionContext.Implicits.global
 import scala.concurrent.duration._
 
 @Singleton
-class PredictionService @Inject()(repo: ParkingDataRepository,
+class PredictionService @Inject()(parkingDataRepo: ParkingDataRepository,
+                                  predictionDataRepo: PredictionDataRepository,
                                   trainer: Trainer) {
 
   val system = ActorSystem("PredictionSystem")
@@ -27,20 +29,19 @@ class PredictionService @Inject()(repo: ParkingDataRepository,
   val actor = system.actorOf(Props(new Actor {
     def receive = {
       case PredictionEvent => {
-        val prediction = onDemandPrediction
-        // TODO save prediction
-        Logger.debug(s"$prediction")
+        onDemandPrediction.map(predictionDataRepo.save)
+          .foreach(s => Logger.debug(s"Saved prediction: $s"))
       }
     }
   }))
 
   system.scheduler.schedule(10 seconds,
-    5 minutes,
+    1 minutes,
     actor,
     PredictionEvent)
 
   def onDemandPrediction = {
-    repo.getAll.map { ds =>
+    parkingDataRepo.getAll.map { ds =>
       val (avgAbsError: Double, bestModel: Regression[Array[Double]]) = trainer.findBestModel(ds.filter(_.hasUsefulData))
 
       val timeIn15Minutes = new DateTime().withFieldAdded(DurationFieldType.minutes(), 15)
