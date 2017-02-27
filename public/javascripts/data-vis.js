@@ -17,7 +17,8 @@ var yAxis = d3.svg.axis().scale(y)
 // Define the line
 var valueline = d3.svg.line()
     .x(function(d) { return x(d.crawlingTime); })
-    .y(function(d) { return y(d.free); });
+    .y(function(d) { return y(d.free); })
+    .interpolate("linear");
 
 // Adds the svg canvas
 var svg = d3.select("body")
@@ -54,7 +55,8 @@ d3.json("/working_data_crawled", function(error, data) {
     svg.append("path")
         .attr("class", "line")
         .attr("d", valueline(data))
-        .attr("fill", "transparent")
-        .attr("stroke", "black");
+        .attr("stroke", "blue")
+        .attr("stroke-width", 2)
+        .attr("fill", "none");
 
 });
