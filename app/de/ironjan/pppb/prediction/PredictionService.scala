@@ -8,7 +8,9 @@ import de.ironjan.pppb.training.Trainer
 import org.joda.time.{DateTime, DurationFieldType}
 import smile.regression.Regression
 import de.ironjan.pppb.core.model.DateTimeHelper._
+import de.ironjan.pppb.prediction.model.PredictionResult
 import play.api.Logger
+
 import scala.concurrent.ExecutionContext.Implicits.global
 import scala.concurrent.duration._
 
