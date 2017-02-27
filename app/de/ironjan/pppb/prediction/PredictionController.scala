@@ -8,6 +8,7 @@ import de.ironjan.pppb.core.repository.ParkingDataRepository
 import de.ironjan.pppb.training.Trainer
 import org.joda.time.{DateTime, DurationFieldType}
 import play.api.mvc._
+import play.api.mvc.Results._
 import de.ironjan.pppb.core.model.DateTimeHelper._
 
 import scala.concurrent.ExecutionContext.Implicits.global
@@ -17,7 +18,7 @@ import scala.concurrent.Future
 class PredictionController @Inject()(repo: ParkingDataRepository,
                                      trainer: Trainer) {
 
-  def all_crawled = Action.async { implicit request =>
+  def predict = Action.async { implicit request =>
 
     repo.getAll.map {ds =>
       val now = new DateTime();
@@ -26,9 +27,9 @@ class PredictionController @Inject()(repo: ParkingDataRepository,
       val filtered = ds.filter(_.hasUsefulData)
       val bestModel = trainer.findBestModel(filtered)
 
-      bestModel.predict(futureTimeAsDoubleArray)
+      val prediction = bestModel.predict(futureTimeAsDoubleArray)
+      NotImplemented(s"$prediction")
     }
-    Future.successful(Results.NotImplemented("NIY"))
   }
 
 }
