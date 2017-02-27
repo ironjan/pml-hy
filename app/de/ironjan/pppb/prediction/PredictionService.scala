@@ -19,6 +19,8 @@ import scala.concurrent.duration._
 class PredictionService @Inject()(parkingDataRepo: ParkingDataRepository,
                                   predictionDataRepo: PredictionDataRepository,
                                   trainer: Trainer) {
+  def getAll = predictionDataRepo.getAll
+
 
   val system = ActorSystem("PredictionSystem")
   val PredictionEvent = "Predict"

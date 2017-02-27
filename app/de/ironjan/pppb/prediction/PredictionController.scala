@@ -14,4 +14,8 @@ class PredictionController @Inject()(predictionService: PredictionService) {
     predictionService.onDemandPrediction.map(r => Ok(Json.toJson(r)))
   }
 
+  def all_predictions = Action.async {implicit  request =>
+    predictionService.getAll.map(ps => Ok(Json.toJson(ps)))
+  }
+
 }
