@@ -31,7 +31,6 @@ var svg = d3.select("body")
 // Get the data
 d3.json("/working_data_crawled", function(error, data) {
     console.log(data[0]);    data.forEach(function(d) {
-        console.log("d: " + d + ", " + d.crawlingTime + ", " + d.free);
         d.crawlingTime = d3.time.format.iso.parse(d.crawlingTime);
         d.free = +d.free;
     });
