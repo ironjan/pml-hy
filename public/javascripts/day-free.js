@@ -1,4 +1,4 @@
-var moveChart = dc.lineChart('#monthly-move-chart');
+var moveChart = dc.lineChart('#day-free-chart');
 
 var margin = {top: 30, right: 20, bottom: 30, left: 50},
     width = 1200 - margin.left - margin.right,
@@ -31,7 +31,7 @@ var svg = d3.select("body")
 
 // Get the data
 d3.json("/working_data_crawled", function(error, data) {
-    console.log(data[0]);    data.forEach(function(d) {
+    data.forEach(function(d) {
         d.crawlingTime = d3.time.format.iso.parse(d.crawlingTime);
         d.free = +d.free;
     });
