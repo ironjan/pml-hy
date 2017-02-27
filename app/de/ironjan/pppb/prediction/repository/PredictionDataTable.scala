@@ -2,11 +2,9 @@ package de.ironjan.pppb.prediction.repository
 
 import com.github.tototoshi.slick.PostgresJodaSupport._
 import de.ironjan.pppb.core.BaseTable
-import de.ironjan.pppb.core.model.ParkingDataSet
 import de.ironjan.pppb.prediction.model.PredictionResult
 import slick.driver.PostgresDriver.api._
 
-// TODO create migration for predictions table
 class PredictionDataTable(_tableTag: Tag) extends BaseTable[PredictionResult](_tableTag, Some("public"), "predictions") {
 
   def * = (predictedTime, avgAbsError, prediction, regressionClass, id, isDeleted) <> (PredictionResult.tupled, PredictionResult.unapply)
