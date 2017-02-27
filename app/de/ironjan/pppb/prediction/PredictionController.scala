@@ -1,36 +1,17 @@
 package de.ironjan.pppb.prediction
-
-import java.time.Period
 import javax.inject.{Inject, Singleton}
 
-import de.ironjan.pppb.core.model.ParkingDataSet
-import de.ironjan.pppb.core.repository.ParkingDataRepository
-import de.ironjan.pppb.training.Trainer
-import org.joda.time.{DateTime, DurationFieldType}
 import play.api.mvc._
 import play.api.mvc.Results._
-import de.ironjan.pppb.core.model.DateTimeHelper._
 import play.api.libs.json.Json
 
 import scala.concurrent.ExecutionContext.Implicits.global
-import scala.concurrent.Future
 
 @Singleton
-class PredictionController @Inject()(repo: ParkingDataRepository,
-                                     trainer: Trainer) {
+class PredictionController @Inject()(predictionService: PredictionService) {
 
   def predict = Action.async { implicit request =>
-
-    repo.getAll.map {ds =>
-      val now = new DateTime();
-      val futureTime = now.withFieldAdded(DurationFieldType.minutes(), 15)
-      val futureTimeAsDoubleArray = futureTime.toPredictionQuery
-      val filtered = ds.filter(_.hasUsefulData)
-      val bestModel = trainer.findBestModel(filtered)._2
-      val avgAbsError = trainer.findBestModel(filtered)._1
-      val prediction = bestModel.predict(futureTimeAsDoubleArray)
-      NotImplemented(Json.toJson(Map("avgAbsError" -> avgAbsError, "prediction" -> prediction)))
-    }
+    predictionService.onDemandPrediction.map(r => Ok(Json.toJson(r)))
   }
 
 }
