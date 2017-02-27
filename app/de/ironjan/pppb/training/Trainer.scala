@@ -29,7 +29,7 @@ class Trainer @Inject()(parkingDataRepository: ParkingDataRepository) {
     Logger.debug(s"Total training time for all subsets: ${totalTrainingTime}ms.")
   }
 
-  def findBestModel(ds: Seq[ParkingDataSet]): Regression[Array[Double]] = {
+  def findBestModel(ds: Seq[ParkingDataSet]): (Double, Regression[Array[Double]] ) = {
     // Append checking set & predict it
     val boundary = ds.length * 9 / 10
     val splitSet = (ds.slice(0, boundary), ds.slice(boundary, ds.length - 1))
@@ -38,7 +38,6 @@ class Trainer @Inject()(parkingDataRepository: ParkingDataRepository) {
     evaluateModels(splitSet, splitSet._1.head.capacity.get)
       .sortBy(_._1)
       .head
-      ._2
   }
 
   private def evaluateModels(ds: (Seq[ParkingDataSet], Seq[ParkingDataSet]), capacity: Int) = {

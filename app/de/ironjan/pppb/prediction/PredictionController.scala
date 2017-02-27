@@ -10,6 +10,7 @@ import org.joda.time.{DateTime, DurationFieldType}
 import play.api.mvc._
 import play.api.mvc.Results._
 import de.ironjan.pppb.core.model.DateTimeHelper._
+import play.api.libs.json.Json
 
 import scala.concurrent.ExecutionContext.Implicits.global
 import scala.concurrent.Future
@@ -25,10 +26,10 @@ class PredictionController @Inject()(repo: ParkingDataRepository,
       val futureTime = now.withFieldAdded(DurationFieldType.minutes(), 15)
       val futureTimeAsDoubleArray = futureTime.toPredictionQuery
       val filtered = ds.filter(_.hasUsefulData)
-      val bestModel = trainer.findBestModel(filtered)
-
+      val bestModel = trainer.findBestModel(filtered)._2
+      val avgAbsError = trainer.findBestModel(filtered)._1
       val prediction = bestModel.predict(futureTimeAsDoubleArray)
-      NotImplemented(s"$prediction")
+      NotImplemented(Json.toJson(Map("avgAbsError" -> avgAbsError, "prediction" -> prediction)))
     }
   }
 
