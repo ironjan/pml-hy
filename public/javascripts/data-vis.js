@@ -55,8 +55,8 @@ d3.json("/working_data_crawled", function(error, data) {
     svg.append("path")
         .attr("class", "line")
         .attr("d", valueline(data))
-        .attr("stroke", "blue")
-        .attr("stroke-width", 2)
+        .attr("stroke", "black")
+        .attr("stroke-width", 1)
         .attr("fill", "none");
 
 });
