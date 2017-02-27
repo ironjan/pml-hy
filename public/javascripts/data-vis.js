@@ -30,14 +30,6 @@ var svg = d3.select("body")
 
 // Get the data
 d3.json("/working_data_crawled", function(error, data) {
-    // Add first and last with free = 0 to fix graph
-    var last = data[data.length-1];
-    last.free = +0;
-    data.push(last);
-   
-    var first = data[0];
-    first.free = +0;
-    data.push(first);
     console.log(data[0]);    data.forEach(function(d) {
         console.log("d: " + d + ", " + d.crawlingTime + ", " + d.free);
         d.crawlingTime = d3.time.format.iso.parse(d.crawlingTime);
@@ -62,6 +54,8 @@ d3.json("/working_data_crawled", function(error, data) {
     // Add the valueline path.
     svg.append("path")
         .attr("class", "line")
+        .attr("fill", "transparent")
+        .attr("stroke", "black")
         .attr("d", valueline(data));
 
 });
