@@ -1,0 +1,17 @@
+The main data source is the actual parking data which is available online. In addition there are other possible features that influence parking space availability. Since taking all features into account is not possible, this project will focus on the parking data and optionally extend the model with basic event data.
+
+\paragraph{Parking Usage Live Data}
+The homepage of the ASP Paderborn\footnote{City-Managed service for waste management, city cleaning, and parking.} lists the city managed parking areas and the number of currently free parking spots. 
+The data is available on \url{https://www.paderborn.de/microsite/asp/parken_in_der_city/freie_Parkplaetze_neu.php}. A more minimal website is available at \url{https://www4.paderborn.de/ParkInfoASP/default.aspx}. 
+
+Since there is no API known, the parking data needs to be scraped from the website.  
+\paragraph{Event Data (Optional)}
+A second data source could be public holidays and local events. In some cases, these events influence the number of free parking spots directly: the Libori fair is located on the parking area ``Le Mans Wall'' and the ``Lunapark'' is located on ``Maspernplatz''. 
+
+Other events may also cause more people to go to the city center and therefore to more parking space usage. One example includes Sunday openings. In Germany, shops are normally closed on Sunday. Howevery, cities may choose to allow shopping on a few Sundays a year. 
+
+This data is considered optional as the big events do not happen while the course ``Practical Project in Machine Learning'' takes place. A list of these events can be found on the homepage of the carneval club\footnote{\url{http://www.kirmes-paderborn.de/termine.htm}}. The city's homepage also lists some events\footnote{\url{https://www.paderborn.de/tourismus-kultur/veranstaltungen/veranstaltungshighlights.php}}. Both of these sources would have to be parsed manually.
+
+
+\section{Prediction Goal}
+As mentioned in the introduction, this project is about predicting available parking space ahead of time. In concrete terms, the project will first focus on one of the parking areas, e.g. ``Libori-Galerie'', and predict the availabilty on regular intervals for 5, 15, and 60 minutes into the future.
