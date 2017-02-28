@@ -1,7 +1,7 @@
 #!/bin/bash
 
 # times are in seconds
-SLEEP_TIME=900
+SLEEP_TIME=60
 PROD_START_TIME=050000 # UTC. Opening 6am MEZ/UTC+1 MESZ/UTC+2 (switch 2017-03-27)
 PROD_END___TIME=230000 # UTC. Closing 2am MEZ/MESZ. App needs 6h sleep a day.
 HEROKU_APP=https://enigmatic-citadel-24582.herokuapp.com/
