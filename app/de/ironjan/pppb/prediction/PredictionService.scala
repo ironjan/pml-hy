@@ -31,6 +31,7 @@ class PredictionService @Inject()(parkingDataRepo: ParkingDataRepository,
   val actor = system.actorOf(Props(new Actor {
     def receive = {
       case PredictionEvent => {
+        Logger.debug("Doing a new prediciton")
         onDemandPrediction.map(predictionDataRepo.save)
           .foreach(s => Logger.debug(s"Saved prediction: $s"))
       }
