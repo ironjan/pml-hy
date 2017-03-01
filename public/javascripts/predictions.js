@@ -31,7 +31,7 @@ var svg = d3.select("#prediction-chart")
               "translate(" + margin.left + "," + margin.top + ")");
 
 // Get the data
-d3.json("/api/predictions", function(error, data) {
+d3.json("/api/predictions/latest", function(error, data) {
     data.forEach(function(d) {
         d.predictedTime = d3.time.format.iso.parse(d.predictedTime);
         d.prediction = +d.prediction;

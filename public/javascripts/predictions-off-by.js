@@ -31,7 +31,7 @@ var svg = d3.select("#predictions-off-by-chart")
               "translate(" + margin.left + "," + margin.top + ")");
 
 // Get the data
-d3.json("/api/evaluations/simplified", function(error, data) {
+d3.json("/api/evaluations/simplified/latest", function(error, data) {
     data.forEach(function(d) {
         d.dateTime = d3.time.format.iso.parse(d.dateTime);
         d.off = Math.abs(+d.predicted - +d.actual);

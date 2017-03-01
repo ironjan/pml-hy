@@ -49,6 +49,15 @@ class DataAPIController @Inject()(crawler: PaderbornCrawler,
       }
   }
 
+  def working_data_crawled_latest = Action.async { implicit request =>
+    repo.getAll
+      .map { crawledSets =>
+        Ok(Json.toJson(
+          crawledSets.filter(d => d.crawlingTime.isLessThan1DayOld && d.isRecentModel && d.hasUsefulData)
+            .sortBy(_.crawlingTime.getMillis())
+            .map(ParkingDataSetJson.from)))
+      }
+  }
   def crawling_time_history = Action.async { implicit request =>
     repo.getAll
       .map { crawledSets =>

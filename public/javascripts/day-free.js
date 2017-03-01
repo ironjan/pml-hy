@@ -31,7 +31,7 @@ var svg = d3.select("#day-free-chart")
               "translate(" + margin.left + "," + margin.top + ")");
 
 // Get the data
-d3.json("/api/working_data_crawled", function(error, data) {
+d3.json("/api/working_data_crawled/latest", function(error, data) {
     data.forEach(function(d) {
         d.crawlingTime = d3.time.format.iso.parse(d.crawlingTime);
         d.free = +d.free;
