@@ -42,7 +42,7 @@ class DataAPIController @Inject()(crawler: PaderbornCrawler,
     repo.getAll
       .map { crawledSets =>
         Ok(Json.toJson(
-          crawledSets.map(d => new DateTime(d.crawlingTime)).distinct
+          crawledSets.map(d => d.crawlingTime).distinct
         ))
       }
   }
