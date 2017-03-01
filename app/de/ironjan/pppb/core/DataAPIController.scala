@@ -4,7 +4,7 @@ import javax.inject._
 
 import de.ironjan.pppb.core.repository.ParkingDataRepository
 import de.ironjan.pppb.crawling.PaderbornCrawler
-import org.joda.time.DateTime
+import de.ironjan.pppb.core.model.DateTimeHelper._
 import play.api.libs.json.Json
 import play.api.mvc._
 
@@ -24,7 +24,18 @@ class DataAPIController @Inject()(crawler: PaderbornCrawler,
     repo.getAll
       .map(crawledSets =>
         Ok(Json.toJson(
-            crawledSets.sortBy(_.crawlingTime.getMillis())
+          crawledSets.sortBy(_.crawlingTime.getMillis())
+            .map(ParkingDataSetJson.from))))
+  }
+
+  def all_crawled_latest = Action.async { implicit request =>
+    val repo = new ParkingDataRepository
+    repo.getAll
+      .map(crawledSets =>
+        Ok(Json.toJson(
+          crawledSets.filter(_.crawlingTime.isLessThan1DayOld)
+            .sortBy(_.crawlingTime.getMillis())
+
             .map(ParkingDataSetJson.from))))
   }
 
@@ -73,7 +84,6 @@ class DataAPIController @Inject()(crawler: PaderbornCrawler,
         }.map(t => t.productIterator.mkString(","))
           .mkString("\n")
       }.map(s => Ok(s.toString))
-    //crawlingTime":1486933054571,"name":"P6 Libori-Galerie","freeRaw":"174","capacityRaw":"500","city":"Paderborn","id":602190,"isDeleted":false,"modelVersion":1,"hourOfDay":20,"minuteOfHour":57,"dayOfWeek":7,"dayOfMonth":12,"weekOfMonth":0,"weekOfYear":6,"free":174,"capacity
   }
 
 

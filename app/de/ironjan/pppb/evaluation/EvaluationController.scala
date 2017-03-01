@@ -16,6 +16,7 @@ import de.ironjan.pppb.core.model.DateTimeHelper._
 import scala.concurrent.ExecutionContext.Implicits.global
 import scala.concurrent.duration.Duration
 import scala.concurrent.{Await, Future}
+import de.ironjan.pppb.core.model.DateTimeHelper._
 
 @Singleton
 class EvaluationController @Inject()(parkingDataRepo: ParkingDataRepository,
@@ -30,6 +31,10 @@ class EvaluationController @Inject()(parkingDataRepo: ParkingDataRepository,
     Ok(Json.toJson(ts)))
   }
 
+
+  def getSimplifiedLatest = Action.async { implicit request =>
+    computeSimplifiedResults.map(ts => Ok(Json.toJson(ts.filter(_.dateTime.isLessThan1DayOld))))
+  }
   def getStats = Action.async { implicit  request =>
     computeSimplifiedResults.map(ts =>
     {
