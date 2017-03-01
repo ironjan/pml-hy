@@ -5,7 +5,20 @@
 \usepackage{amsfonts}
 \usepackage{amssymb}
 \usepackage{graphicx}
+\usepackage{hyperref}
+
 \usetheme{CambridgeUS}
+
+
+\newcommand{\subtask}[1]{\begin{quote}\textbf{#1}\end{quote}}
+\newcommand{\hod}{hour}
+\newcommand{\moh}{min}
+\newcommand{\dow}{day_{week}}
+\newcommand{\dom}{day_{month}}
+\newcommand{\wom}{week_{month}}
+\newcommand{\woy}{week_{year}}
+\newcommand{\yyy}{year}
+
 \begin{document}
 \author{Jan Lippert}
 \title{Predicting Parking Space Availability in Paderborn}
@@ -23,52 +36,102 @@
 \section{Predicting Parking Space Availability}
 \subsection{Introduction}
 \begin{frame}
-  \frametitle{}
+  \frametitle{Introduction}
+  \begin{itemize}
+  	\item \url{https://pppb.herokuapp.com/}
+  	\item Predicts the number of available parking spaces 15 minutes into the future
+  	\item Hosted Heroku with free plans
+  \end{itemize}
 \end{frame}
 
 \section{Getting the data}
 \subsection{Crawling}
 \begin{frame}
-  \frametitle{}
+  \frametitle{Crawling}
+  \begin{itemize}
+  	\item Was quite straightforward: get html, extract data, save it
+  	\item Encountered problems: 
+  	\begin{itemize}
+  	  \item Heroku free dynos start to sleep after 30s without request
+  	  \item Heroku free dynos are required to sleep 6hrs a day
+  	\end{itemize}
+  \end{itemize}
 \end{frame}
 
 \subsection{Preprocessing}
 \begin{frame}
-  \frametitle{}
+  \frametitle{Preprocessing}
+  \begin{itemize}
+  	\item Done directly after crawling
+  	\item Regular job to update existing entries when model changes
+  \end{itemize}
 \end{frame}
 
 
 \section{Predicting the future}
 \subsection{Model \& Training Method}
 \begin{frame}
-  \frametitle{}
+  \frametitle{Model \& Training Method}
+  \begin{itemize}
+    \item \((\hod, \moh, \dow, \dom, \wom, \woy, \yyy, free)\)
+    \item Similar to models used by other ``parking space predictors''
+    \item Tried RegressionTree first but results were very unsatisfactory
+    \item Then tried other regressions. Current best: GradientBoost
+    \begin{itemize}
+      \item Implementation: try different models and parameterizations, pick best
+    \end{itemize}
+  \end{itemize}
 \end{frame}
 
 \subsection{Evaluation}
 \begin{frame}
-  \frametitle{}
+  \frametitle{Evaluation}
+  \begin{itemize}
+    \item Most of the time the predictions are far off
+    \item Sometimes they are nearly exact
+    \item Average absolute error: \(\mu \sim 130, \sigma \sim 120\)
+    \item Did not have time to look into the reason for that
+  \end{itemize}
 \end{frame}
 
 \section{Challenges}
-\subsection{Live System}
+\subsection{Free Heroku plan}
 \begin{frame}
-  \frametitle{}
+  \begin{itemize}
+  \frametitle{Challenges}
+  	\item Sleeping dynos \(\rightarrow\) keep awake script on melkinpaasi
+  	\item Required sleep of 6hrs \(\rightarrow\) sleep at night
+  	\begin{itemize}
+  	  \item Libori-Galerie is also closed
+  	\end{itemize}
+  \end{itemize}
 \end{frame}
 
-\subsection{Maintenance}
+\subsection{Other}
 \begin{frame}
-  \frametitle{}
+  \frametitle{Challenges}
+  \begin{itemize}
+  	\item I don't have tracking in place and didn't check regularly
+  	\begin{itemize}
+  	  \item Some problems (sleeping dynos causing crawling to fail) were discovered to late
+  	\end{itemize}
+  	\item At one time, ASP system was done
+    \begin{itemize}
+      \item Was repaired after one week
+      \item Enabled me to fix some bugs
+    \end{itemize}
+  \end{itemize}
 \end{frame}
 
 \section{Open Challenges}
-\subsection{Meaningful predictions}
+\subsection{Much space for improvement}
 \begin{frame}
-  \frametitle{}
-\end{frame}
-
-\subsection{Getting the system to run correctly}
-\begin{frame}
-  \frametitle{}
+  \frametitle{Open Challenges}
+  \begin{itemize}
+  	\item Get meaningful predictions
+  	\item Find out, why predictions on dev system are by far more accurate
+  	\item Find out, why prediction accuracy fluctates so much
+  \end{itemize}
 \end{frame}
 
 \end{document}
