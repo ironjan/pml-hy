@@ -86,22 +86,25 @@ class Trainer @Inject()(parkingDataRepository: ParkingDataRepository) {
 
     val shrinkageSteps = (1/shrinkageStepWidth - 1).toInt
     Stream.concat(
-      Stream({
-          val result = evaluate(smile.regression.cart(x, y, 100), testSet, modelMaker),
+      Stream(
+        {
+          val result = evaluate(smile.regression.cart(x, y, 100), testSet, modelMaker)
           Logger.debug(s"cart -> $result")
           result
-          },
+        },
         try{
           val result = evaluate(smile.regression.randomForest(x, y), testSet, modelMaker)
           Logger.debug(s"RDF-> $result")
           result
         }catch {case e: IllegalArgumentException => (Double.PositiveInfinity, null)}
       ),
-      Stream.tabulate(shrinkageSteps) { i => (i + 1) * shrinkageStepWidth }.map(s => {
-        val result = evaluate(smile.regression.gbm(x, y, shrinkage = s), testSet, modelMaker)
-        Logger.debug(s"GBM($shrinkage) -> $result")
-        result
-      ))
+      Stream.tabulate(shrinkageSteps) { i => (i + 1) * shrinkageStepWidth }
+        .map(s => 
+          {
+            val result = evaluate(smile.regression.gbm(x, y, shrinkage = s), testSet, modelMaker)
+            Logger.debug(s"GBM($s) -> $result")
+            result
+          }))
   }
 
   private def evaluate(regression: Regression[Array[Double]], T: Seq[ParkingDataSet], modelMaker: ParkingDataSet =>  (Array[Double], Double)) = {
