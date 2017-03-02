@@ -1,0 +1,42 @@
+\documentclass[journal,10pt]{IEEEtran}
+\usepackage{hyperref}
+\usepackage{todonotes}
+\usepackage{amssymb}
+\usepackage{amsmath}
+\usepackage{mathtools}
+\usepackage{graphicx}
+
+\title{Predicting Parking Space Availability in Paderborn\\
+Methodology Selection}
+\author{Jan Lippert \(<\)\href{mailt:ljan@mail.upb.de}{ljan@mail.upb.de}\(>\)}
+\date{\today}
+
+\newcommand{\subtask}[1]{\begin{quote}\textbf{#1}\end{quote}}
+\newcommand{\hod}{h}
+\newcommand{\moh}{m}
+\newcommand{\dow}{d}
+\newcommand{\dom}{d_m}
+\newcommand{\wom}{w_m}
+\newcommand{\woy}{w_y}
+\newcommand{\yyy}{a}
+
+\newcommand{\IN}{\mathbb{N}}
+\newcommand{\defeq}{\coloneqq}
+
+\begin{document}
+\maketitle
+
+\section{Introduction}
+
+In urban areas, space and as such parking space is limited. Car owners often have to drive around to available parking spots. This leads to an unnecessary waste of time and additional air pollution. 
+
+According to multiple studies, the availability of parking data reduces the search time for a parking spot \cite{Asakura1994}\cite{Caicedo2010228}. However, most systems only provide the current number free parking spots. In rush hours, this information can quickly get outdated and lead to driving around to find available parking spaces.
+
+The goal of this project is to predict the available parking space in advance. Because of the limitation outlined in \ref{sec:challenged}, we will focus on the covered car park ``Libori-Galerie''. This car park is also the most interesting as it is directly connected to a local shopping center. It is opened from 06:00 am to 02:00 am.
+\input{methodology_content}
+
+
+\bibliographystyle{ieeetr}  
+\bibliography{report_2}
+
+\end{document}

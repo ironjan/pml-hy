@@ -37,6 +37,8 @@ object DateTimeHelper {
       val weekOfYear = dateTime.getWeekOfWeekyear
       (hourOfDay, minuteOfHour, dayOfWeek, dayOfMonth, weekOfMonth, weekOfYear)
     }
+
+    def isLessThan1DayOld = dateTime.isAfter(new DateTime().minusDays(1))
   }
 
 

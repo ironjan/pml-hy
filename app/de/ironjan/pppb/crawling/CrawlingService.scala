@@ -32,7 +32,7 @@ import scala.concurrent.duration._
       }
       }))
 
-  system.scheduler.schedule(0 milliseconds,
+  system.scheduler.schedule(30 seconds,
     1 minutes,
     crawlingActor,
     Event)

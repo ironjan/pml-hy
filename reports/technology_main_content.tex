@@ -1,26 +1,3 @@
-\input{header.tex}
-
-\renewcommand{\todo}{}
-
-\begin{document}
-
-\title{Predicting Parking Space Availability in Paderborn\\
-Technology Selection}
-\maketitle
-
-\begin{abstract}
-The Parking Prediction system Paderborn is available at \url{http://pppb.herokuapp.com/}. It was written in Play! Scala and uses the \href{smile}{haifengl.github.io/smile/} library. It was planned to predict the number of available parking spaces for the ``Libori-Galerie'' 15 minutes in advance, e.g. loading the web page in the browser will show the prediction. Currently, this functionality was not implemented yet as the quality of predictions is insufficient. Alternative models need to be investigated and implemented for the final system. 
- \end{abstract}
-
-\section{Introduction}
-
-In urban areas, space and as such parking space is limited. Car owners often have to drive around to available parking spots. This leads to an unnecessary waste of time and additional air pollution. 
-
-According to multiple studies, the availability of parking data reduces the search time for a parking spot \cite{Asakura1994}\cite{Caicedo2010228}. However, most systems only provide the current number free parking spots. In rush hours, this information can quickly get outdated and lead to driving around to find available parking spaces.
-
-This report will describe how such a system could be implemented. Section \ref{sec:architecture} will show how the overall architecture of the system will look like. Section \ref{sec:frameworks} will compare the different frameworks that were considered for the implementation. 
-
-\section{Technology}
 
 \subsection{Architecture}\label{sec:architecture}
 One important part in the choice of technology was the separation of the different concerns in the applications. There are multiple parts that play together: crawling, preprocessing, training, prediction, and finally evaluation. 
@@ -67,7 +44,3 @@ The next limit is in the size of the database. The free tier only allows \(10000
 As initially expected, the prediction accuracy is quite low. The regression tree has a mean absolute error of \(106.09\) when using \(754\) training examples and \(83\) test examples. The currently best result was achieved by using a Random Forest Classificator; using the same examples as before, the RFC had a mean absolute error of \(64.36\). This clearly shows that model and training method have to improved by a great deal before actually becoming useful. 
 
 To do so, the next part of the project will consist of trying out different models and experimenting with other features. Live predictions will be added soon with the warning that they are experimental and probably not usable yet.
-\bibliographystyle{ieeetr}  
-\bibliography{report_3}
-
-\end{document}

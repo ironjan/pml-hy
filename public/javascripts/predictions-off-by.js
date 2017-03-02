@@ -1,5 +1,5 @@
-function drawDayFree(){
-var moveChart = dc.lineChart('#day-free-chart');
+function drawPredictions(){
+var moveChart = dc.lineChart('#predictions-off-by-chart');
 
 var margin = {top: 30, right: 20, bottom: 30, left: 50},
     width = 1200 - margin.left - margin.right,
@@ -17,12 +17,12 @@ var yAxis = d3.svg.axis().scale(y)
 
 // Define the line
 var valueline = d3.svg.line()
-    .x(function(d) { return x(d.crawlingTime); })
-    .y(function(d) { return y(d.free); })
+    .x(function(d) { return x(d.dateTime); })
+    .y(function(d) { return y(d.off); })
     .interpolate("linear");
 
 // Adds the svg canvas
-var svg = d3.select("#day-free-chart")
+var svg = d3.select("#predictions-off-by-chart")
     .append("svg")
         .attr("width", width + margin.left + margin.right)
         .attr("height", height + margin.top + margin.bottom)
@@ -31,15 +31,15 @@ var svg = d3.select("#day-free-chart")
               "translate(" + margin.left + "," + margin.top + ")");
 
 // Get the data
-d3.json("/api/working_data_crawled/latest", function(error, data) {
+d3.json("/api/evaluations/simplified/latest", function(error, data) {
     data.forEach(function(d) {
-        d.crawlingTime = d3.time.format.iso.parse(d.crawlingTime);
-        d.free = +d.free;
+        d.dateTime = d3.time.format.iso.parse(d.dateTime);
+        d.off = Math.abs(+d.predicted - +d.actual);
     });
 
     // Scale the range of the data
-    x.domain(d3.extent(data, function(d) { return d.crawlingTime; }));
-    y.domain([0, d3.max(data, function(d) { return d.free; })]);
+    x.domain(d3.extent(data, function(d) { return d.dateTime; }));
+    y.domain([0, d3.max(data, function(d) { return d.off; })]);
 
     // Add the X Axis
     svg.append("g")
@@ -64,8 +64,9 @@ d3.json("/api/working_data_crawled/latest", function(error, data) {
         .data(data)
         .enter().append("circle")
             .attr("r", 2)
-            .attr("cx", function(d) { return x(d.crawlingTime); })
-            .attr("cy", function(d) { return y(d.free); });
+            .attr("cx", function(d) { return x(d.dateTime); })
+            .attr("cy", function(d) { return y(d.off); });
 });
-};
-drawDayFree();
+}
+
+drawPredictions();

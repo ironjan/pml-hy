@@ -1,0 +1,31 @@
+\documentclass[journal,10pt]{IEEEtran}
+\usepackage{hyperref}
+\usepackage{todonotes}
+
+\title{Predicting Parking Space Availability in Paderborn}
+\author{Jan Lippert \(<\)\href{mailt:ljan@mail.upb.de}{ljan@mail.upb.de}\(>\)}
+\date{\today}
+
+
+\begin{document}
+\maketitle
+
+\section{Introduction}
+
+In urban areas, space and as such parking space is limited. Car owners often have to drive around to available parking spots. This leads to an unnecessary waste of time and additional air pollution. 
+
+According to multiple studies, the availability of parking data reduces the search time for a parking spot \cite{Asakura1994}\cite{Caicedo2010228}. However, most systems only provide the current number free parking spots. In rush hours, this information can quickly get outdated and lead to driving around to find available parking spaces.
+
+%\cite{parkendd} is a similar project which shows the current free parking spots in different cities. This information is collected from different websites. In addition, \cite{parkendd} collected data over the course of a year and used machine learning to predict the usage of the covered car park ``Centrum Galerie''\footnote{\url{http://mechlab-engineering.de/2015/03/vorhersage-der-parkhausbelegung-mit-offenen-daten/}}. 
+%\cite{Rajabioun2013} and \cite{Zheng2015} propose similar systems to predict the availability of parking space to help car owners find a parking spot in advance. 
+
+In Paderborn the situation is similar: live-data is available but no prediction. The proposed project will collect parking data from Paderborn and use machine learning to predict the number of free parking spots.
+
+
+\input{related_work}
+\input{data_sources}
+
+\bibliographystyle{abbrv}
+\bibliography{report_1}
+
+\end{document}
