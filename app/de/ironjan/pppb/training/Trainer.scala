@@ -36,8 +36,10 @@ class Trainer @Inject()(parkingDataRepository: ParkingDataRepository) {
 
     // TODO just using get on option
     evaluateModels(splitSet, splitSet._1.head.capacity.get)
-      .sortBy(_._1)
-      .head
+      .minBy(p => {
+        Logger.debug(s"Min by for $p")
+        p._1
+      })
   }
 
   private def evaluateModels(ds: (Seq[ParkingDataSet], Seq[ParkingDataSet]), capacity: Int) = {
@@ -54,10 +56,12 @@ class Trainer @Inject()(parkingDataRepository: ParkingDataRepository) {
 
     Logger.debug(s"Prepared training data.")
 
-    Seq.concat(
-      Seq(evaluate(smile.regression.cart(x, y, 100), testSet),
-      evaluate(smile.regression.randomForest(x, y), testSet)),
-      Seq.tabulate(19) { i => (i + 1) * 0.05 }.map(s => evaluate(smile.regression.gbm(x, y, shrinkage = s), testSet)))
+    val shrinkageStepWidth = 0.1
+    val shrinkageSteps = (1/shrinkageStepWidth - 1).toInt
+    Stream.concat(
+      Stream(evaluate(smile.regression.cart(x, y, 100), testSet),
+        evaluate(smile.regression.randomForest(x, y), testSet)),
+      Stream.tabulate(shrinkageSteps) { i => (i + 1) * shrinkageStepWidth }.map(s => evaluate(smile.regression.gbm(x, y, shrinkage = s), testSet)))
   }
 
   private def evaluate(regression: Regression[Array[Double]], T: Seq[ParkingDataSet]) = {
@@ -69,7 +73,7 @@ class Trainer @Inject()(parkingDataRepository: ParkingDataRepository) {
       .map(p => Math.abs(p._1 - p._2))
 
     val mae = aes.sum / aes.length
-    Logger.debug(s"${regression.getClass.getName} had a mean average error of $mae.")
+    Logger.debug(s"${regression} had a mean average error of $mae.")
     (mae, regression)
   }
 
