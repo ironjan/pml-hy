@@ -43,7 +43,7 @@ class Trainer @Inject()(parkingDataRepository: ParkingDataRepository) {
     var counter = 0
     // TODO just using get on option
     val best = Stream.concat(
-      {
+      /*{
         Logger.debug("toFullTrainingTuple")
         evaluateModels(splitSet, splitSet._1.head.capacity.get, toFullTrainingTuple)
       },
@@ -51,6 +51,7 @@ class Trainer @Inject()(parkingDataRepository: ParkingDataRepository) {
         Logger.debug("toHourMinutesTuple")
         evaluateModels(splitSet, splitSet._1.head.capacity.get, toHourMinutesTuple)
       },
+      */
       {
         Logger.debug("toMinutesOfDayTuple")
         evaluateModels(splitSet, splitSet._1.head.capacity.get, toMinutesOfDayTuple)
