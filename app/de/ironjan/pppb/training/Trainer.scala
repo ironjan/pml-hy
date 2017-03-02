@@ -1,7 +1,5 @@
 package de.ironjan.pppb.training
 
-import java.lang.IllegalArgumentException
-
 import com.google.inject.Inject
 import de.ironjan.pppb.core.model.ParkingDataSet
 import de.ironjan.pppb.core.model.DateTimeHelper._
@@ -13,15 +11,11 @@ import smile.regression.Regression
 import scala.concurrent.Await
 import scala.concurrent.duration.Duration
 import scala.concurrent.ExecutionContext.Implicits.global
-import scala.util.Try
 
 /**
   * Created by Jan Lippert on 19.02.2017.
   */
 class Trainer @Inject()(parkingDataRepository: ParkingDataRepository) {
-  val shrinkageStepWidth = 0.05
-
-
   def timeModelEvaluation = {
     Logger.debug(s"Started training.")
 
@@ -40,43 +34,18 @@ class Trainer @Inject()(parkingDataRepository: ParkingDataRepository) {
     val boundary = ds.length * 9 / 10
     val splitSet = (ds.slice(0, boundary), ds.slice(boundary, ds.length - 1))
 
-    var counter = 0
     // TODO just using get on option
-    val best = Stream.concat(
-      /*{
-        Logger.debug("toFullTrainingTuple")
-        evaluateModels(splitSet, splitSet._1.head.capacity.get, toFullTrainingTuple)
-      },
-      {
-        Logger.debug("toHourMinutesTuple")
-        evaluateModels(splitSet, splitSet._1.head.capacity.get, toHourMinutesTuple)
-      },
-      */
-      {
-        Logger.debug("toMinutesOfDayTuple")
-        evaluateModels(splitSet, splitSet._1.head.capacity.get, toMinutesOfDayTuple)
-      },
-      {
-        Logger.debug("toMinutesOfHourTuple")
-        evaluateModels(splitSet, splitSet._1.head.capacity.get, toMinutesOfHourTuple)
-      }
-    )
-      .minBy(p => {
-          Logger.debug(s"Min by for $p")
-        counter += 1
-          p._1
-      })
-
-    Logger.info(s"Found that $best is the best ($counter checked in total)")
-    best
+    evaluateModels(splitSet, splitSet._1.head.capacity.get)
+      .sortBy(_._1)
+      .head
   }
 
-  private def evaluateModels(ds: (Seq[ParkingDataSet], Seq[ParkingDataSet]), capacity: Int, modelMaker: ParkingDataSet =>  (Array[Double], Double)) = {
+  private def evaluateModels(ds: (Seq[ParkingDataSet], Seq[ParkingDataSet]), capacity: Int) = {
     val trainingSet = ds._1
     val testSet = ds._2
     Logger.debug(s"Training subset of length ${trainingSet.length} and test set of length ${testSet.length}.")
 
-    val unzipped = unzipSet(trainingSet, modelMaker)
+    val unzipped = unzipSet(trainingSet)
 
     // TODO better way for double .toArray?
     val x = unzipped._1.toArray
@@ -85,73 +54,29 @@ class Trainer @Inject()(parkingDataRepository: ParkingDataRepository) {
 
     Logger.debug(s"Prepared training data.")
 
-    val shrinkageSteps = (1/shrinkageStepWidth - 1).toInt
-    Stream.concat(
-      Stream(
-        {
-          val result = evaluate(smile.regression.cart(x, y, 100), testSet, modelMaker)
-          Logger.debug(s"cart -> $result")
-          result
-        },
-        try{
-          val result = evaluate(smile.regression.randomForest(x, y), testSet, modelMaker)
-          Logger.debug(s"RDF-> $result")
-          result
-        }catch {case e: IllegalArgumentException => (Double.PositiveInfinity, null)}
-      ),
-      Stream.tabulate(shrinkageSteps) { i => (i + 1) * shrinkageStepWidth }
-        .map(s => 
-          {
-            val result = evaluate(smile.regression.gbm(x, y, shrinkage = s), testSet, modelMaker)
-            Logger.debug(s"GBM($s) -> $result")
-            result
-          }))
+    Seq.concat(
+      Seq(evaluate(smile.regression.cart(x, y, 100), testSet),
+      evaluate(smile.regression.randomForest(x, y), testSet)),
+      Seq.tabulate(19) { i => (i + 1) * 0.05 }.map(s => evaluate(smile.regression.gbm(x, y, shrinkage = s), testSet)))
   }
 
-  private def evaluate(regression: Regression[Array[Double]], T: Seq[ParkingDataSet], modelMaker: ParkingDataSet =>  (Array[Double], Double)) = {
-    try{
-      val xStars = unzipSet(T, modelMaker)._1
-      val yStars = unzipSet(T, modelMaker)._2
+  private def evaluate(regression: Regression[Array[Double]], T: Seq[ParkingDataSet]) = {
+    val xStars = unzipSet(T)._1
+    val yStars = unzipSet(T)._2
 
-      val aes = xStars.map(regression.predict)
-        .zip(yStars)
-        .map(p => Math.abs(p._1 - p._2))
+    val aes = xStars.map(regression.predict)
+      .zip(yStars)
+      .map(p => Math.abs(p._1 - p._2))
 
-      val mae = aes.sum / aes.length
-//      Logger.debug(s"${regression} had a mean average error of $mae.")
-      (mae, regression)
-    } catch {
-      case e: IllegalArgumentException => {
-        Logger.warn(e.getMessage)
-        (Double.PositiveInfinity, null)
-      }
-    }
+    val mae = aes.sum / aes.length
+    Logger.debug(s"${regression.getClass.getName} had a mean average error of $mae.")
+    (mae, regression)
   }
 
-  private def unzipSet(trainingSet: Seq[ParkingDataSet], modelMaker: ParkingDataSet =>  (Array[Double], Double)) = {
+  private def unzipSet(trainingSet: Seq[ParkingDataSet]) = {
     trainingSet.filter(_.hasUsefulData)
-      .map(modelMaker)
+      .map(_.toMlTrainingTuple)
       .unzip
   }
 
-  // FIXME just using get!
-  private def toFullTrainingTuple(parkingDataSet: ParkingDataSet): (Array[Double], Double) =
-    (
-      Array(
-        parkingDataSet.hourOfDay.get.toDouble,
-        parkingDataSet.minuteOfHour.get.toDouble,
-        parkingDataSet.dayOfWeek.get.toDouble,
-        parkingDataSet.dayOfMonth.get.toDouble,
-        parkingDataSet.weekOfMonth.get.toDouble,
-        parkingDataSet.weekOfYear.get.toDouble),
-      parkingDataSet.free.get.toDouble)
-
-  private def toHourMinutesTuple(parkingDataSet: ParkingDataSet): (Array[Double], Double) =
-    (Array(parkingDataSet.hourOfDay.get, parkingDataSet.minuteOfHour.get), parkingDataSet.free.get)
-
-  private def toMinutesOfDayTuple(parkingDataSet: ParkingDataSet): (Array[Double], Double) =
-    (Array(parkingDataSet.hourOfDay.get * 60 + parkingDataSet.minuteOfHour.get), parkingDataSet.free.get)
-
-  private def toMinutesOfHourTuple(parkingDataSet: ParkingDataSet): (Array[Double], Double) =
-    (Array(parkingDataSet.minuteOfHour.get), parkingDataSet.free.get)
 }

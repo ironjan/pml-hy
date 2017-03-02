@@ -43,6 +43,17 @@ object ParkingDataSet {
 
     def isDeleteable = isRecentModel && !hasUsefulData
 
+    // FIXME just using get!
+    def toMlTrainingTuple =
+      (
+        Array(
+          parkingDataSet.hourOfDay.get.toDouble,
+          parkingDataSet.minuteOfHour.get.toDouble,
+          parkingDataSet.dayOfWeek.get.toDouble,
+          parkingDataSet.dayOfMonth.get.toDouble,
+          parkingDataSet.weekOfMonth.get.toDouble,
+          parkingDataSet.weekOfYear.get.toDouble),
+        parkingDataSet.free.get.toDouble)
   }
 
   def attributes: Array[Attribute] =

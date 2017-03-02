@@ -39,7 +39,7 @@ class PredictionService @Inject()(parkingDataRepo: ParkingDataRepository,
   }))
 
   system.scheduler.schedule(30 seconds,
-    5 minutes,
+    1 minutes,
     actor,
     PredictionEvent)
 
