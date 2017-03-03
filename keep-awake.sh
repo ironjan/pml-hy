@@ -7,7 +7,7 @@ PROD_END___TIME=230000 # UTC. Closing 2am MEZ/MESZ. App needs 6h sleep a day.
 HEROKU_APP=https://pppb.herokuapp.com/
 
 function wake_up_app {
-  curl -I https://enigmatic-citadel-24582.herokuapp.com/
+  curl -I https://pppb.herokuapp.com/
 }
 
 while true
