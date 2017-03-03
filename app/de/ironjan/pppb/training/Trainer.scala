@@ -54,10 +54,12 @@ class Trainer @Inject()(parkingDataRepository: ParkingDataRepository) {
 
     Logger.debug(s"Prepared training data.")
 
+    val gmbStepWidth = 0.1
+    val gbmSteps = (1/gmbStepWidth - 1).toInt
     Seq.concat(
       Seq(evaluate(smile.regression.cart(x, y, 100), testSet),
       evaluate(smile.regression.randomForest(x, y), testSet)),
-      Seq.tabulate(19) { i => (i + 1) * 0.05 }.map(s => evaluate(smile.regression.gbm(x, y, shrinkage = s), testSet)))
+      Seq.tabulate(gbmSteps) { i => (i + 1) * gmbStepWidth }.map(s => evaluate(smile.regression.gbm(x, y, shrinkage = s), testSet)))
   }
 
   private def evaluate(regression: Regression[Array[Double]], T: Seq[ParkingDataSet]) = {
