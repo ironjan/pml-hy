@@ -71,7 +71,8 @@ class EvaluationController @Inject()(parkingDataRepo: ParkingDataRepository,
 
   private def computeSimplifiedResults = {
     computeTmpEvalResults.map(ts =>
-      ts.map(t  => SimplifiedEvalResult(t.prediction.predictedTime, t.prediction.prediction, t.parkingDataSetJson.free.get)))
+      ts.map(t  =>
+        SimplifiedEvalResult(t.prediction.predictedTime, t.prediction.prediction, t.parkingDataSetJson.free.get, t.delta)))
   }
 
   private def computeTmpEvalResults = {
@@ -90,10 +91,14 @@ class EvaluationController @Inject()(parkingDataRepo: ParkingDataRepository,
         .filter(ed => keys.contains(ed._1))
         .zip(explodedPredictions)
         .map(pair => {
-          val prediction = pair._2._2
-          val actual = pair._1._2
-          val delta = Math.abs(actual.free.get - prediction.prediction)
-          TmpEvalResult(prediction, actual, delta)
+          val predictionObject = pair._2._2
+          val actualParkingData = pair._1._2
+
+          val predictedY = predictionObject.prediction
+          val actualY = actualParkingData.free.get
+
+          val delta = Math.abs(predictedY - actualY)
+          TmpEvalResult(predictionObject, actualParkingData, delta)
         }))
   }
 }
