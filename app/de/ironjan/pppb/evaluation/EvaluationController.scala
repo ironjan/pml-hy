@@ -23,17 +23,17 @@ class EvaluationController @Inject()(parkingDataRepo: ParkingDataRepository,
                                      predictionDataRepo: PredictionDataRepository) {
 
   def getAll = Action.async { implicit request =>
-    computeTmpEvalResults.map(xs => Ok(Json.toJson(xs)))
+    computeTmpEvalResults.map(xs => Ok(Json.toJson(xs.sortBy(_.prediction.predictedTime.getMillis))))
   }
 
   def getSimplified = Action.async {implicit request =>
     computeSimplifiedResults.map(ts =>
-    Ok(Json.toJson(ts)))
+    Ok(Json.toJson(ts.sortBy(_.dateTime.getMillis))))
   }
 
 
   def getSimplifiedLatest = Action.async { implicit request =>
-    computeSimplifiedResults.map(ts => Ok(Json.toJson(ts.filter(_.dateTime.isLessThan1DayOld))))
+    computeSimplifiedResults.map(ts => Ok(Json.toJson(ts.filter(_.dateTime.isLessThan1DayOld).sortBy(_.dateTime.getMillis))))
   }
   def getStats = Action.async { implicit  request =>
     computeSimplifiedResults.map(ts =>
