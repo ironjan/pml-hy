@@ -28,6 +28,10 @@ object DateTimeHelper {
       Weeks.weeksBetween(dateTime.withDayOfMonth(1), dateTime).getWeeks + 1
     }
 
+    /**
+      *
+      * @return (hod, moh, dow, dom, wom, woy)
+      */
     def explode ={
       val hourOfDay = dateTime.getHourOfDay
       val minuteOfHour = dateTime.getMinuteOfHour
