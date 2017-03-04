@@ -12,6 +12,8 @@ import scala.concurrent.Await
 import scala.concurrent.duration.Duration
 import scala.concurrent.ExecutionContext.Implicits.global
 
+import de.ironjan.pppb.training.RegressionStringOps._
+
 /**
   * Created by Jan Lippert on 19.02.2017.
   */
@@ -35,9 +37,11 @@ class Trainer @Inject()(parkingDataRepository: ParkingDataRepository) {
     val splitSet = (ds.slice(0, boundary), ds.slice(boundary, ds.length - 1))
 
     // TODO just using get on option
-    evaluateModels(splitSet, splitSet._1.head.capacity.get)
+    val best = evaluateModels(splitSet, splitSet._1.head.capacity.get)
       .sortBy(_._1)
       .head
+    Logger.info(s"Found best model: (${best._1}, ${best._2.toPrintable}")
+    best
   }
 
   private def evaluateModels(ds: (Seq[ParkingDataSet], Seq[ParkingDataSet]), capacity: Int) = {
@@ -71,7 +75,7 @@ class Trainer @Inject()(parkingDataRepository: ParkingDataRepository) {
       .map(p => Math.abs(p._1 - p._2))
 
     val mae = aes.sum / aes.length
-    Logger.debug(s"${regression.getClass.getName} had a mean average error of $mae.")
+    Logger.debug(s"${regression.toPrintable} had a mean average error of $mae.")
     (mae, regression)
   }
 
@@ -82,3 +86,4 @@ class Trainer @Inject()(parkingDataRepository: ParkingDataRepository) {
   }
 
 }
+
