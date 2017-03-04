@@ -4,32 +4,24 @@ import org.joda.time.DateTime
 import smile.regression.{GradientTreeBoost, RandomForest, Regression, RegressionTree}
 
 object RegressionStringOps {
+
   implicit class RegressionOps(regression: Regression[Array[Double]]) {
-    def toPrintable: String = regression.getClass.getName
-  }
-
-  implicit class RegressionTreeOps(regressionTree: RegressionTree)
-  extends RegressionOps(regressionTree){
-    override def toPrintable: String = {
-      val importance = regressionTree.importance().mkString(", ")
-      s"RegressionTree: maxDepth = ${regressionTree.maxDepth()}, importance = [$importance]"
+    def toPrintable: String = {
+    regression match {
+      case rt: RegressionTree => {
+        val importance = rt.importance().mkString(", ")
+        s"RegressionTree: maxDepth = ${rt.maxDepth()}, importance = [$importance]"
+      }
+      case rf : RandomForest => {
+        val importance = rf.importance().mkString(", ")
+        s"RandomForest: importance = [$importance]"
+      }
+      case gtb: GradientTreeBoost => {
+        val importance = gtb.importance().mkString(", ")
+        s"GradientTreeBoost: importance = [$importance]"
+      }
+      case r => r.getClass.getName
     }
-  }
-
-  implicit class RandomForestOps(rdf: RandomForest)
-    extends RegressionOps(rdf){
-    override def toPrintable: String = {
-      val importance = rdf.importance().mkString(", ")
-      s"RandomForest: importance = [$importance]"
-    }
-  }
-
-
-  implicit class GradientTreeBoostOps(gtb: GradientTreeBoost)
-    extends RegressionOps(gtb){
-    override def toPrintable: String = {
-      val importance = gtb.importance().mkString(", ")
-      s"GradientTreeBoost: importance = [$importance]"
     }
   }
 
