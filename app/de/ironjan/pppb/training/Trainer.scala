@@ -6,13 +6,11 @@ import de.ironjan.pppb.core.model.DateTimeHelper._
 import de.ironjan.pppb.core.repository.ParkingDataRepository
 import org.joda.time.DateTime
 import play.api.Logger
-import smile.regression.Regression
+import smile.regression.{GradientTreeBoost, RandomForest, Regression, RegressionTree}
 
 import scala.concurrent.Await
 import scala.concurrent.duration.Duration
 import scala.concurrent.ExecutionContext.Implicits.global
-
-import de.ironjan.pppb.training.RegressionStringOps._
 
 /**
   * Created by Jan Lippert on 19.02.2017.
@@ -40,7 +38,7 @@ class Trainer @Inject()(parkingDataRepository: ParkingDataRepository) {
     val best = evaluateModels(splitSet, splitSet._1.head.capacity.get)
       .sortBy(_._1)
       .head
-    Logger.info(s"Found best model: (${best._1}, ${best._2.toPrintable}")
+    Logger.info(s"Found best model: (${best._1}, ${toPrintable(best._2)}")
     best
   }
 
@@ -75,7 +73,7 @@ class Trainer @Inject()(parkingDataRepository: ParkingDataRepository) {
       .map(p => Math.abs(p._1 - p._2))
 
     val mae = aes.sum / aes.length
-    Logger.debug(s"${regression.toPrintable} had a mean average error of $mae.")
+    Logger.debug(s"${toPrintable(regression)} had a mean average error of $mae.")
     (mae, regression)
   }
 
@@ -85,5 +83,22 @@ class Trainer @Inject()(parkingDataRepository: ParkingDataRepository) {
       .unzip
   }
 
+  def toPrintable(regression: Regression[Array[Double]]): String = {
+    regression match {
+      case rt: RegressionTree => {
+        val importance = rt.importance().mkString(", ")
+        s"RegressionTree: maxDepth = ${rt.maxDepth()}, importance = [$importance]"
+      }
+      case rf : RandomForest => {
+        val importance = rf.importance().mkString(", ")
+        s"RandomForest: importance = [$importance]"
+      }
+      case gtb: GradientTreeBoost => {
+        val importance = gtb.importance().mkString(", ")
+        s"GradientTreeBoost: importance = [$importance]"
+      }
+      case r => r.getClass.getName
+    }
+  }
 }
 
