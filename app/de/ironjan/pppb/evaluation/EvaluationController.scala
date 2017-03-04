@@ -23,21 +23,21 @@ class EvaluationController @Inject()(parkingDataRepo: ParkingDataRepository,
                                      predictionDataRepo: PredictionDataRepository) {
 
   def getAll = Action.async { implicit request =>
-    computeTmpEvalResults.map(xs => Ok(Json.toJson(xs)))
+    computeTmpEvalResults.map(xs => Ok(Json.toJson(xs.sortBy(_.prediction.predictedTime.getMillis))))
   }
 
-  def getSimplified = Action.async {implicit request =>
+  def getSimplified = Action.async { implicit request =>
     computeSimplifiedResults.map(ts =>
-    Ok(Json.toJson(ts)))
+      Ok(Json.toJson(ts.sortBy(_.dateTime.getMillis))))
   }
 
 
   def getSimplifiedLatest = Action.async { implicit request =>
-    computeSimplifiedResults.map(ts => Ok(Json.toJson(ts.filter(_.dateTime.isLessThan1DayOld))))
+    computeSimplifiedResults.map(ts => Ok(Json.toJson(ts.filter(_.dateTime.isLessThan1DayOld).sortBy(_.dateTime.getMillis))))
   }
-  def getStats = Action.async { implicit  request =>
-    computeSimplifiedResults.map(ts =>
-    {
+
+  def getStats = Action.async { implicit request =>
+    computeSimplifiedResults.map(ts => {
       val deltas = ts.map(_.delta).toArray
       val (mean, std) = meanStd(deltas)
       Ok(Json.toJson(Map("mean" -> mean, "std" -> std, "n" -> deltas.length.toDouble)))
@@ -47,10 +47,11 @@ class EvaluationController @Inject()(parkingDataRepo: ParkingDataRepository,
 
   /**
     * http://www.scalaformachinelearning.com/2015/10/recursive-mean-and-standard-deviation.html
+    *
     * @param x
     * @return
     */
-  def meanStd(x: Array[Double]): (Double, Double) ={
+  def meanStd(x: Array[Double]): (Double, Double) = {
 
     @scala.annotation.tailrec
     def meanStd(
@@ -58,11 +59,11 @@ class EvaluationController @Inject()(parkingDataRepo: ParkingDataRepository,
                  mu: Double,
                  Q: Double,
                  count: Int): (Double, Double) =
-      if (count >= x.length) (mu, Math.sqrt(Q/x.length))
+      if (count >= x.length) (mu, Math.sqrt(Q / x.length))
       else {
-        val newCount = count +1
-        val newMu = x(count)/newCount + mu * (1.0 - 1.0/newCount)
-        val newQ = Q + (x(count) - mu)*(x(count) - newMu)
+        val newCount = count + 1
+        val newMu = x(count) / newCount + mu * (1.0 - 1.0 / newCount)
+        val newQ = Q + (x(count) - mu) * (x(count) - newMu)
         meanStd(x, newMu, newQ, newCount)
       }
 
@@ -71,7 +72,8 @@ class EvaluationController @Inject()(parkingDataRepo: ParkingDataRepository,
 
   private def computeSimplifiedResults = {
     computeTmpEvalResults.map(ts =>
-      ts.map(t  => SimplifiedEvalResult(t.prediction.predictedTime, t.prediction.prediction, t.parkingDataSetJson.free.get)))
+      ts.map(t =>
+        SimplifiedEvalResult(t.prediction.predictedTime, t.prediction.prediction, t.parkingDataSetJson.free.get, t.delta)))
   }
 
   private def computeTmpEvalResults = {
@@ -83,17 +85,31 @@ class EvaluationController @Inject()(parkingDataRepo: ParkingDataRepository,
 
     val keys = explodedPredictions.map(_._1).toSet
 
-    parkingDataRepo.getAll.map(ds =>
-      ds.filter(_.hasUsefulData)
+    parkingDataRepo.getAll.map(ds => {
+      val crawledAndPreparedForPairing = ds.filter(_.hasUsefulData)
         .sortBy(_.crawlingTime.getMillis)
         .map(d => (d.crawlingTime.explode, ParkingDataSetJson.from(d)))
         .filter(ed => keys.contains(ed._1))
-        .zip(explodedPredictions)
-        .map(pair => {
-          val prediction = pair._2._2
-          val actual = pair._1._2
-          val delta = Math.abs(actual.free.get - prediction.prediction)
-          TmpEvalResult(prediction, actual, delta)
-        }))
+
+      crawledAndPreparedForPairing.flatMap(c => findPartner(c,explodedPredictions))
+    })
   }
+
+
+
+  private def findPartner(dTuple: ( (Int, Int, Int, Int, Int, Int), ParkingDataSetJson), explodedPredictions: List[((Int, Int, Int, Int, Int, Int), PredictionResult)])
+  : Option[TmpEvalResult]= {
+    explodedPredictions.find(_._1 == dTuple._1).map(x => {
+      val predictionObject = x._2
+      val actualParkingData = dTuple._2
+
+      val predictedY = predictionObject.prediction
+      val actualY = actualParkingData.free.get
+
+      val delta = Math.abs(predictedY - actualY)
+      TmpEvalResult(x._2, dTuple._2, delta)
+    })
+  }
+
+
 }
