@@ -56,12 +56,13 @@ class Trainer @Inject()(parkingDataRepository: ParkingDataRepository) {
 
     Logger.debug(s"Prepared training data.")
 
-    val gmbStepWidth = 0.1
-    val gbmSteps = (1/gmbStepWidth - 1).toInt
-    Stream.concat(
-      Stream(evaluate(smile.regression.cart(x, y, 100), testSet),
-      evaluate(smile.regression.randomForest(x, y), testSet)),
-      Stream.tabulate(gbmSteps) { i => (i + 1) * gmbStepWidth }.map(s => evaluate(smile.regression.gbm(x, y, shrinkage = s), testSet)))
+    Stream(
+      evaluate(smile.regression.cart(x, y, 100), testSet),
+      evaluate(smile.regression.randomForest(x, y), testSet),
+      evaluate(smile.regression.gbm(x, y, shrinkage = 1), testSet),
+      evaluate(smile.regression.gbm(x, y, shrinkage = 0.1), testSet),
+      evaluate(smile.regression.gbm(x, y, shrinkage = 0.01), testSet),
+      evaluate(smile.regression.gbm(x, y, shrinkage = 0.001), testSet))
   }
 
   private def evaluate(regression: Regression[Array[Double]], T: Seq[ParkingDataSet]) = {
@@ -94,6 +95,7 @@ class Trainer @Inject()(parkingDataRepository: ParkingDataRepository) {
         s"RandomForest: importance = [$importance]"
       }
       case gtb: GradientTreeBoost => {
+        gtb.getSamplingRate
         val importance = gtb.importance().mkString(", ")
         s"GradientTreeBoost: importance = [$importance]"
       }
