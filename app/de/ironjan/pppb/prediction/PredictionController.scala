@@ -25,8 +25,7 @@ class PredictionController @Inject()(predictionService: PredictionService) {
   }
 
   def do_something_great =  Action.async{ implicit request =>
-    predictionService.doSomethingGreat
-    Future.successful(Ok)
+    predictionService.doSomethingGreat.map(s => Ok(Json.toJson(s)))
   }
 
 }

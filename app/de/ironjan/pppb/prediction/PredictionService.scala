@@ -59,6 +59,8 @@ class PredictionService @Inject()(parkingDataRepo: ParkingDataRepository,
   def doSomethingGreat = {
     parkingDataRepo.getAll.map { ds =>
       val (avgAbsError: Double, bestModel: Regression[Array[Double]]) = trainer.doSomethingGreat(ds.filter(_.hasUsefulData))
+      val printableModel = trainer.toPrintable(bestModel)
+      s"Found: ${printableModel} with avgAbsError $avgAbsError"
     }
   }
 }

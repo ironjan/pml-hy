@@ -64,7 +64,6 @@ class Trainer @Inject()(parkingDataRepository: ParkingDataRepository) {
         evaluate(smile.regression.gbm(x, y, shrinkage = 0.01, ntrees = 50), testSet),
         evaluate(smile.regression.gbm(x, y, shrinkage = 0.01, ntrees = 100), testSet),
         evaluate(smile.regression.gbm(x, y, shrinkage = 0.01, ntrees = 500), testSet),
-        evaluate(smile.regression.gbm(x, y, shrinkage = 0.01, maxNodes = 1), testSet),
         evaluate(smile.regression.gbm(x, y, shrinkage = 0.01, maxNodes = 6), testSet),
         evaluate(smile.regression.gbm(x, y, shrinkage = 0.01, maxNodes = 36), testSet)
       )
