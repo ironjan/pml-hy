@@ -2,7 +2,7 @@ package de.ironjan.pppb.evaluation
 
 import javax.inject.{Inject, Singleton}
 
-import de.ironjan.pppb.core.ParkingDataSetJson
+import de.ironjan.pppb.core.{MeanStd, ParkingDataSetJson}
 import de.ironjan.pppb.core.model.ParkingDataSet
 import de.ironjan.pppb.core.repository.ParkingDataRepository
 import de.ironjan.pppb.crawling.PaderbornCrawler
@@ -17,6 +17,7 @@ import scala.concurrent.ExecutionContext.Implicits.global
 import scala.concurrent.duration.Duration
 import scala.concurrent.{Await, Future}
 import de.ironjan.pppb.core.model.DateTimeHelper._
+import de.ironjan.pppb.core
 
 @Singleton
 class EvaluationController @Inject()(parkingDataRepo: ParkingDataRepository,
@@ -39,36 +40,12 @@ class EvaluationController @Inject()(parkingDataRepo: ParkingDataRepository,
   def getStats = Action.async { implicit request =>
     computeSimplifiedResults.map(ts => {
       val deltas = ts.map(_.delta).toArray
-      val (mean, std) = meanStd(deltas)
+      val (mean, std) = MeanStd.meanStd(deltas)
       Ok(Json.toJson(Map("mean" -> mean, "std" -> std, "n" -> deltas.length.toDouble)))
     }
     )
   }
 
-  /**
-    * http://www.scalaformachinelearning.com/2015/10/recursive-mean-and-standard-deviation.html
-    *
-    * @param x
-    * @return
-    */
-  def meanStd(x: Array[Double]): (Double, Double) = {
-
-    @scala.annotation.tailrec
-    def meanStd(
-                 x: Array[Double],
-                 mu: Double,
-                 Q: Double,
-                 count: Int): (Double, Double) =
-      if (count >= x.length) (mu, Math.sqrt(Q / x.length))
-      else {
-        val newCount = count + 1
-        val newMu = x(count) / newCount + mu * (1.0 - 1.0 / newCount)
-        val newQ = Q + (x(count) - mu) * (x(count) - newMu)
-        meanStd(x, newMu, newQ, newCount)
-      }
-
-    meanStd(x, 0.0, 0.0, 0)
-  }
 
   private def computeSimplifiedResults = {
     computeTmpEvalResults.map(ts =>

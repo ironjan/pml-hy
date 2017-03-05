@@ -1,6 +1,7 @@
 package de.ironjan.pppb.training
 
 import com.google.inject.Inject
+import de.ironjan.pppb.core.MeanStd
 import de.ironjan.pppb.core.model.ParkingDataSet
 import de.ironjan.pppb.core.model.DateTimeHelper._
 import de.ironjan.pppb.core.repository.ParkingDataRepository
@@ -28,6 +29,8 @@ class Trainer @Inject()(parkingDataRepository: ParkingDataRepository) {
   }
 
   def findImportances = {
+    val descr = Stream("hourOfDay", "minuteOfHour", "dayOfWeek", "dayOfMonth", "weekOfMonth", "weekOfYear")
+
     val x = getTrainedModels(trainingMethod = extensiveTraining)
       .map{stream =>
         stream.map{
@@ -35,9 +38,11 @@ class Trainer @Inject()(parkingDataRepository: ParkingDataRepository) {
         case (_, rf : RandomForest) => rf.importance()
         case (_, gtb: GradientTreeBoost) => gtb.importance()
       }
-          .transpose.map(x => x.count(d => true))
+          .transpose
+          .map(x => MeanStd.meanStd(x.toArray))
+          .sortBy(_._1)
+          .zip(descr)
       }
-
 
     x
   }
