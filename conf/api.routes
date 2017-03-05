@@ -8,6 +8,7 @@ GET     /csv                        de.ironjan.pppb.core.DataAPIController.csv
 GET     /predictions/in_15_min      de.ironjan.pppb.prediction.PredictionController.predict
 GET     /predictions                de.ironjan.pppb.prediction.PredictionController.all_predictions
 GET     /predictions/latest         de.ironjan.pppb.prediction.PredictionController.all_predictions_latest
+GET     /predictions/do_something_great         de.ironjan.pppb.prediction.PredictionController.do_something_great
 
 GET     /evaluations                de.ironjan.pppb.evaluation.EvaluationController.getAll
 GET     /evaluations/simplified     de.ironjan.pppb.evaluation.EvaluationController.getSimplified

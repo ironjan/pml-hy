@@ -29,6 +29,57 @@ class Trainer @Inject()(parkingDataRepository: ParkingDataRepository) {
     Logger.debug(s"Total training time for all subsets: ${totalTrainingTime}ms.")
   }
 
+  def doSomethingGreat(ds: Seq[ParkingDataSet]): (Double, Regression[Array[Double]] ) = {
+    Logger.debug(s"Started something great.")
+
+    val ds = Await.result(parkingDataRepository.getAll, Duration.Inf)
+
+    val ts = DateTime.now()
+    // Append checking set & predict it
+    val boundary = ds.length * 9 / 10
+    val splitSet = (ds.slice(0, boundary), ds.slice(boundary, ds.length - 1))
+
+    val mods = {
+      val trainingSet = splitSet._1
+      val testSet = splitSet._2
+      Logger.debug(s"Training subset of length ${trainingSet.length} and test set of length ${testSet.length}.")
+
+      val unzipped = unzipSet(trainingSet)
+
+      // TODO better way for double .toArray?
+      val x = unzipped._1.toArray
+      val y = unzipped._2.toArray
+
+
+      Logger.debug(s"Prepared training data.")
+
+      Stream(
+        evaluate(smile.regression.cart(x, y, 100), testSet),
+        evaluate(smile.regression.randomForest(x, y), testSet),
+        evaluate(smile.regression.gbm(x, y, shrinkage = 1), testSet),
+        evaluate(smile.regression.gbm(x, y, shrinkage = 0.1), testSet),
+        evaluate(smile.regression.gbm(x, y, shrinkage = 0.01), testSet),
+        evaluate(smile.regression.gbm(x, y, shrinkage = 0.01, ntrees = 1), testSet),
+        evaluate(smile.regression.gbm(x, y, shrinkage = 0.01, ntrees = 10), testSet),
+        evaluate(smile.regression.gbm(x, y, shrinkage = 0.01, ntrees = 50), testSet),
+        evaluate(smile.regression.gbm(x, y, shrinkage = 0.01, ntrees = 100), testSet),
+        evaluate(smile.regression.gbm(x, y, shrinkage = 0.01, ntrees = 500), testSet),
+        evaluate(smile.regression.gbm(x, y, shrinkage = 0.01, maxNodes = 1), testSet),
+        evaluate(smile.regression.gbm(x, y, shrinkage = 0.01, maxNodes = 6), testSet),
+        evaluate(smile.regression.gbm(x, y, shrinkage = 0.01, maxNodes = 36), testSet)
+      )
+    }
+    // TODO just using get on option
+    val best = mods
+      .sortBy(_._1)
+      .head
+
+
+    val totalTrainingTime = DateTime.now().getMillis - ts.getMillis
+    Logger.warn(s"Found best model with something great after ${totalTrainingTime}ms: (${best._1}, ${toPrintable(best._2)}")
+    best
+  }
+
   def findBestModel(ds: Seq[ParkingDataSet]): (Double, Regression[Array[Double]] ) = {
     // Append checking set & predict it
     val boundary = ds.length * 9 / 10
@@ -61,8 +112,8 @@ class Trainer @Inject()(parkingDataRepository: ParkingDataRepository) {
       evaluate(smile.regression.randomForest(x, y), testSet),
       evaluate(smile.regression.gbm(x, y, shrinkage = 1), testSet),
       evaluate(smile.regression.gbm(x, y, shrinkage = 0.1), testSet),
-      evaluate(smile.regression.gbm(x, y, shrinkage = 0.01), testSet),
-      evaluate(smile.regression.gbm(x, y, shrinkage = 0.001), testSet))
+      evaluate(smile.regression.gbm(x, y, shrinkage = 0.01), testSet)
+    )
   }
 
   private def evaluate(regression: Regression[Array[Double]], T: Seq[ParkingDataSet]) = {
@@ -97,7 +148,7 @@ class Trainer @Inject()(parkingDataRepository: ParkingDataRepository) {
       case gtb: GradientTreeBoost => {
         gtb.getSamplingRate
         val importance = gtb.importance().mkString(", ")
-        s"GradientTreeBoost: importance = [$importance]"
+        s"GradientTreeBoost: importance = [$importance], nTrees = ${gtb.getTrees.length}, maxNodes = ${gtb.getmaxNodes()}"
       }
       case r => r.getClass.getName
     }

@@ -55,4 +55,10 @@ class PredictionService @Inject()(parkingDataRepo: ParkingDataRepository,
       PredictionResult(timeIn15Minutes, avgAbsError, prediction, regressionName)
     }
   }
+
+  def doSomethingGreat = {
+    parkingDataRepo.getAll.map { ds =>
+      val (avgAbsError: Double, bestModel: Regression[Array[Double]]) = trainer.doSomethingGreat(ds.filter(_.hasUsefulData))
+    }
+  }
 }
