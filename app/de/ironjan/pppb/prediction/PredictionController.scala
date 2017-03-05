@@ -28,4 +28,7 @@ class PredictionController @Inject()(predictionService: PredictionService) {
     predictionService.doSomethingGreat.map(s => Ok(Json.toJson(s)))
   }
 
+  def importances = Action.async { implicit  request =>
+    predictionService.importances.map(x => Ok(Json.toJson(x.mkString(", "))))
+  }
 }

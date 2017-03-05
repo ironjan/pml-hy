@@ -9,6 +9,7 @@ GET     /predictions/in_15_min      de.ironjan.pppb.prediction.PredictionControl
 GET     /predictions                de.ironjan.pppb.prediction.PredictionController.all_predictions
 GET     /predictions/latest         de.ironjan.pppb.prediction.PredictionController.all_predictions_latest
 GET     /predictions/do_something_great         de.ironjan.pppb.prediction.PredictionController.do_something_great
+GET     /predictions/importances         de.ironjan.pppb.prediction.PredictionController.importances
 
 GET     /evaluations                de.ironjan.pppb.evaluation.EvaluationController.getAll
 GET     /evaluations/simplified     de.ironjan.pppb.evaluation.EvaluationController.getSimplified

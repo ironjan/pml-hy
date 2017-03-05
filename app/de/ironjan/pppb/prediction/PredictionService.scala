@@ -21,6 +21,7 @@ class PredictionService @Inject()(parkingDataRepo: ParkingDataRepository,
                                   trainer: Trainer) {
   def getAll = predictionDataRepo.getAll
 
+  def importances = trainer.findImportances
 
   val system = ActorSystem("PredictionSystem")
   val PredictionEvent = "Predict"
@@ -44,23 +45,23 @@ class PredictionService @Inject()(parkingDataRepo: ParkingDataRepository,
     PredictionEvent)
 
   def onDemandPrediction = {
-    parkingDataRepo.getAll.map { ds =>
-      val (avgAbsError: Double, bestModel: Regression[Array[Double]]) = trainer.findBestModel(ds.filter(_.hasUsefulData))
+    trainer.findBestModel.map {
+      case (avgAbsError: Double, bestModel: Regression[Array[Double]]) =>
 
-      val timeIn15Minutes = new DateTime().withFieldAdded(DurationFieldType.minutes(), 15)
-      val prediction = bestModel.predict(timeIn15Minutes.toPredictionQuery)
+        val timeIn15Minutes = new DateTime().withFieldAdded(DurationFieldType.minutes(), 15)
+        val prediction = bestModel.predict(timeIn15Minutes.toPredictionQuery)
 
-      val regressionName = bestModel.getClass.getSimpleName
+        val regressionName = bestModel.getClass.getSimpleName
 
-      PredictionResult(timeIn15Minutes, avgAbsError, prediction, regressionName)
+        PredictionResult(timeIn15Minutes, avgAbsError, prediction, regressionName)
     }
   }
 
   def doSomethingGreat = {
-    parkingDataRepo.getAll.map { ds =>
-      val (avgAbsError: Double, bestModel: Regression[Array[Double]]) = trainer.doSomethingGreat(ds.filter(_.hasUsefulData))
-      val printableModel = trainer.toPrintable(bestModel)
-      s"Found: ${printableModel} with avgAbsError $avgAbsError"
-    }
+    trainer.doSomethingGreat
+      .map { case (avgAbsError: Double, bestModel: Regression[Array[Double]]) =>
+        val printableModel = trainer.toPrintable(bestModel)
+        s"Found: ${printableModel} with avgAbsError $avgAbsError"
+      }
   }
 }

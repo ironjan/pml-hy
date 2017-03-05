@@ -21,10 +21,25 @@ class Trainer @Inject()(parkingDataRepository: ParkingDataRepository) {
     getTrainedModels(trainingMethod = smallTraining)
       .map(_.minBy(_._1))
   }
-  
+
   def doSomethingGreat = {
     getTrainedModels(trainingMethod = extensiveTraining)
       .map(_.minBy(_._1))
+  }
+
+  def findImportances = {
+    val x = getTrainedModels(trainingMethod = extensiveTraining)
+      .map{stream =>
+        stream.map{
+        case (_, rt: RegressionTree) => rt.importance()
+        case (_, rf : RandomForest) => rf.importance()
+        case (_, gtb: GradientTreeBoost) => gtb.importance()
+      }
+          .transpose.map(x => x.count(d => true))
+      }
+
+
+    x
   }
 
   private def getTrainedModels(trainingMethod: (Array[Array[Double]], Array[Double], Seq[ParkingDataSet]) => Stream[(Double, Regression[Array[Double]])]) = {
