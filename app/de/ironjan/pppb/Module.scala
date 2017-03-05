@@ -7,7 +7,6 @@ import de.ironjan.pppb.core.model.ParkingDataSet
 import de.ironjan.pppb.core.repository.ParkingDataRepository
 import de.ironjan.pppb.crawling.{CrawlingService, PaderbornCrawler, PaderbornCrawlerImpl}
 import de.ironjan.pppb.preprocessing.{Cleaner, CleanerService, ParkingDataSetCleanerImpl}
-import de.ironjan.pppb.training.TrainingService
 
 /**
  * This class is a Guice module that tells Guice how to bind several
@@ -27,7 +26,6 @@ class Module extends AbstractModule {
 
     // TODO find better place
     bind(classOf[CleanerService]).asEagerSingleton()
-    bind(classOf[TrainingService]).asEagerSingleton()
   }
 
 }

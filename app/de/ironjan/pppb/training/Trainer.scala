@@ -16,18 +16,6 @@ import scala.concurrent.ExecutionContext.Implicits.global
   * Created by Jan Lippert on 19.02.2017.
   */
 class Trainer @Inject()(parkingDataRepository: ParkingDataRepository) {
-  def timeModelEvaluation = {
-    Logger.debug(s"Started training.")
-
-    val ds = Await.result(parkingDataRepository.getAll, Duration.Inf)
-
-    val ts = DateTime.now()
-
-    findBestModel(ds)
-
-    val totalTrainingTime = DateTime.now().getMillis - ts.getMillis
-    Logger.debug(s"Total training time for all subsets: ${totalTrainingTime}ms.")
-  }
 
   def doSomethingGreat(ds: Seq[ParkingDataSet]): (Double, Regression[Array[Double]] ) = {
     Logger.debug(s"Started something great.")
@@ -85,14 +73,14 @@ class Trainer @Inject()(parkingDataRepository: ParkingDataRepository) {
     val splitSet = (ds.slice(0, boundary), ds.slice(boundary, ds.length - 1))
 
     // TODO just using get on option
-    val best = evaluateModels(splitSet, splitSet._1.head.capacity.get)
+    val best = evaluateModels(splitSet)
       .sortBy(_._1)
       .head
     Logger.info(s"Found best model: (${best._1}, ${toPrintable(best._2)}")
     best
   }
 
-  private def evaluateModels(ds: (Seq[ParkingDataSet], Seq[ParkingDataSet]), capacity: Int) = {
+  private def evaluateModels(ds: (Seq[ParkingDataSet], Seq[ParkingDataSet])): Stream[(Double, Regression[Array[Double]])] = {
     val trainingSet = ds._1
     val testSet = ds._2
     Logger.debug(s"Training subset of length ${trainingSet.length} and test set of length ${testSet.length}.")
