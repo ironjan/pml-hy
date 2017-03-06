@@ -24,17 +24,17 @@ class EvaluationController @Inject()(parkingDataRepo: ParkingDataRepository,
                                      predictionDataRepo: PredictionDataRepository) {
 
   def getAll = Action.async { implicit request =>
-    computeTmpEvalResults.map(xs => Ok(Json.toJson(xs.sortBy(_.prediction.predictedTime.getMillis))))
+    computeTmpEvalResults.map(xs => Ok(Json.toJson(xs.sortBy(- _.prediction.predictedTime.getMillis))))
   }
 
   def getSimplified = Action.async { implicit request =>
     computeSimplifiedResults.map(ts =>
-      Ok(Json.toJson(ts.sortBy(_.dateTime.getMillis))))
+      Ok(Json.toJson(ts.sortBy(- _.dateTime.getMillis))))
   }
 
 
   def getSimplifiedLatest = Action.async { implicit request =>
-    computeSimplifiedResults.map(ts => Ok(Json.toJson(ts.filter(_.dateTime.isLessThan2DaysOld).sortBy(_.dateTime.getMillis))))
+    computeSimplifiedResults.map(ts => Ok(Json.toJson(ts.filter(_.dateTime.isLessThan2DaysOld).sortBy(- _.dateTime.getMillis))))
   }
 
   def getStats = Action.async { implicit request =>
@@ -57,14 +57,14 @@ class EvaluationController @Inject()(parkingDataRepo: ParkingDataRepository,
     // TODO actually use brain before rewrite
     val explodedPredictions = Await.result(predictionDataRepo.getAll, Duration.Inf)
       .toList
-      .sortBy(p => p.predictedTime.getMillis)
+      .sortBy(p => - p.predictedTime.getMillis)
       .map(p => (p.predictedTime.explode, p))
 
     val keys = explodedPredictions.map(_._1).toSet
 
     parkingDataRepo.getAll.map(ds => {
       val crawledAndPreparedForPairing = ds.filter(_.hasUsefulData)
-        .sortBy(_.crawlingTime.getMillis)
+        .sortBy(- _.crawlingTime.getMillis)
         .map(d => (d.crawlingTime.explode, ParkingDataSetJson.from(d)))
         .filter(ed => keys.contains(ed._1))
 
