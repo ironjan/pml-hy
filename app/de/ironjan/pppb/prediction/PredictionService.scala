@@ -51,9 +51,13 @@ class PredictionService @Inject()(parkingDataRepo: ParkingDataRepository,
         val timeIn15Minutes = new DateTime().withFieldAdded(DurationFieldType.minutes(), 15)
         val prediction = bestModel.predict(timeIn15Minutes.toPredictionQuery)
 
+        val normalizedPrediction = if(prediction < 0) { 0 }
+                                   else if(prediction > 500) { 500 }
+                                   else { prediction }
+
         val regressionName = bestModel.getClass.getSimpleName
 
-        PredictionResult(timeIn15Minutes, avgAbsError, prediction, regressionName)
+        PredictionResult(timeIn15Minutes, avgAbsError, normalizedPrediction, regressionName)
     }
   }
 
