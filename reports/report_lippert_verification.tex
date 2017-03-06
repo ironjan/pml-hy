@@ -1,0 +1,18 @@
+%\subtask{Describe and discuss your ``objective method'', ie. the method by which you will measure the success of your predictor.}
+To verify the trained model and the accuracy of its predictions, the system will regularly generate predictions 15 minutes into the future. These predictions will be saved and compared to the actual available parking space at the predicted time. The average abolute error will be used to measure the accuracy of the predictions.
+\todo{rewrite and extend section}
+\todo{how do we verify?}
+\todo{what method do we use to measure error?}
+\todo{verification over time?}
+\todo{implementation}
+
+At the moment, the predictions are of very bad quality and not usable. For 403 predictions, the average absolute error had a mean of \(144.14\) with a standard deviation of \(99.68\).
+
+In rare cases, the predictions are quite good. \(47\) predictions were off by less than \(20\), 
+\(19\) predictions were off by less than \(10\), and \(6\) predictions were off by less than 2. One goal -- beside improving the prediction accuracy overall -- will be to understand why these predictions were so good.
+
+The original predictions were achieved by training a RegressionTree on tuples of the form 
+\[
+((\hod, \moh, \dow, \dom, \wom, \woy, \yyy), free)\text{.}
+\]
+Since these results are very unsatisfactory, other methods will be investigated until the final report.

@@ -24,7 +24,7 @@ class DataAPIController @Inject()(crawler: PaderbornCrawler,
     repo.getAll
       .map(crawledSets =>
         Ok(Json.toJson(
-          crawledSets.sortBy(_.crawlingTime.getMillis())
+          crawledSets.sortBy(- _.crawlingTime.getMillis())
             .map(ParkingDataSetJson.from))))
   }
 
@@ -33,8 +33,8 @@ class DataAPIController @Inject()(crawler: PaderbornCrawler,
     repo.getAll
       .map(crawledSets =>
         Ok(Json.toJson(
-          crawledSets.filter(_.crawlingTime.isLessThan1DayOld)
-            .sortBy(_.crawlingTime.getMillis())
+          crawledSets.filter(_.crawlingTime.isLessThan2DaysOld)
+            .sortBy(- _.crawlingTime.getMillis())
 
             .map(ParkingDataSetJson.from))))
   }
@@ -44,7 +44,7 @@ class DataAPIController @Inject()(crawler: PaderbornCrawler,
       .map { crawledSets =>
         Ok(Json.toJson(
           crawledSets.filter(d => d.isRecentModel && d.hasUsefulData)
-          .sortBy(_.crawlingTime.getMillis())
+          .sortBy(- _.crawlingTime.getMillis())
           .map(ParkingDataSetJson.from)))
       }
   }
@@ -53,8 +53,8 @@ class DataAPIController @Inject()(crawler: PaderbornCrawler,
     repo.getAll
       .map { crawledSets =>
         Ok(Json.toJson(
-          crawledSets.filter(d => d.crawlingTime.isLessThan1DayOld && d.isRecentModel && d.hasUsefulData)
-            .sortBy(_.crawlingTime.getMillis())
+          crawledSets.filter(d => d.crawlingTime.isLessThan2DaysOld && d.isRecentModel && d.hasUsefulData)
+            .sortBy(- _.crawlingTime.getMillis())
             .map(ParkingDataSetJson.from)))
       }
   }
@@ -70,7 +70,7 @@ class DataAPIController @Inject()(crawler: PaderbornCrawler,
   def csv = Action.async { implicit request =>
     repo.getAll
       .map { crawledSets =>
-        crawledSets.sortBy(_.crawlingTime.getMillis())
+        crawledSets.sortBy(- _.crawlingTime.getMillis())
           .map {
             def unifyStringLength(i: Int) = {
               val prefix = if (i < 10) "  "

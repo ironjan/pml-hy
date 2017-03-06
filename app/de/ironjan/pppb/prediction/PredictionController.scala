@@ -21,7 +21,7 @@ class PredictionController @Inject()(predictionService: PredictionService) {
     predictionService.getAll.map(ps => Ok(Json.toJson(ps)))
   }
   def all_predictions_latest = Action.async {implicit  request =>
-    predictionService.getAll.map(ps => Ok(Json.toJson(ps.filter(_.predictedTime.isLessThan1DayOld).sortBy(_.predictedTime.getMillis()))))
+    predictionService.getAll.map(ps => Ok(Json.toJson(ps.filter(_.predictedTime.isLessThan2DaysOld).sortBy(_.predictedTime.getMillis()))))
   }
 
   def do_something_great =  Action.async{ implicit request =>

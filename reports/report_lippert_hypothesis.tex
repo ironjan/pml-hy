@@ -1,0 +1,11 @@
+
+It is assumed, that the available parking space is dependent on time, i.e. there exists a function \(f\) such that 
+\[
+f(\hod, \moh, \dow, \dom, \wom, \woy, \yyy) = y\text{.}
+\]
+
+As mentioned in previous sections, the idea to predict available parking space was inspired by other projects. \cite{parkendd} was using a RegressionTree model with great success, so I picked this model.
+
+To keep the scope of this project small, multiple data sources will be ignored. For this project, it is assumed that the number of available parking spots solely depends on time. As described in \ref{data sources}, this obviously is a very simplified model. However, as shown by \cite{parkendd}, such a simple model may be enough. 
+
+%The greatest challenge in this project is to collect enough training data to make meaningful predictions. All data needs to be extracted from ASP's website. Changes to the website and non-availability of the service may prove problematic. In the beginning of February, the ASP parking guiding system was dysfunctional and did not show useful data for one week. 
