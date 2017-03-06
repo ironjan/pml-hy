@@ -33,7 +33,7 @@ class DataAPIController @Inject()(crawler: PaderbornCrawler,
     repo.getAll
       .map(crawledSets =>
         Ok(Json.toJson(
-          crawledSets.filter(_.crawlingTime.isLessThan1DayOld)
+          crawledSets.filter(_.crawlingTime.isLessThan2DaysOld)
             .sortBy(_.crawlingTime.getMillis())
 
             .map(ParkingDataSetJson.from))))
@@ -53,7 +53,7 @@ class DataAPIController @Inject()(crawler: PaderbornCrawler,
     repo.getAll
       .map { crawledSets =>
         Ok(Json.toJson(
-          crawledSets.filter(d => d.crawlingTime.isLessThan1DayOld && d.isRecentModel && d.hasUsefulData)
+          crawledSets.filter(d => d.crawlingTime.isLessThan2DaysOld && d.isRecentModel && d.hasUsefulData)
             .sortBy(_.crawlingTime.getMillis())
             .map(ParkingDataSetJson.from)))
       }

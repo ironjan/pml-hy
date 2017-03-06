@@ -34,7 +34,7 @@ class EvaluationController @Inject()(parkingDataRepo: ParkingDataRepository,
 
 
   def getSimplifiedLatest = Action.async { implicit request =>
-    computeSimplifiedResults.map(ts => Ok(Json.toJson(ts.filter(_.dateTime.isLessThan1DayOld).sortBy(_.dateTime.getMillis))))
+    computeSimplifiedResults.map(ts => Ok(Json.toJson(ts.filter(_.dateTime.isLessThan2DaysOld).sortBy(_.dateTime.getMillis))))
   }
 
   def getStats = Action.async { implicit request =>
