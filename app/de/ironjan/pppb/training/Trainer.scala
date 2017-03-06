@@ -18,7 +18,6 @@ import scala.concurrent.ExecutionContext.Implicits.global
   */
 class Trainer @Inject()(parkingDataRepository: ParkingDataRepository) {
 
-  val trainingSetPercentage: Double = 8 / 10
 
   def findBestModel = {
     getTrainedModels(trainingMethod = smallTraining)
@@ -58,7 +57,7 @@ class Trainer @Inject()(parkingDataRepository: ParkingDataRepository) {
   }
 
   private def prepareTrainingData(ds: Seq[ParkingDataSet]) = {
-    val boundary = (ds.length * trainingSetPercentage).toInt
+    val boundary = ds.length * 8 / 10
     val splitSet = (ds.slice(0, boundary), ds.slice(boundary, ds.length - 1))
 
     val trainingSet = splitSet._1
