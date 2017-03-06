@@ -8,6 +8,7 @@ import de.ironjan.pppb.core.repository.ParkingDataRepository
 import org.joda.time.DateTime
 import play.api.Logger
 import smile.regression.{GradientTreeBoost, RandomForest, Regression, RegressionTree}
+import util.Random.shuffle
 
 import scala.concurrent.Await
 import scala.concurrent.duration.Duration
@@ -58,7 +59,8 @@ class Trainer @Inject()(parkingDataRepository: ParkingDataRepository) {
 
   private def prepareTrainingData(ds: Seq[ParkingDataSet]) = {
     val boundary = ds.length * 8 / 10
-    val splitSet = (ds.slice(0, boundary), ds.slice(boundary, ds.length - 1))
+    val shuffled = shuffle(ds)
+    val splitSet = (shuffled.slice(0, boundary), shuffled.slice(boundary, shuffled.length - 1))
 
     val trainingSet = splitSet._1
     val testSet = splitSet._2
