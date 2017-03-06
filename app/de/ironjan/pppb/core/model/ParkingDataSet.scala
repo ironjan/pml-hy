@@ -47,12 +47,12 @@ object ParkingDataSet {
     def toMlTrainingTuple =
       (
         Array(
-          parkingDataSet.hourOfDay.get.toDouble,
-          parkingDataSet.minuteOfHour.get.toDouble,
-          parkingDataSet.dayOfWeek.get.toDouble,
-          parkingDataSet.dayOfMonth.get.toDouble,
-          parkingDataSet.weekOfMonth.get.toDouble,
-          parkingDataSet.weekOfYear.get.toDouble),
+          parkingDataSet.hourOfDay.get.toDouble / 24,
+          parkingDataSet.minuteOfHour.get.toDouble / 60,
+          parkingDataSet.dayOfWeek.get.toDouble / 6,
+          parkingDataSet.dayOfMonth.get.toDouble / 31),
+          //parkingDataSet.weekOfMonth.get.toDouble / 5,
+          //parkingDataSet.weekOfYear.get.toDouble / 52),
         parkingDataSet.free.get.toDouble)
   }
 
@@ -61,7 +61,8 @@ object ParkingDataSet {
       new NominalAttribute("hourOfDay", Array(0 to 23).map(_.toString)),
       new NominalAttribute("minuteOfHours", Array(0 to 59).map(_.toString)),
       new NominalAttribute("dayOfWeek", Array(0 to 6).map(_.toString)),
-      new NominalAttribute("dayOfMonth", Array(0 to 31).map(_.toString)),
-      new NominalAttribute("weekOfMonth", Array(-5 to 5).map(_.toString)),
-      new NominalAttribute("weekOfYear", Array(0 to 52).map(_.toString)))
+      new NominalAttribute("dayOfMonth", Array(0 to 31).map(_.toString))
+      //new NominalAttribute("weekOfMonth", Array(-5 to 5).map(_.toString)),
+      //new NominalAttribute("weekOfYear", Array(0 to 52).map(_.toString))
+      )
 }
