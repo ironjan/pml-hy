@@ -1,6 +1,8 @@
 PML-HY
 =================================
 
+[![Codacy Badge](https://api.codacy.com/project/badge/Grade/3ee61e8cfff04d95b7f1ac682286560b)](https://www.codacy.com/app/lippertsjan/pml-hy?utm_source=github.com&amp;utm_medium=referral&amp;utm_content=ironjan/pml-hy&amp;utm_campaign=Badge_Grade)
+
 This is a webapp for my participation in the course [Project in Practical Machine Learning](https://www.cs.helsinki.fi/en/courses/582739/2017/k/k/1)
 at [Helsinkin Yliopistio (University of Helsinki)](https://www.helsinki.fi/fi). The application itself is online at
 [[https://pppb.herokuapp.com/]].
