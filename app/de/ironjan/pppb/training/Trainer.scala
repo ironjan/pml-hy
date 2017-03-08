@@ -31,9 +31,9 @@ class Trainer @Inject()(parkingDataRepository: ParkingDataRepository) {
   }
 
   def findImportances = {
-    val descr = Stream("hourOfDay", "minuteOfHour", "dayOfWeek", "dayOfMonth")
-      //"weekOfMonth", 
-      //"weekOfYear")
+    val descr = Stream("hourOfDay", "minuteOfHour", "dayOfWeek", "dayOfMonth",
+      "weekOfMonth", 
+      "weekOfYear")
       
 
     val x = getTrainedModels(trainingMethod = extensiveTraining)

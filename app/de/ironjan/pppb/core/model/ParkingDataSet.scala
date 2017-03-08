@@ -47,12 +47,12 @@ object ParkingDataSet {
     def toMlTrainingTuple =
       (
         Array(
-          parkingDataSet.hourOfDay.get.toDouble / 24,
-          parkingDataSet.minuteOfHour.get.toDouble / 60,
-          parkingDataSet.dayOfWeek.get.toDouble / 6,
-          parkingDataSet.dayOfMonth.get.toDouble / 31),
-          //parkingDataSet.weekOfMonth.get.toDouble / 5,
-          //parkingDataSet.weekOfYear.get.toDouble / 52),
+          parkingDataSet.hourOfDay.get.toDouble,
+          parkingDataSet.minuteOfHour.get.toDouble,
+          parkingDataSet.dayOfWeek.get.toDouble,
+          parkingDataSet.dayOfMonth.get.toDouble,
+          parkingDataSet.weekOfMonth.get.toDouble,
+          parkingDataSet.weekOfYear.get.toDouble),
         parkingDataSet.free.get.toDouble)
   }
 
