@@ -12,6 +12,7 @@ import de.ironjan.pppb.prediction.model.PredictionResult
 import de.ironjan.pppb.prediction.repository.PredictionDataRepository
 import play.api.Logger
 
+import scala.concurrent.{Await, TimeoutException}
 import scala.concurrent.ExecutionContext.Implicits.global
 import scala.concurrent.duration._
 
@@ -33,8 +34,18 @@ class PredictionService @Inject()(parkingDataRepo: ParkingDataRepository,
     def receive = {
       case PredictionEvent => {
         Logger.debug("Doing a new prediciton")
+
+        val timeout = 60 seconds
+
         onDemandPrediction.map(predictionDataRepo.save)
-          .foreach(s => Logger.debug(s"Saved prediction: $s"))
+          .foreach { f =>
+            try {
+              val s = Await.ready(f, timeout)
+              Logger.debug(s"Saved prediction: $s")
+            } catch {
+              case _: TimeoutException => Logger.warn(s"onDemandPrediction did not complete after $timeout.")
+            }
+          }
       }
     }
   }))
@@ -51,9 +62,15 @@ class PredictionService @Inject()(parkingDataRepo: ParkingDataRepository,
         val timeIn15Minutes = new DateTime().withFieldAdded(DurationFieldType.minutes(), 15)
         val prediction = bestModel.predict(timeIn15Minutes.toPredictionQuery)
 
-        val normalizedPrediction = if(prediction < 0) { 0 }
-                                   else if(prediction > 500) { 500 }
-                                   else { prediction }
+        val normalizedPrediction = if (prediction < 0) {
+          0
+        }
+        else if (prediction > 500) {
+          500
+        }
+        else {
+          prediction
+        }
 
         val regressionName = trainer.toPrintable(bestModel)
 
