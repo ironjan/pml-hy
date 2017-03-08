@@ -1,8 +1,7 @@
 @(caption: String, id: String)
-@chartId = @{id.concat("-chart")}
 
 <div class='chart-container'>
   <span>@caption</span>
-  <div id="@chartId"></div>
+  <div id="@{id.concat("-chart")}></div>
   <script src="@routes.Assets.versioned("javascripts/@{id}.js")" type="text/javascript"></script>
 </div>
