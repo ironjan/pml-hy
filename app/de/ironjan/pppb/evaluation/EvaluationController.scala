@@ -49,7 +49,7 @@ class EvaluationController @Inject()(parkingDataRepo: ParkingDataRepository,
           }
             .mkString("\n")
         }
-      .map(ts => Ok(Json.toJson(ts)))
+      .map(ts => Ok(ts))
   }
 
   def getStats = Action.async { implicit request =>
