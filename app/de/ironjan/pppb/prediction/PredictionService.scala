@@ -40,7 +40,7 @@ class PredictionService @Inject()(parkingDataRepo: ParkingDataRepository,
         onDemandPrediction.map(predictionDataRepo.save)
           .foreach { f =>
             try {
-              val s = Await.ready(f, timeout)
+              val s = Await.result(f, timeout)
               Logger.info(s"Saved prediction: $s")
             } catch {
               case _: TimeoutException => Logger.warn(s"onDemandPrediction did not complete after $timeout.")
