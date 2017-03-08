@@ -19,6 +19,7 @@ import scala.concurrent.duration.Duration
 import scala.concurrent.{Await, Future}
 import de.ironjan.pppb.core.model.DateTimeHelper._
 import de.ironjan.pppb.core
+import org.joda.time.format.DateTimeFormat
 
 @Singleton
 class EvaluationController @Inject()(parkingDataRepo: ParkingDataRepository,
@@ -42,8 +43,8 @@ class EvaluationController @Inject()(parkingDataRepo: ParkingDataRepository,
       computeSimplifiedResults
         .map { ts =>
           ts.map { t =>
-            val date = (new java.text.SimpleDateFormat("yyyy-MM-dd")).format(t.dateTime)
-            val time = (new java.text.SimpleDateFormat("HH:mm")).format(t.dateTime)
+            val date = DateTimeFormat.forPattern("YYYY-MM-dd").print(t.dateTime)
+            val time = DateTimeFormat.forPattern("HH:mm").print(t.dateTime)
             s"${date}, ${time}, ${t.predicted},${t.actual},${t.delta}"
           }
         }
