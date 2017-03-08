@@ -1,5 +1,5 @@
 function drawPredictions(){
-var moveChart = dc.lineChart('#prediction-chart');
+var moveChart = dc.lineChart('#predictions-chart');
 
 var margin = {top: 30, right: 20, bottom: 30, left: 50},
     width = 1200 - margin.left - margin.right,
@@ -22,7 +22,7 @@ var valueline = d3.svg.line()
     .interpolate("linear");
 
 // Adds the svg canvas
-var svg = d3.select("#prediction-chart")
+var svg = d3.select("#predictions-chart")
     .append("svg")
         .attr("width", width + margin.left + margin.right)
         .attr("height", height + margin.top + margin.bottom)

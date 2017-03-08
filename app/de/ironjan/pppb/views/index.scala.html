@@ -24,28 +24,8 @@ future</a> (That page just shows the prediction result). In the next stage, the 
 </ul>
 </div>
 
-<div class='chart-container'>
- <span>Free spaces by day</span>
- <div id='day-free-chart'></div>
-</div>
+@chartContainer("Free spaces by day", "day-free")
+@chartContainer("Predictions", "predictions")
+@chartContainer("Predictions were off by", "predictions-off-by")
 
-<div class='chart-container'>
- <span>Predictions</span>
- <div id='prediction-chart'></div>
-</div>
-
-<div class='chart-container'>
- <span>Predictions compared to actual data (Not yet implemented)</span>
- <div id='eval-chart'></div>
-</div>
-
-<div class='chart-container'>
-  <span>Predictions were off by</span>
-  <div id='predictions-off-by-chart'></div>
-</div>
-
-
-<script src="@routes.Assets.versioned("javascripts/day-free.js")" type="text/javascript"></script>
-<script src="@routes.Assets.versioned("javascripts/predictions.js")" type="text/javascript"></script>
-<script src="@routes.Assets.versioned("javascripts/predictions-off-by.js")" type="text/javascript"></script>
 }
