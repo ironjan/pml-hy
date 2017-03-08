@@ -32,7 +32,7 @@ class Trainer @Inject()(parkingDataRepository: ParkingDataRepository) {
   }
 
   @tailrec
-  def findMin(models: Stream[(Double, Regression[Array[Double]])], best: (Double, Regression[Array[Double]]))
+  private final def findMin(models: Stream[(Double, Regression[Array[Double]])], best: (Double, Regression[Array[Double]]))
   : (Double, Regression[Array[Double]]) =
     if (models.isEmpty) best else {
       val head = models.head
