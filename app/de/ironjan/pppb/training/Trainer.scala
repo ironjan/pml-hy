@@ -33,7 +33,7 @@ class Trainer @Inject()(parkingDataRepository: ParkingDataRepository) {
 
   @tailrec
   def findMin(models: Stream[(Double, Regression[Array[Double]])], best: (Double, Regression[Array[Double]]))
-  : (Double, Regression[Array[Double]] =
+  : (Double, Regression[Array[Double]]) =
     if (models.isEmpty) best else {
       val head = models.head
       val min = if(head._1 < best._1) head else best
@@ -110,10 +110,11 @@ class Trainer @Inject()(parkingDataRepository: ParkingDataRepository) {
 
   private def smallTraining(x: Array[Array[Double]], y: Array[Double], testSet: Seq[ParkingDataSet]) =
     Stream.concat(
+      Stream(
       evaluate(smile.regression.cart(x, y, 100), testSet),
       evaluate(smile.regression.randomForest(x, y), testSet),
       evaluate(smile.regression.gbm(x, y, shrinkage = 1), testSet),
-      evaluate(smile.regression.gbm(x, y, shrinkage = 0.01, maxNodes = 4, ntrees = 500), testSet),
+      evaluate(smile.regression.gbm(x, y, shrinkage = 0.01, maxNodes = 4, ntrees = 500), testSet)),
       Stream.tabulate(gbmSteps) { i => (i + 1) * gmbStepWidth }
         .map(s => evaluate(smile.regression.gbm(x, y, shrinkage = s), testSet)))
 
