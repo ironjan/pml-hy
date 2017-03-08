@@ -96,8 +96,7 @@ class Trainer @Inject()(parkingDataRepository: ParkingDataRepository) {
   )
 
   val gmbStepWidth = 0.02
-  val gbmSteps: Int = (1.0/gmbStepWidth).toInt
-
+  val gbmSteps: Int = (1.0/2/gmbStepWidth - 1).toInt
   private def smallTraining(x: Array[Array[Double]], y: Array[Double], testSet: Seq[ParkingDataSet]) =
     Stream.concat(
       Stream(
@@ -106,7 +105,7 @@ class Trainer @Inject()(parkingDataRepository: ParkingDataRepository) {
       evaluate(smile.regression.gbm(x, y, shrinkage = 1), testSet),
       evaluate(smile.regression.gbm(x, y, shrinkage = 0.01, maxNodes = 4, ntrees = 500), testSet)
       ),
-      Stream.tabulate(gbmSteps) { i => (i + 1) * gmbStepWidth }
+      Stream.tabulate(gbmSteps) { i => (i + 2) * gmbStepWidth }
         .map(s => evaluate(smile.regression.gbm(x, y, shrinkage = s), testSet)))
 
 
