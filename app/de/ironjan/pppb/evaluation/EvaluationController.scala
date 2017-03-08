@@ -1,5 +1,6 @@
 package de.ironjan.pppb.evaluation
 
+import java.text.SimpleDateFormat
 import javax.inject.{Inject, Singleton}
 
 import de.ironjan.pppb.core.{MeanStd, ParkingDataSetJson}
@@ -37,7 +38,17 @@ class EvaluationController @Inject()(parkingDataRepo: ParkingDataRepository,
     computeSimplifiedResults.map(ts => Ok(Json.toJson(ts.filter(_.dateTime.isLessThan2DaysOld))))
   }
 
-
+  def getSimplifiedAsCsv = Action.async { implicit request =>
+      computeSimplifiedResults
+        .map { ts =>
+          ts.map { t =>
+            val date = (new java.text.SimpleDateFormat("yyyy-MM-dd")).format(t.dateTime)
+            val time = (new java.text.SimpleDateFormat("HH:mm")).format(t.dateTime)
+            s"${date}, ${time}, ${t.predicted},${t.actual},${t.delta}"
+          }
+        }
+      .map(ts => Ok(Json.toJson(ts)))
+  }
 
   def getStats = Action.async { implicit request =>
     computeSimplifiedResults.map(ts => {
@@ -60,27 +71,26 @@ class EvaluationController @Inject()(parkingDataRepo: ParkingDataRepository,
     // TODO actually use brain before rewrite
     val explodedPredictions = Await.result(predictionDataRepo.getAll, Duration.Inf)
       .toList
-      .sortBy(p => - p.predictedTime.getMillis)
+      .sortBy(p => -p.predictedTime.getMillis)
       .map(p => (p.predictedTime.explode, p))
 
     val keys = explodedPredictions.map(_._1).toSet
 
     parkingDataRepo.getAll.map(ds => {
       val crawledAndPreparedForPairing = ds.filter(_.hasUsefulData)
-        .sortBy(- _.crawlingTime.getMillis)
+        .sortBy(-_.crawlingTime.getMillis)
         .map(d => (d.crawlingTime.explode, ParkingDataSetJson.from(d)))
         .filter(ed => keys.contains(ed._1))
 
       crawledAndPreparedForPairing
-        .flatMap(c => findPartner(c,explodedPredictions))
-        .sortBy(- _.prediction.predictedTime.getMillis)
+        .flatMap(c => findPartner(c, explodedPredictions))
+        .sortBy(-_.prediction.predictedTime.getMillis)
     })
   }
 
 
-
-  private def findPartner(dTuple: ( (Int, Int, Int, Int, Int, Int), ParkingDataSetJson), explodedPredictions: List[((Int, Int, Int, Int, Int, Int), PredictionResult)])
-  : Option[TmpEvalResult]= {
+  private def findPartner(dTuple: ((Int, Int, Int, Int, Int, Int), ParkingDataSetJson), explodedPredictions: List[((Int, Int, Int, Int, Int, Int), PredictionResult)])
+  : Option[TmpEvalResult] = {
     explodedPredictions.find(_._1 == dTuple._1).map(x => {
       val predictionObject = x._2
       val actualParkingData = dTuple._2

@@ -13,5 +13,6 @@ GET     /predictions/importances         de.ironjan.pppb.prediction.PredictionCo
 
 GET     /evaluations                de.ironjan.pppb.evaluation.EvaluationController.getAll
 GET     /evaluations/simplified     de.ironjan.pppb.evaluation.EvaluationController.getSimplified
+GET     /evaluations/simplified/csv     de.ironjan.pppb.evaluation.EvaluationController.getSimplifiedAsCsv
 GET     /evaluations/simplified/latest     de.ironjan.pppb.evaluation.EvaluationController.getSimplifiedLatest
 GET     /evaluations/stats          de.ironjan.pppb.evaluation.EvaluationController.getStats
