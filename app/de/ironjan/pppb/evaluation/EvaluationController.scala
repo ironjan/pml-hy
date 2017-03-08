@@ -45,7 +45,7 @@ class EvaluationController @Inject()(parkingDataRepo: ParkingDataRepository,
           ts.map { t =>
             val date = DateTimeFormat.forPattern("YYYY-MM-dd").print(t.dateTime)
             val time = DateTimeFormat.forPattern("HH:mm").print(t.dateTime)
-            s"${date}, ${time}, ${t.predicted},${t.actual},${t.delta}"
+            s"${date}, ${time}, ${t.predicted},${t.actual}, ${t.delta}"
           }
         }
       .map(ts => Ok(Json.toJson(ts)))
