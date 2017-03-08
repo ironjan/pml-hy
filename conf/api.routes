@@ -5,14 +5,5 @@ GET     /working_data_crawled/latest       de.ironjan.pppb.core.DataAPIControlle
 GET     /crawling_time_history      de.ironjan.pppb.core.DataAPIController.crawling_time_history
 GET     /csv                        de.ironjan.pppb.core.DataAPIController.csv
 
-GET     /predictions/in_15_min      de.ironjan.pppb.prediction.PredictionController.predict
-GET     /predictions                de.ironjan.pppb.prediction.PredictionController.all_predictions
-GET     /predictions/latest         de.ironjan.pppb.prediction.PredictionController.all_predictions_latest
-GET     /predictions/do_something_great         de.ironjan.pppb.prediction.PredictionController.do_something_great
-GET     /predictions/importances         de.ironjan.pppb.prediction.PredictionController.importances
-
-GET     /evaluations                de.ironjan.pppb.evaluation.EvaluationController.getAll
-GET     /evaluations/simplified     de.ironjan.pppb.evaluation.EvaluationController.getSimplified
-GET     /evaluations/simplified/csv     de.ironjan.pppb.evaluation.EvaluationController.getSimplifiedAsCsv
-GET     /evaluations/simplified/latest     de.ironjan.pppb.evaluation.EvaluationController.getSimplifiedLatest
-GET     /evaluations/stats          de.ironjan.pppb.evaluation.EvaluationController.getStats
+->  /predictions api_prediction.Routes
+->  /evaluations api_evaluations.Routes
