@@ -55,7 +55,7 @@ class PredictionService @Inject()(parkingDataRepo: ParkingDataRepository,
                                    else if(prediction > 500) { 500 }
                                    else { prediction }
 
-        val regressionName = bestModel.getClass.getSimpleName
+        val regressionName = trainer.toPrintable(bestModel)
 
         PredictionResult(timeIn15Minutes, avgAbsError, normalizedPrediction, regressionName)
     }
