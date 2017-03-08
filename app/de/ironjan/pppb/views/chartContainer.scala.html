@@ -1,6 +1,8 @@
 @(caption: String, id: String)
+@chartId=@{s"${id}-chart"}
+
 <div class='chart-container'>
   <span>@caption</span>
-  <div id='@{id + "-chart"}'></div>
+  <div id='@chartId'></div>
   <script src="@routes.Assets.versioned("javascripts/@{id}.js")" type="text/javascript"></script>
 </div>
