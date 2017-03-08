@@ -1,5 +1,5 @@
 @(caption: String, id: String)
-@chartId=@{id + "-chart"}
+@chartId=@{id.concat("-chart")}
 
 <div class='chart-container'>
   <span>@caption</span>
