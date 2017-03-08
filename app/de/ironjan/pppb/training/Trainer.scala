@@ -21,14 +21,16 @@ import scala.concurrent.ExecutionContext.Implicits.global
 class Trainer @Inject()(parkingDataRepository: ParkingDataRepository) {
 
 
+  val maxModel = (Double.PositiveInfinity, null)
+
   def findBestModel = {
     getTrainedModels(trainingMethod = smallTraining)
-      .map(models => findMin(models, models.head))
+      .map(models => findMin(models, maxModel))
   }
 
   def doSomethingGreat = {
     getTrainedModels(trainingMethod = extensiveTraining)
-      .map(models => findMin(models, models.head))
+      .map(models => findMin(models, maxModel))
   }
 
   @tailrec
@@ -36,6 +38,7 @@ class Trainer @Inject()(parkingDataRepository: ParkingDataRepository) {
   : (Double, Regression[Array[Double]]) =
     if (models.isEmpty) best else {
       val head = models.head
+      Logger.info(s"Finding min. Current: best=$best, head=$head")
       val min = if(head._1 < best._1) head else best
       findMin(models.tail, min)
     }
