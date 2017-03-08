@@ -66,7 +66,9 @@ class PredictionService @Inject()(parkingDataRepo: ParkingDataRepository,
         else if (prediction > 500) 500
         else prediction
 
-        PredictionResult(timeIn15Minutes, avgAbsError, normalizedPrediction, trainer.toPrintable(bestModel))
+        val regressionDescr = trainer.toPrintable(bestModel)
+        Logger.warn(s"Generated $regressionDescr")
+        PredictionResult(timeIn15Minutes, avgAbsError, normalizedPrediction, regressionDescr)
     }
   }
 
