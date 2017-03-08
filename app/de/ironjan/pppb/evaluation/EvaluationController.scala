@@ -24,18 +24,20 @@ class EvaluationController @Inject()(parkingDataRepo: ParkingDataRepository,
                                      predictionDataRepo: PredictionDataRepository) {
 
   def getAll = Action.async { implicit request =>
-    computeTmpEvalResults.map(xs => Ok(Json.toJson(xs.sortBy(- _.prediction.predictedTime.getMillis))))
+    computeTmpEvalResults.map(xs => Ok(Json.toJson(xs)))
   }
 
   def getSimplified = Action.async { implicit request =>
-    computeSimplifiedResults.map(ts =>
-      Ok(Json.toJson(ts.sortBy(- _.dateTime.getMillis))))
+    computeSimplifiedResults
+      .map(ts => Ok(Json.toJson(ts)))
   }
 
 
   def getSimplifiedLatest = Action.async { implicit request =>
-    computeSimplifiedResults.map(ts => Ok(Json.toJson(ts.filter(_.dateTime.isLessThan2DaysOld).sortBy(- _.dateTime.getMillis))))
+    computeSimplifiedResults.map(ts => Ok(Json.toJson(ts.filter(_.dateTime.isLessThan2DaysOld))))
   }
+
+
 
   def getStats = Action.async { implicit request =>
     computeSimplifiedResults.map(ts => {
@@ -51,6 +53,7 @@ class EvaluationController @Inject()(parkingDataRepo: ParkingDataRepository,
     computeTmpEvalResults.map(ts =>
       ts.map(t =>
         SimplifiedEvalResult(t.prediction.predictedTime, t.prediction.prediction, t.parkingDataSetJson.free.get, t.delta)))
+
   }
 
   private def computeTmpEvalResults = {
@@ -68,7 +71,9 @@ class EvaluationController @Inject()(parkingDataRepo: ParkingDataRepository,
         .map(d => (d.crawlingTime.explode, ParkingDataSetJson.from(d)))
         .filter(ed => keys.contains(ed._1))
 
-      crawledAndPreparedForPairing.flatMap(c => findPartner(c,explodedPredictions))
+      crawledAndPreparedForPairing
+        .flatMap(c => findPartner(c,explodedPredictions))
+        .sortBy(- _.prediction.predictedTime.getMillis)
     })
   }
 
