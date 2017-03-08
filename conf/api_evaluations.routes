@@ -1,0 +1,5 @@
+GET     /                de.ironjan.pppb.evaluation.EvaluationController.getAll
+GET     /simplified     de.ironjan.pppb.evaluation.EvaluationController.getSimplified
+GET     /simplified/csv     de.ironjan.pppb.evaluation.EvaluationController.getSimplifiedAsCsv
+GET     /simplified/latest     de.ironjan.pppb.evaluation.EvaluationController.getSimplifiedLatest
+GET     /stats          de.ironjan.pppb.evaluation.EvaluationController.getStats
