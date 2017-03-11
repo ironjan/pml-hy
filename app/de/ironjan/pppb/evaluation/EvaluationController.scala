@@ -10,7 +10,7 @@ import de.ironjan.pppb.crawling.PaderbornCrawler
 import de.ironjan.pppb.prediction.model.PredictionResult
 import de.ironjan.pppb.prediction.repository.PredictionDataRepository
 import play.api.libs.json.Json
-import play.api.mvc.Action
+import play.api.mvc.{Action, Results}
 import play.api.mvc.Results._
 import de.ironjan.pppb.core.model.DateTimeHelper._
 
@@ -53,9 +53,7 @@ class EvaluationController @Inject()(parkingDataRepo: ParkingDataRepository,
   }
 
   def getStats = Action.async { implicit request =>
-    val simplifiedResults = computeSimplifiedResults
-
-    simplifiedResults.map { ts =>
+    computeSimplifiedResults.map { ts =>
       val dayDeltasAsArray = ts.filter(_.dateTime.isLessThan1DayOld).map(_.delta).toArray
       val weekDeltasAsArray = ts.filter(_.dateTime.isLessThan1WeekOld).map(_.delta).toArray
       val monthDeltasAsArray = ts.filter(_.dateTime.isLessThan1MonthOld).map(_.delta).toArray
@@ -76,6 +74,17 @@ class EvaluationController @Inject()(parkingDataRepo: ParkingDataRepository,
     }
   }
 
+  def rollingStats(days: Int) = Action.async {implicit request =>
+    computeSimplifiedResults.map{ts =>
+      ts.groupBy(t => t.dateTime.getDayOfYear / days)
+        .map{grouped =>
+          val deltasAsArray = grouped._2.map(_.delta).toArray
+          val (mean, std) = MeanStd.meanStd(deltasAsArray)
+          val n = deltasAsArray.length
+          SimpleStats(mean, std, n, s"${grouped._1} = dow mod $days")
+        }
+    }.map(ts => Ok(Json.toJson(ts)))
+  }
 
   private def computeSimplifiedResults = {
     computeTmpEvalResults.map(ts =>
