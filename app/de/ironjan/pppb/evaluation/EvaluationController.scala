@@ -56,20 +56,23 @@ class EvaluationController @Inject()(parkingDataRepo: ParkingDataRepository,
     val simplifiedResults = computeSimplifiedResults
 
     simplifiedResults.map { ts =>
+      val dayDeltasAsArray = ts.filter(_.dateTime.isLessThan1DayOld).map(_.delta).toArray
       val weekDeltasAsArray = ts.filter(_.dateTime.isLessThan1WeekOld).map(_.delta).toArray
       val monthDeltasAsArray = ts.filter(_.dateTime.isLessThan1MonthOld).map(_.delta).toArray
       val allTimeDeltasAsArray = ts.map(_.delta).toArray
 
+      val (meanDay, stdDay) = MeanStd.meanStd(dayDeltasAsArray)
       val (meanWeek, stdWeek) = MeanStd.meanStd(weekDeltasAsArray)
       val (meanMonth, stdMonth) = MeanStd.meanStd(monthDeltasAsArray)
       val (meanAllTime, stdAllTime) = MeanStd.meanStd(allTimeDeltasAsArray)
 
 
+      val dayStats = SimpleStats(meanDay, stdDay, dayDeltasAsArray.length, "last day")
       val weekStats = SimpleStats(meanWeek, stdWeek, weekDeltasAsArray.length, "last week")
       val monthStats = SimpleStats(meanMonth, stdMonth, monthDeltasAsArray.length, "last Month")
       val allTimeStats = SimpleStats(meanAllTime, stdAllTime, allTimeDeltasAsArray.length, "all time")
 
-      Ok(Json.toJson(Seq(weekStats, monthStats, allTimeStats)))
+      Ok(Json.toJson(Seq(dayStats, weekStats, monthStats, allTimeStats)))
     }
   }
 
