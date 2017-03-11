@@ -4,7 +4,21 @@ The functionality of the system will be verified by doing regular predictions an
 parking situation later. Similar to the crawling implementation, the web application will generate a new prediction 
 ``15 minutes into the future''. These predictions will be saved in a database. 
 
-\todo{rewrite and extend section}
+To measure the error, we will use the mean absolute error 
+\[
+MAE \defeq mean(|y_i^∗ − y_i|)\text{.}
+\]
+
+Some verification data, fetched on 2017-03-11:
+
+\begin{itemize}
+  \item \textbf{Last day}        \(\mu = 32.32, \sigma = 35.70,  n = 1071\)
+  \item \textbf{Last week}       \(\mu = 80.84, \sigma = 109.99, n = 7242\)
+  \item \textbf{All predictions} \(\mu = 76.16, \sigma = 106.96, n = 7882\)
+\end{itemize}
+
+TODO\todo{what do these numbers mean?}\todo{how did we achieve them?}
+
 \todo{how do we verify?}
 \todo{what method do we use to measure error?}
 \todo{verification over time?}
