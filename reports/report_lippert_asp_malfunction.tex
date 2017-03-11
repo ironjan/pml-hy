@@ -1,5 +1,5 @@
-One week after the first prototype of the crawler was online, \url{https://www.paderborn.de/microsite/asp/parken_in_der_city/freie_Parkplaetze_neu.php} was non-functional. The number of available parking spaces for the ``Liborie-Galerie'' was always set to \(0\).
+One week after the first prototype of the crawler was online, \url{https://www.paderborn.de/microsite/asp/parken_in_der_city/freie_Parkplaetze_neu.php} was non-functional. The number of available parking spaces for the ``Libori-Galerie'' was always set to \(0\).
 
 At the same time, many of the other parking areas were switched to ``Nicht im Parkleitsystem'' (not part of the parking guidance system). Both of these issues were caused by a malfunction of the parking guidance system. Crawling was resumed normally after the parking guidance system was fixed by the provider.
 
-On another note, string values were not expected for the Liborie-Galerie. This caused the crawler to crash on every crawl; the crawler was then adapted to be ore resilient to unexpected values: all non-integer values for free spaces will directly be dropped.
+On another note, string values were not expected for the Libori-Galerie. This caused the crawler to crash on every crawl; the crawler was then adapted to be ore resilient to unexpected values: all non-integer values for free spaces will directly be dropped.

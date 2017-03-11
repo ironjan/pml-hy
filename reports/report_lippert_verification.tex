@@ -1,6 +1,4 @@
-%\subtask{Describe and discuss your ``objective method'', ie. the method by which you will measure the success of your predictor.}
 \input{tab_eval_doy}
-\input{tab_eval_woy}
 
 The functionality of the system will be verified by doing regular predictions and comparing these to the actual 
 parking situation later. Similar to the crawling implementation, the web application will generate a new prediction 
@@ -10,7 +8,7 @@ To measure the error, we will use the mean absolute error
 \[
 MAE \defeq mean(|y_i^∗ - y_i|)\text{,}
 \]
-where \(y_i^∗\) denotes the predicted value and \(y_i\) denotes the actual, crawled value. Tables \ref{tab:eval_doy} and \ref{tab:eval_woy} lists the evaluation results fetched on 11.03.2017 around 6pm. 
+where \(y_i^∗\) denotes the predicted value and \(y_i\) denotes the actual, crawled value. Table \ref{tab:eval_doy} lists the evaluation results fetched on 11.03.2017 around 6pm. 
 
 The evaluations show that the predictions got worse on the 4th and are especially bad on the 7th and 8th March. The cause for this was some experimentation with the training method and the model.
 
@@ -26,7 +24,7 @@ predictions, the aforementioned attributes were not important. Also, from this d
 when training the model. This was not necessary but I wanted to try it out anyway.
 
 As one can see in Table \ref{tab:eval_doy} both changes did not improve the model but instead made predictions worse. Therefore the changes were rolled back on the 9th. After this was done, the prediction accuracy increased again. 
-Figures \ref{fig_actual} and \ref{fig_predictions} display the actual availability respectively the predicted 
+Figures \ref{fig:actual} and \ref{fig:predictions} display the actual availability respectively the predicted 
 availability of parking spaces over the last 48 hours. As one can see, the tendency of the predictions is quite good. However, the predictions tend to overshoot and ``wiggle around''. When presenting the intermediate results in class, it was suggested to dampen the predictions. 
 
 \input{fig_actual}
