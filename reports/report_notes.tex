@@ -34,7 +34,6 @@ The reason for this failure of data collection was in the uninformed use of the 
 
 Therefore, a bash script was created to keep the deployed application awake by sending a request to the application every 30 minutes. Since the dyno is still required to sleep 6 hours a day, the keep-awake signals will not be sent from 2:00 am to 8:00 am which is also the time frame in which the ``Libori-Galerie'' is closed.
 
-\
 \section{Database connections}
 At first, I had multiple problems to get the application running as expected. After some time, the 20 connections for the free Postgresql database were exhausted. This was caused by a misconfiguration of the database connection pool. After some trial and error, the configuration was adapted to only use 10 connections.
 
