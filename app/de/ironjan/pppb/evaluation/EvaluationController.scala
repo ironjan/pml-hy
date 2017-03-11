@@ -74,7 +74,7 @@ class EvaluationController @Inject()(parkingDataRepo: ParkingDataRepository,
     }
   }
 
-  def rollingStats(days: Int) = Action.async {implicit request =>
+  def rollingStats(days: Int = 1) = Action.async {implicit request =>
     computeSimplifiedResults.map{ts =>
       ts.groupBy(t => t.dateTime.getDayOfYear / days)
         .map{grouped =>
