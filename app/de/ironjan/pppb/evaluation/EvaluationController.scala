@@ -76,8 +76,7 @@ class EvaluationController @Inject()(parkingDataRepo: ParkingDataRepository,
 
   def rollingStats(days: Int = 1) = Action.async {implicit request =>
     computeSimplifiedResults.map{ts =>
-      ts.groupBy(t => t.dateTime.getDayOfYear / days)
-        .sortBy(_._1)
+      ts.groupBy(t => (t.dateTime.getDayOfYear - 1) / days) // 1st day of year is 2nd of Jan
         .map{grouped =>
           val deltasAsArray = grouped._2.map(_.delta).toArray
           val (mean, std) = MeanStd.meanStd(deltasAsArray)
