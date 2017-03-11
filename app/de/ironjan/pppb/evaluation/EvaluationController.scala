@@ -53,12 +53,24 @@ class EvaluationController @Inject()(parkingDataRepo: ParkingDataRepository,
   }
 
   def getStats = Action.async { implicit request =>
-    computeSimplifiedResults.map(ts => {
-      val deltas = ts.map(_.delta).toArray
-      val (mean, std) = MeanStd.meanStd(deltas)
-      Ok(Json.toJson(Map("mean" -> mean, "std" -> std, "n" -> deltas.length.toDouble)))
+    val simplifiedResults = computeSimplifiedResults
+
+    simplifiedResults.map { ts =>
+      val weekDeltasAsArray = ts.filter(_.dateTime.isLessThan1WeekOld).map(_.delta).toArray
+      val monthDeltasAsArray = ts.filter(_.dateTime.isLessThan1MonthOld).map(_.delta).toArray
+      val allTimeDeltasAsArray = ts.map(_.delta).toArray
+
+      val (meanWeek, stdWeek) = MeanStd.meanStd(weekDeltasAsArray)
+      val (meanMonth, stdMonth) = MeanStd.meanStd(monthDeltasAsArray)
+      val (meanAllTime, stdAllTime) = MeanStd.meanStd(allTimeDeltasAsArray)
+
+
+      val weekStats = SimpleStats(meanWeek, stdWeek, weekDeltasAsArray.length, "last week")
+      val monthStats = SimpleStats(meanMonth, stdMonth, monthDeltasAsArray.length, "last Month")
+      val allTimeStats = SimpleStats(meanAllTime, stdAllTime, allTimeDeltasAsArray.length, "all time")
+
+      Ok(Json.toJson(Seq(weekStats, monthStats, allTimeStats)))
     }
-    )
   }
 
 

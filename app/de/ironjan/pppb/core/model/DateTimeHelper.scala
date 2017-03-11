@@ -44,6 +44,9 @@ object DateTimeHelper {
 
     def isLessThan1DayOld = dateTime.isAfter(new DateTime().minusDays(1))
     def isLessThan2DaysOld = dateTime.isAfter(new DateTime().minusDays(2))
+    def isLessThan1WeekOld = dateTime.isAfter(new DateTime().minusWeeks(1))
+    def isLessThan1MonthOld = dateTime.isAfter(new DateTime().minusMonths(1))
+
   }
 
 
