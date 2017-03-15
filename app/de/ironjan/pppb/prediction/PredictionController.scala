@@ -6,6 +6,7 @@ import play.api.mvc.Results._
 import play.api.libs.json.Json
 import de.ironjan.pppb.core.model.DateTimeHelper._
 import de.ironjan.pppb.training.Trainer
+import play.api.Logger
 
 import scala.concurrent.ExecutionContext.Implicits.global
 import scala.concurrent.Future
@@ -21,7 +22,16 @@ class PredictionController @Inject()(predictionService: PredictionService) {
     predictionService.getAll.map(ps => Ok(Json.toJson(ps)))
   }
   def all_predictions_latest = Action.async {implicit  request =>
-    predictionService.getAll.map(ps => Ok(Json.toJson(ps.filter(_.predictedTime.isLessThan2DaysOld).sortBy(_.predictedTime.getMillis()))))
+    predictionService.getAll.map{      ps =>
+      val start = System.currentTimeMillis()
+      val filtered = ps.filter(_.predictedTime.isLessThan2DaysOld)
+
+      val filterTimestamp= System.currentTimeMillis()
+      Logger.debug(s"filtered: ${filterTimestamp - start}ms")
+      val sorted = filtered.sortBy(_.predictedTime.getMillis())
+      Logger.debug(s"sorted:   ${System.currentTimeMillis() - filterTimestamp}ms")
+      Ok(Json.toJson(sorted))
+    }
   }
 
   def do_something_great =  Action.async{ implicit request =>
