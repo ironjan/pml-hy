@@ -30,7 +30,9 @@ class PredictionController @Inject()(predictionService: PredictionService) {
       Logger.debug(s"filtered: ${filterTimestamp - start}ms")
       val sorted = filtered.sortBy(_.predictedTime.getMillis())
       Logger.debug(s"sorted:   ${System.currentTimeMillis() - filterTimestamp}ms")
-      Ok(Json.toJson(sorted))
+      val json = Json.toJson(sorted)
+      Logger.debug(s"jsoned:   ${System.currentTimeMillis() - filterTimestamp}ms")
+      Ok(json)
     }
   }
 
