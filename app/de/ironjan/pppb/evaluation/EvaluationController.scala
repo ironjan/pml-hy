@@ -36,7 +36,7 @@ class EvaluationController @Inject()(parkingDataRepo: ParkingDataRepository,
 
 
   def getSimplifiedLatest = Action.async { implicit request =>
-    computeSimplifiedResults.map(ts => Ok(Json.toJson(ts.filter(_.dateTime.isLessThan2DaysOld))))
+    computeSimplifiedResults.map(ts => Ok(Json.toJson(ts.filter(_.dateTime.isLessThan1DayOld))))
   }
 
   def getSimplifiedAsCsv = Action.async { implicit request =>

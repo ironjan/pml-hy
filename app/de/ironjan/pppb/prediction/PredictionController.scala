@@ -24,7 +24,7 @@ class PredictionController @Inject()(predictionService: PredictionService) {
   def all_predictions_latest = Action.async {implicit  request =>
     predictionService.getAll.map{      ps =>
       val start = System.currentTimeMillis()
-      val filtered = ps.filter(_.predictedTime.isLessThan2DaysOld)
+      val filtered = ps.filter(_.predictedTime.isLessThan1DayOld)
 
       val filterTimestamp= System.currentTimeMillis()
       Logger.debug(s"filtered: ${filterTimestamp - start}ms")
