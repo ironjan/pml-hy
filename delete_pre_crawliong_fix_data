@@ -1,2 +1,0 @@
-﻿DELETE FROM parking_data 
-WHERE crawling_time < '2017-02-14';

@@ -1,6 +1,0 @@
-GET     /in_15_min      de.ironjan.pppb.prediction.PredictionController.predict
-GET     /               de.ironjan.pppb.prediction.PredictionController.all_predictions
-GET     /latest         de.ironjan.pppb.prediction.PredictionController.all_predictions_latest
-GET     /do_something_great         de.ironjan.pppb.prediction.PredictionController.do_something_great
-GET     /importances         de.ironjan.pppb.prediction.PredictionController.importances
-

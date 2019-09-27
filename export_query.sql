@@ -1,2 +1,0 @@
-﻿SELECT is_deleted, name, free_raw, capacity_raw, crawling_time, city, model_version, hour_of_day, minute_of_hour, day_of_week, day_of_month, week_of_month, week_of_year, free, capacity
-FROM parking_data;
